@@ -1,13 +1,43 @@
-<%= simple_form_for(@manuscript) do |f| %>
-  <%= f.error_notification %>
+<%= form_for @manuscript, html: { class: "form-horizontal" } do |f| %>
+  <% if @manuscript.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@manuscript.errors.count, "error") %> prohibited this manuscript from being saved:</h2>
 
-  <div class="form-inputs">
-    <%= f.input :title %>
-    <%= f.input :shelfmark %>
-    <%= f.input :url %>
+      <ul>
+      <% @manuscript.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :title, class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= f.text_field :title, class: "form-control", placeholder: "Manuscript title" %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label :shelfmark, class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= f.text_field :shelfmark, class: "form-control", placeholder: "Shelfmark" %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label :url, "URL", class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= f.text_field :url, class: "form-control", placeholder: "URL" %>
+    </div>
   </div>
 
-  <div class="form-actions">
-    <%= f.button :submit %>
+  <div class="form-group">
+    <%= f.label :quire_number_input, "Number of quires", class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= f.text_field :quire_number_input, class: "form-control", placeholder: "Number of quires" %>
+    </div>
+  </div>
+
+  <div class="actions">
+    <%= f.submit class: "btn btn-default" %>
   </div>
 <% end %>

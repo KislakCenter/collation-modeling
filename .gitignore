@@ -15,3 +15,6 @@
 /log/*
 !/log/.keep
 /tmp
+
+# don't track the rbenv file
+.ruby-version

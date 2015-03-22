@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Manuscripts</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Shelfmark</th>
+      <th>Url</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @manuscripts.each do |manuscript| %>
+      <tr>
+        <td><%= manuscript.title %></td>
+        <td><%= manuscript.shelfmark %></td>
+        <td><%= manuscript.url %></td>
+        <td><%= link_to 'Show', manuscript %></td>
+        <td><%= link_to 'Edit', edit_manuscript_path(manuscript) %></td>
+        <td><%= link_to 'Destroy', manuscript, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Manuscript', new_manuscript_path %>

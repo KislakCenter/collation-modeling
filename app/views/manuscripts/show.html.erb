@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @manuscript.title %>
+</p>
+
+<p>
+  <strong>Shelfmark:</strong>
+  <%= @manuscript.shelfmark %>
+</p>
+
+<p>
+  <strong>Url:</strong>
+  <%= @manuscript.url %>
+</p>
+
+<%= link_to 'Edit', edit_manuscript_path(@manuscript) %> |
+<%= link_to 'Back', manuscripts_path %>

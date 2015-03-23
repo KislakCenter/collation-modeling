@@ -1,0 +1,50 @@
+<%= form_for @quire, html: { class: "form-horizontal" } do |f| %>
+  <% if @quire.errors.any? %>
+    <div id="error_explanation">
+      <h2>
+        <%= pluralize(@quire.errors.count, "error") %> prohibited this quire from being saved:
+      </h2>
+
+      <ul>
+      <% @quire.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% if @quire.folios.blank? -%>
+    <div class="form-group">
+      <%= f.label :folio_count_input, "Number of folios",
+          class: "col-sm-2 control-label" %>
+      <div class="col-sm-10">
+        <%= f.text_field :folio_count_input, class: "form-control",
+            placeholder: "Number of folios " %>
+      </div>
+    </div>
+  <% else -%>
+    <%= f.fields_for :folios do |fol| %>
+
+      <div class="form-group">
+        <div class="col-sm-2">
+          <%= fol.label :position, "Folio #{fol.object.position}",
+              class: "control-label" %>
+        </div>
+        <%= fol.label :mode, "Mode", class: "col-sm-1 control-label" %>
+        <div class="col-sm-2">
+          <%= fol.select :mode, Folio::MODES, {}, { class: "form-control" } %>
+        </div>
+        <div class="col-sm-2">
+          <label class="checkbox-inline control-label">
+            <%= fol.check_box :single %> <strong>Single?</strong>
+          </label>
+        </div>
+      </div>
+
+    <% end %>
+  <% end -%>
+
+  <div class="actions">
+    <%= f.submit class: "btn btn-default" %>
+  </div>
+<% end %>

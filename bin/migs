@@ -4,7 +4,14 @@ this_dir=`dirname $0`
 
 RAILS=$this_dir/rails
 
-$RAILS g migration add_manuscript_id_to_quires manuscript:references
+$RAILS g model folio mode:string \
+    single:boolean \
+    quire:belongs_to \
+    position:integer
+
+# $RAILS g controller quires
+
+# $RAILS g migration add_manuscript_id_to_quires manuscript:references
 
 # $RAILS g model quire number:string position:integer manuscript:references
 

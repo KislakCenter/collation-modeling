@@ -26,6 +26,6 @@ class QuiresController < ApplicationController
   end
 
   def quire_params
-    params.require(:quire).permit(:leaf_count_input, :leaves_attributes => [ :id, :mode, :single ])
+    params.require(:quire).permit(:leaf_count_input, :leaves_attributes => [ :id, :mode, :single, :folio_number ])
   end
 end

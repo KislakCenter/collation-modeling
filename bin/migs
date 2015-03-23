@@ -4,7 +4,9 @@ this_dir=`dirname $0`
 
 RAILS=$this_dir/rails
 
-$RAILS g migration rename_table_folios_to_leaves
+$RAILS g migration add_folio_number_to_leaves folio_number:string
+
+# $RAILS g migration rename_table_folios_to_leaves
 
 # $RAILS g model folio mode:string \
 #     single:boolean \

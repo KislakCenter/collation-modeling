@@ -23,20 +23,24 @@
       </div>
     </div>
   <% else -%>
-    <%= f.fields_for :leaves do |fol| %>
+    <%= f.fields_for :leaves do |leaf| %>
 
       <div class="form-group">
         <div class="col-sm-2">
-          <%= fol.label :position, "Leaf #{fol.object.position}",
+          <%= leaf.label :position, "Leaf #{leaf.object.position}",
               class: "control-label" %>
         </div>
-        <%= fol.label :mode, "Mode", class: "col-sm-1 control-label" %>
+        <%= leaf.label :folio_number, "fol.", class: "col-sm-1 control-label" %>
         <div class="col-sm-2">
-          <%= fol.select :mode, Leaf::MODES, {}, { class: "form-control" } %>
+          <%= leaf.text_field :folio_number, class: "form-control" %>
+        </div>
+        <%= leaf.label :mode, "Mode", class: "col-sm-1 control-label" %>
+        <div class="col-sm-2">
+          <%= leaf.select :mode, Leaf::MODES, {}, { class: "form-control" } %>
         </div>
         <div class="col-sm-2">
           <label class="checkbox-inline control-label">
-            <%= fol.check_box :single %> <strong>Single?</strong>
+            <%= leaf.check_box :single %> <strong>Single?</strong>
           </label>
         </div>
       </div>

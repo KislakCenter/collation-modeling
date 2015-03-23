@@ -50,8 +50,8 @@
       <div class="row">
         <div class="col-sm-3">
           <ul>
-            <% quire.leaves.each do |fol| %>
-              <li><%= fol.position %> <%= fol.mode %> <%= fol.single? ? "single" : "" %>
+            <% quire.leaves.each do |leaf| %>
+              <li>Leaf: <%= leaf.position %> (fol. <%= leaf.folio_number %>) <%= leaf.mode %> <%= leaf.single? ? "single" : "" %>
             <% end %>
           </ul>
         </div>

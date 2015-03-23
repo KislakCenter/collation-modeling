@@ -38,13 +38,26 @@
   <% @manuscript.quires.each do |quire| -%>
 
     <div class="row">
-      <div class="col-sm-2">
+      <div class="col-sm-3">
         <p>Quire <%= quire.number %></p>
       </div>
       <div class="col-sm-3">
         <p class="field-value"><%= link_to "Edit", edit_quire_path(quire) %></p>
       </div>
     </div>
+
+    <% if quire.folios.present? %>
+      <div class="row">
+        <div class="col-sm-3">
+          <ul>
+            <% quire.folios.each do |fol| %>
+              <li><%= fol.position %> <%= fol.mode %> <%= fol.single? ? "single" : "" %>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    <% end %>
+
   <% end -%>
 <% end -%>
 

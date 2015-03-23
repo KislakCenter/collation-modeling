@@ -13,26 +13,26 @@
     </div>
   <% end %>
 
-  <% if @quire.folios.blank? -%>
+  <% if @quire.leaves.blank? -%>
     <div class="form-group">
-      <%= f.label :folio_count_input, "Number of folios",
+      <%= f.label :leaf_count_input, "Number of leaves",
           class: "col-sm-2 control-label" %>
       <div class="col-sm-10">
-        <%= f.text_field :folio_count_input, class: "form-control",
-            placeholder: "Number of folios " %>
+        <%= f.text_field :leaf_count_input, class: "form-control",
+            placeholder: "Number of leaves " %>
       </div>
     </div>
   <% else -%>
-    <%= f.fields_for :folios do |fol| %>
+    <%= f.fields_for :leaves do |fol| %>
 
       <div class="form-group">
         <div class="col-sm-2">
-          <%= fol.label :position, "Folio #{fol.object.position}",
+          <%= fol.label :position, "Leaf #{fol.object.position}",
               class: "control-label" %>
         </div>
         <%= fol.label :mode, "Mode", class: "col-sm-1 control-label" %>
         <div class="col-sm-2">
-          <%= fol.select :mode, Folio::MODES, {}, { class: "form-control" } %>
+          <%= fol.select :mode, Leaf::MODES, {}, { class: "form-control" } %>
         </div>
         <div class="col-sm-2">
           <label class="checkbox-inline control-label">

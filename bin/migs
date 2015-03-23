@@ -4,10 +4,12 @@ this_dir=`dirname $0`
 
 RAILS=$this_dir/rails
 
-$RAILS g model folio mode:string \
-    single:boolean \
-    quire:belongs_to \
-    position:integer
+$RAILS g migration rename_table_folios_to_leaves
+
+# $RAILS g model folio mode:string \
+#     single:boolean \
+#     quire:belongs_to \
+#     position:integer
 
 # $RAILS g controller quires
 

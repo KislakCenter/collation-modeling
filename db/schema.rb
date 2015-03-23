@@ -11,9 +11,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150323002052) do
+ActiveRecord::Schema.define(version: 20150323201804) do
 
-  create_table "folios", force: :cascade do |t|
+  create_table "leaves", force: :cascade do |t|
     t.string   "mode",       limit: 255
     t.boolean  "single",     limit: 1
     t.integer  "quire_id",   limit: 4
@@ -22,7 +22,7 @@ ActiveRecord::Schema.define(version: 20150323002052) do
     t.datetime "updated_at",             null: false
   end
 
-  add_index "folios", ["quire_id"], name: "index_folios_on_quire_id", using: :btree
+  add_index "leaves", ["quire_id"], name: "index_leaves_on_quire_id", using: :btree
 
   create_table "manuscripts", force: :cascade do |t|
     t.string   "title",      limit: 255
@@ -60,6 +60,6 @@ ActiveRecord::Schema.define(version: 20150323002052) do
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
-  add_foreign_key "folios", "quires"
+  add_foreign_key "leaves", "quires"
   add_foreign_key "quires", "manuscripts"
 end

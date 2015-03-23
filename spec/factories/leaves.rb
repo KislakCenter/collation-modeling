@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :folio do
+  factory :leaf do
     mode "MyString"
 single false
 quire nil

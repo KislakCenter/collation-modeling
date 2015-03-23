@@ -46,11 +46,11 @@
       </div>
     </div>
 
-    <% if quire.folios.present? %>
+    <% if quire.leaves.present? %>
       <div class="row">
         <div class="col-sm-3">
           <ul>
-            <% quire.folios.each do |fol| %>
+            <% quire.leaves.each do |fol| %>
               <li><%= fol.position %> <%= fol.mode %> <%= fol.single? ? "single" : "" %>
             <% end %>
           </ul>

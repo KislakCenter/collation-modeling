@@ -1,4 +1,4 @@
-class Folio < ActiveRecord::Base
+class Leaf < ActiveRecord::Base
   belongs_to :quire
 
   acts_as_list scope: :quire

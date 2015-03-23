@@ -7,7 +7,7 @@ class QuiresController < ApplicationController
   end
 
   def update
-    if @quire.folios.present?
+    if @quire.leaves.present?
       @quire.update(quire_params)
       if @quire.next.present?
         redirect_to edit_quire_path(@quire.next)
@@ -26,6 +26,6 @@ class QuiresController < ApplicationController
   end
 
   def quire_params
-    params.require(:quire).permit(:folio_count_input, :folios_attributes => [ :id, :mode, :single ])
+    params.require(:quire).permit(:leaf_count_input, :leaves_attributes => [ :id, :mode, :single ])
   end
 end

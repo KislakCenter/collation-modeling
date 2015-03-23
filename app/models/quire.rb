@@ -1,11 +1,11 @@
 class Quire < ActiveRecord::Base
-  attr_accessor :folio_count_input
+  attr_accessor :leaf_count_input
 
   belongs_to :manuscript
-  has_many :folios, -> { order('position ASC') }
-  accepts_nested_attributes_for :folios
+  has_many :leaves, -> { order('position ASC') }
+  accepts_nested_attributes_for :leaves
 
-  before_save :create_folios
+  before_save :create_leaves
 
   validate :must_have_even_bifolia
 
@@ -21,17 +21,17 @@ class Quire < ActiveRecord::Base
 
   private
 
-  def create_folios
-    if folio_count_input && folios.blank?
-      folio_count_input.to_i.times { |i| folios.build }
+  def create_leaves
+    if leaf_count_input && leaves.blank?
+      leaf_count_input.to_i.times { |i| leaves.build }
     end
   end
 
-  # Make sure that the number of folios not marked 'single' is even.
+  # Make sure that the number of leaves not marked 'single' is even.
   def must_have_even_bifolia
-    count = folios.where.not(single: true).count
+    count = leaves.where.not(single: true).count
     if count.odd?
-      errors.add(:base, "The number of non-single folios cannot be odd; found: #{count}")
+      errors.add(:base, "The number of non-single leaves cannot be odd; found: #{count}")
     end
   end
 end

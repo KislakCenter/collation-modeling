@@ -31,14 +31,6 @@ class Manuscript < ActiveRecord::Base
     end
   end
 
-  def to_hash
-    manuscript = { quires: [] }
-    quires.each do |q|
-      manuscript[:quires] << q.to_hash
-    end
-    { manuscript: manuscript }
-  end
-
   private
 
   def build_quires

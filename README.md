@@ -1,13 +1,5 @@
 # README
 
-This README would normally document whatever steps are necessary to
-get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
 ## Software version
 
 Ruby v2.1.5
@@ -30,11 +22,6 @@ Rails 4.2.1
 * Deployment instructions
 
 * ...
-
-
-Please feel free to use a different markup language if you do not plan
-to run
-<tt>rake doc:app</tt>.
 
 # Install
 

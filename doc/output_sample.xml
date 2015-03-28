@@ -1,20 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manuscript>
     <quire n="I">
-        <!--  @single = "true|false[=default]"; default is false if @single not provided;
-              this one's tricky; single means that the leaf was always single;
-              Examples:
-              
-              1. If a leaf is or was part of a conjoin, @single is "false".
-              2. If a leaf was single in the orginal quire or was inserted as a single leaf,
-                 @single is "true".              
-              3. If one leaf of a conjoin is missing, @single is "false" for both the missing
-                 and the remaining cojoin.
-              4. If a leaf is added as replacement for one half of a conjoin, @single is "false"
-                 for both halves of the conjoin.
-         -->
-        <!--  @mode = "original[=default]|added|replaced|missing"; default is "original" if @mode 
-              not provided  -->
         <leaf n="1" />
         <leaf n="2" mode="replaced" />
         <leaf n="3" single="true" />
@@ -26,6 +12,30 @@
         <leaf n="9" mode="added" />
     </quire>
     <quire n="1">
+        <!--
+             @single = "true|false[=default]"; default is false if
+                 @single not provided; this one's tricky; single
+                 means that the leaf was always single;
+
+              Examples:
+
+              1. If a leaf is or was part of a conjoin, @single is
+                 "false".
+
+              2. If a leaf was single in the orginal quire or was
+                 inserted as a single leaf, @single is "true".
+
+              3. If one leaf of a conjoin is missing, @single is
+                 "false" for both the missing and the remaining
+                 conjoin.
+
+              4. If a leaf is added as replacement for one half of a
+                 conjoin, @single is "false" for both halves of the
+                 conjoin.
+
+             @mode = "original[=default]|added|replaced|missing";
+                   default is "original" if @mode not provided
+        -->
         <unit>
             <leaf n="1" />
             <leaf n="8" />
@@ -57,7 +67,7 @@
         <leaf n="6" />
         <leaf n="7" conjoins="2"/>
         <leaf n="8" conjoins="1" />
-    </quire> 
+    </quire>
     <quire n="2">
         <unit>
             <leaf n="1" />
@@ -76,5 +86,5 @@
             <leaf n="5" />
         </unit>
     </quire>
-    
+
 </manuscript>

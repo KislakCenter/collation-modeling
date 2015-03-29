@@ -3,9 +3,11 @@ class Manuscript < ActiveRecord::Base
 
   attr_accessor :quire_number_input
 
-  before_create :build_quires
+  before_save :build_quires
 
-  def to_xml
+  validates_presence_of :title, :shelfmark
+
+  def to_xml options={}
     build_xml.to_xml
   end
 
@@ -34,8 +36,10 @@ class Manuscript < ActiveRecord::Base
   private
 
   def build_quires
-    quire_number_input and (1..quire_number_input.to_i).each do |i|
-      quires.build number: i
+    if quires.empty? && quire_number_input
+      (1..quire_number_input.to_i).each do |i|
+        quires.build number: i
+      end
     end
   end
 end

@@ -8,15 +8,22 @@ class QuiresController < ApplicationController
 
   def update
     if @quire.leaves.present?
-      @quire.update(quire_params)
-      if @quire.next.present?
-        redirect_to edit_quire_path(@quire.next)
+
+      if @quire.update(quire_params)
+        if @quire.next.present?
+          redirect_to edit_quire_path(@quire.next)
+        else
+          redirect_to manuscript_path(@quire.manuscript)
+        end
       else
-        redirect_to edit_manuscript_path(@quire.manuscript)
+        render action: :edit
       end
     else
-      @quire.update(quire_params)
-      redirect_to edit_quire_path(@quire)
+      if @quire.update(quire_params)
+        redirect_to edit_quire_path(@quire)
+      else
+        render action: :edit
+      end
     end
   end
 

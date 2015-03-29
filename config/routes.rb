@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
   resources :manuscripts
+
+  get 'manuscripts/xml/:id', to: 'manuscripts#export_xml', as: 'manuscript_xml'
+
   devise_for :users
   root to: 'manuscripts#index'
 

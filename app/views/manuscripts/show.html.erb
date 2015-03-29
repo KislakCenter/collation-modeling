@@ -33,6 +33,8 @@
 
 </div>
 
+<p><%= link_to "Export as XML", manuscript_xml_path(@manuscript) %></p>
+
 <% if @manuscript.quires.present? -%>
   <h3>Quires</h3>
   <% @manuscript.quires.each do |quire| -%>

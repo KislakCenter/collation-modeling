@@ -1,11 +1,15 @@
 class ManuscriptsController < ApplicationController
-  before_action :set_manuscript, only: [:show, :edit, :update, :destroy]
+  before_action :set_manuscript, only: [:show, :edit, :update, :destroy, :export_xml]
 
-  respond_to :html
+  respond_to :html, :xml
 
   def index
     @manuscripts = Manuscript.all
     respond_with(@manuscripts)
+  end
+
+  def export_xml
+    send_data  "#{@manuscript.to_xml}", filename: xml_file_name
   end
 
   def show
@@ -37,6 +41,10 @@ class ManuscriptsController < ApplicationController
   end
 
   private
+  def xml_file_name
+    "#{@manuscript.shelfmark.strip.gsub /\s+/, '_'}.xml"
+  end
+
     def set_manuscript
       @manuscript = Manuscript.find(params[:id])
     end

@@ -13,7 +13,7 @@ class Manuscript < ActiveRecord::Base
 
   def build_xml
     Nokogiri::XML::Builder.new do |xml|
-      xml.manuscript {
+      xml.manuscript(url: url) {
         xml.title title
         xml.shelfmark shelfmark
         xml.quires {

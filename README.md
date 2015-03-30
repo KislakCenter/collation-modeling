@@ -135,26 +135,6 @@ It should look like this when done:
 
 rename README.rdoc -> README.md
 
-# SIMPLE FORM
-
-Add simple form gem:
-
-```ruby
-gem 'simple_form'
-```
-
-Run bundle install:
-
-```bash
-$ bundle install
-```
-
-Make simple_form use bootstrap:
-
-```bash
-$ rails generate simple_form:install --bootstrap
-```
-
 # MYSQL2
 
 Remove sqlite3 and add mysql2 database gem.

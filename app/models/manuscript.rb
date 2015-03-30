@@ -1,5 +1,5 @@
 class Manuscript < ActiveRecord::Base
-  has_many :quires, -> { order('position ASC') }
+  has_many :quires, -> { order('position ASC') }, dependent: :destroy
 
   attr_accessor :quire_number_input
 

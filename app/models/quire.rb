@@ -45,12 +45,10 @@ class Quire < ActiveRecord::Base
 
   def create_leaves
     if leaf_count_input && leaves.blank?
-      next_folio = next_folio_number
-      leaf_count_input.to_i.times do |i|
-        attrs = {}
-        attrs[:folio_number] = next_folio if next_folio
-        leaves.build attrs
-        next_folio += 1 if next_folio
+      curr_folio = prev_folio_number
+      leaf_count_input.to_i.times do
+        curr_folio = inc_folio curr_folio
+        leaves.build folio_number: curr_folio
       end
     end
   end
@@ -63,11 +61,27 @@ class Quire < ActiveRecord::Base
     end
   end
 
-  def next_folio_number
+  # Increment the folio number. If +number+ cannot be parsed as in Integer,
+  # return +nil+.
+  #
+  # TODO: Enable incrementing of paginated numbers, 1-2, 3-4, etc.
+  #
+  def inc_folio number
+    begin
+      Integer(number) + 1
+    rescue ArgumentError, TypeError
+      # if number is nil, TypeError is raised
+      # if number is not an integer, ArgumentError is raised
+      # in either case, return nil
+      nil
+    end
+  end
+
+  def prev_folio_number
     if previous.present?
-      previous.leaves.last.folio_number.to_i + 1
+      previous.leaves.last.folio_number.to_i
     else
-      1
+      0
     end
   end
 end

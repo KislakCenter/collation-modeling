@@ -1,3 +1,5 @@
+require 'ostruct'
+
 class Manuscript < ActiveRecord::Base
   has_many :quires, -> { order('position ASC') }, dependent: :destroy
 
@@ -11,14 +13,23 @@ class Manuscript < ActiveRecord::Base
     build_xml.to_xml
   end
 
+  def to_struct
+    s = OpenStruct.new title: title, shelfmark: shelfmark, url: url, quires: []
+    quires.each do |q|
+      s.quires << q.to_struct
+    end
+    s
+  end
+
   def build_xml
+    struct = to_struct
     Nokogiri::XML::Builder.new do |xml|
-      xml.manuscript(url: url) {
-        xml.title title
-        xml.shelfmark shelfmark
+      xml.manuscript(url: struct.url) {
+        xml.title struct.title
+        xml.shelfmark struct.shelfmark
         xml.quires {
-          quires.each do |q|
-            xml.quire(n: q.position) {
+          struct.quires.each do |q|
+            xml.quire(n: q.n) {
               q.units.each do |u|
                 xml.unit {
                   u.leaves.each do |leaf|

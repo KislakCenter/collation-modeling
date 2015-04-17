@@ -21,6 +21,49 @@ class Quire < ActiveRecord::Base
     higher_item
   end
 
+  def to_struct
+    OpenStruct.new n: position, units: units
+  end
+
+  def filled_quire
+    leaves = to_leaves.reverse
+    to_leaves.each do |leaf|
+      if leaf.conjoin.nil?
+        cj = 0
+        insertion_point = nil
+        leaves.each_with_index do |rleaf,index|
+          if rleaf.conjoin.blank?
+            # skip it
+          elsif rleaf.conjoin == cj+1
+            cj += 1
+          else
+            insertion_point = index
+            break
+          end
+        end
+        leaves.insert insertion_point, OpenStruct.new(n: nil, conjoin: leaf.n)
+      end
+    end
+    leaves.reverse!
+    leaves.each_with_index { |leaf,index| leaf.position = (index+1) }
+    leaves
+  end
+
+  def to_leaves
+    leaves = []
+    units.each do |unit|
+      first = unit.leaves.first
+      if unit.leaves.size > 1
+        second = unit.leaves.second
+        leaves << OpenStruct.new(first.marshal_dump.merge({ conjoin: second.n }))
+        leaves << OpenStruct.new(second.marshal_dump.merge({ conjoin: first.n }))
+      else
+        leaves << OpenStruct.new(first.marshal_dump.merge({ conjoin: nil  }))
+      end
+    end
+    leaves.sort_by &:n
+  end
+
   # Create a list of units. Each unit corresponds to a single leaf or
   # conjoin and thus contains either one or two leaves.
   def units

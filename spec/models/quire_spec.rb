@@ -25,6 +25,8 @@ RSpec.describe Quire, :type => :model do
 
   let(:quire_8_third_second_single) { build_quire_and_leaves 8, 3, 2 }
 
+  let(:quire_8_second_sixth_single) { build_quire_and_leaves 8, 2, 6 }
+
   context "factories" do
     it "builds a reqular quire" do
       expect(quire_8_regular.leaves.size).to eq 8
@@ -36,6 +38,27 @@ RSpec.describe Quire, :type => :model do
 
   end
 
+  context "to_leaves" do
+    it "prints leaves from a quire" do
+      expect(quire_8_regular.to_leaves.size).to eq 8
+    end
+
+    it "prints leaves from a quire with a second single" do
+      expect(quire_7_second_single.to_leaves.size).to eq 7
+    end
+
+    it "prints leaves from a quire with a second single" do
+      expect(quire_8_second_sixth_single.to_leaves.size).to eq 8
+    end
+
+  end
+
+  context "filled_quire" do
+    it "prints a filled quire least" do
+      # expect(quire_8_second_sixth_single.to_filled_leaves.size).to eq 7
+      expect(quire_8_second_sixth_single.filled_quire.size).to eq 10
+    end
+  end
 
   context "quire units" do
     it "builds a quire model" do

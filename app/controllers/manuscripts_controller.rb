@@ -9,7 +9,7 @@ class ManuscriptsController < ApplicationController
   end
 
   def export_xml
-    send_data  "#{@manuscript.to_xml}", filename: xml_file_name
+    send_data  "#{@manuscript.to_xml(xml_type: :filled_quires)}", filename: xml_file_name
   end
 
   def show

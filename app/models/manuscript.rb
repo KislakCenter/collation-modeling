@@ -11,7 +11,7 @@ class Manuscript < ActiveRecord::Base
 
   def to_xml options={}
     case options[:xml_type]
-    when :filled_quire
+    when :filled_quires
       filled_quires_xml.to_xml
     else
       build_xml.to_xml

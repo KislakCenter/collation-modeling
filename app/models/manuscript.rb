@@ -10,7 +10,12 @@ class Manuscript < ActiveRecord::Base
   validates_presence_of :title, :shelfmark
 
   def to_xml options={}
-    build_xml.to_xml
+    case options[:xml_type]
+    when :filled_quire
+      filled_quires_xml.to_xml
+    else
+      build_xml.to_xml
+    end
   end
 
   def to_struct
@@ -41,6 +46,23 @@ class Manuscript < ActiveRecord::Base
           end
         } # xml.quires
       } # xml.manuscript
+    end
+  end
+
+  def filled_quires_xml
+    Nokogiri::XML::Builder.new do |xml|
+      xml.manuscript {
+        xml.url url
+        xml.title title
+        xml.shelfmark shelfmark
+        quires.each do |q|
+          xml.quire(n: q.position) {
+            q.filled_quire.each do |leaf|
+              xml.leaf leaf.marshal_dump
+            end
+          }
+        end
+      }
     end
   end
 

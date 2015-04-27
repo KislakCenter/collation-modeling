@@ -55,8 +55,8 @@ RSpec.describe Quire, :type => :model do
 
   context "filled_quire" do
     it "prints a filled quire least" do
-      # expect(quire_8_second_sixth_single.to_filled_leaves.size).to eq 7
       expect(quire_8_second_sixth_single.filled_quire.size).to eq 10
+      # puts quire_8_second_sixth_single.filled_quire
     end
   end
 

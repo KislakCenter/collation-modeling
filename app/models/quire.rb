@@ -25,6 +25,22 @@ class Quire < ActiveRecord::Base
     OpenStruct.new n: position, units: units
   end
 
+  # Return a list of leaves with conjoins, filling in `nil` leaf
+  # placeholders for the partners of single leaves.  For example:
+  #
+  # leaf n=1,   mode="original", folio_number="1", conjoin=8,   position=1
+  # leaf n=2,   mode="original", folio_number="2", conjoin=nil, position=2
+  # leaf n=3,   mode="original", folio_number="3", conjoin=7,   position=3
+  # leaf n=nil,                                    conjoin=6,   position=4
+  # leaf n=4,   mode="original", folio_number="4", conjoin=5,   position=5
+  # leaf n=5,   mode="original", folio_number="5", conjoin=4,   position=6
+  # leaf n=6,   mode="original", folio_number="6", conjoin=nil, position=7
+  # leaf n=7,   mode="original", folio_number="7", conjoin=3,   position=8
+  # leaf n=nil,                                    conjoin=2,   position=9
+  # leaf n=8,   mode="original", folio_number="8", conjoin=1,   position=10
+  #
+  # This presentation is a convenience for building quire diagrams
+  # where single leaves are balanced with blank slots.
   def filled_quire
     leaves = to_leaves.reverse
     to_leaves.each do |leaf|

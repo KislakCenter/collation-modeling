@@ -18,3 +18,11 @@
 
 # don't track the rbenv file
 .ruby-version
+
+# Ignore transient emacs
+\#*
+.\#*
+~*
+
+# Ignore rails guides
+doc/guides

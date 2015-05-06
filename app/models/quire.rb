@@ -46,7 +46,7 @@ class Quire < ActiveRecord::Base
     to_leaves.each do |leaf|
       if leaf.conjoin.nil?
         cj = 0
-        insertion_point = nil
+        insertion_point = 0
         leaves.each_with_index do |rleaf,index|
           if rleaf.conjoin.blank?
             # skip it

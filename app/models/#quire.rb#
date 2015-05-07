@@ -60,6 +60,7 @@ class Quire < ActiveRecord::Base
     leaves.any? { |leaf| leaf.conjoin.present? }
   end
 
+  # When we have all single leaves, we just fill in 
   def handle_all_singles leaves
     leaves.reverse!
     to_leaves.reverse.each do |leaf|

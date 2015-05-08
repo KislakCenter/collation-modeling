@@ -5,13 +5,17 @@ class Quire < ActiveRecord::Base
 
   belongs_to :manuscript
   has_many :leaves, -> { order('position ASC') }, dependent: :destroy
-  accepts_nested_attributes_for :leaves
+  accepts_nested_attributes_for :leaves, allow_destroy: true
 
   before_save :create_leaves
 
   validate :must_have_even_bifolia
 
   acts_as_list scope: :manuscript
+
+  def name
+    sprintf "%s  Quire %s", manuscript.title, number
+  end
 
   def next
     lower_item
@@ -46,7 +50,7 @@ class Quire < ActiveRecord::Base
     to_leaves.each do |leaf|
       if leaf.conjoin.nil?
         cj = 0
-        insertion_point = nil
+        insertion_point = 0
         leaves.each_with_index do |rleaf,index|
           if rleaf.conjoin.blank?
             # skip it
@@ -85,6 +89,7 @@ class Quire < ActiveRecord::Base
   def units
     units = []
     leaf_queue = leaves.map(&:itself)
+    logger.info leaf_queue.inspect
     while leaf_queue.size > 0 do
       leaf = leaf_queue.shift.to_struct
       if leaf.single

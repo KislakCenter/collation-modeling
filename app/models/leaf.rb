@@ -6,10 +6,10 @@ class Leaf < ActiveRecord::Base
   MODES = %w( original added replaced missing )
 
   def description
-    s = "Leaf: "
+    s = "Leaf "
     s += position.to_s
     if folio_number.present?
-      s += "(fol/pg "
+      s += " (fol/pg "
       s += folio_number
       s += ")"
     end

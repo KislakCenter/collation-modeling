@@ -1,8 +1,8 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Listing Manuscripts</h1>
+<h1>Manuscripts</h1>
 
-<table class="table">
+<table class="table table-striped">
   <thead>
     <tr>
       <th>Title</th>
@@ -18,14 +18,19 @@
         <td><%= manuscript.title %></td>
         <td><%= manuscript.shelfmark %></td>
         <td><%= manuscript.url %></td>
-        <td><%= link_to 'Show', manuscript %></td>
-        <td><%= link_to 'Edit', edit_manuscript_path(manuscript) %></td>
-        <td><%= link_to 'Destroy', manuscript, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td>
+          <%= link_to 'Show', manuscript, class: 'btn btn-default btn-sm' %>
+        </td>
+        <td>
+          <%= link_to 'Edit', edit_manuscript_path(manuscript),
+                class: 'btn btn-default btn-sm' %>
+        </td>
+        <td>
+          <%= link_to 'x', manuscript, method: :delete,
+                data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm' %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
-<br>
-
-<%= link_to 'New Manuscript', new_manuscript_path %>
+<%= link_to 'New Manuscript', new_manuscript_path, class: 'btn btn-default' %>

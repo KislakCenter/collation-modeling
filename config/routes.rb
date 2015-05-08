@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   resources :manuscripts do
-    resources :quires, only: [ :create, :new ]
+    resources :quires, only: [ :create, :new, :destroy ]
   end
 
   get 'manuscripts/xml/:id', to: 'manuscripts#export_xml', as: 'manuscript_xml'

@@ -47,19 +47,21 @@
 
     <div class="row">
       <div class="col-sm-3">
-        <p><%= link_to "Quire #{quire.number}", quire_path(quire) %></p>
+        <p>Quire <%= quire.position %></p>
       </div>
       <div class="col-sm-3">
         <p class="field-value">
           <%= link_to 'View', quire_path(quire), class: 'btn btn-default' %>
           <%= link_to 'Edit', edit_quire_path(quire), class: 'btn btn-default' %>
-        </p>
+          <%= link_to 'x', [ @manuscript, quire ], method: :delete,
+              data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+      </p>
       </div>
     </div>
 
     <% if quire.leaves.present? %>
       <div class="row">
-        <div class="col-sm-3">
+        <div class="col-sm-4">
           <ul>
             <% quire.leaves.each do |leaf| %>
               <li><%= leaf.description %>

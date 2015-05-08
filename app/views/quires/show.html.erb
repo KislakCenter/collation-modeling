@@ -1,0 +1,41 @@
+<p id="notice"><%= notice %></p>
+
+<p><%= render 'bread_crumbs' %></p>
+
+<h1><%= @quire.name %></h1>
+
+<%= render 'manuscripts/summary', manuscript: @quire.manuscript %>
+
+<div class="row">
+  <div class="col-sm-2">
+    <p class="field-label">Quire</p>
+  </div>
+  <div class="col-sm-10">
+    <p class="field-value"><%= @quire.number %></p>
+  </div>
+</div>
+
+<div>
+  <%= link_to 'Edit', edit_quire_path(@quire), class: 'btn btn-default' %>
+</div>
+
+
+<% if @quire.leaves.present? -%>
+  <h3>Leaves</h3>
+  <% @quire.leaves.each do |leaf| %>
+    <div class="row">
+      <div class="col-sm-1">
+        Leaf <%= leaf.position %>
+      </div>
+      <div class="col-sm-1">
+        Folio: <%= leaf.folio_number %>
+      </div>
+      <div class="col-sm-2">
+        Mode: <%= leaf.mode %>
+      </div>
+      <div class="col-sm-2">
+        Single? <%= leaf.single?.yesno %>
+      </div>
+    </div>
+  <% end %>
+<% end -%>

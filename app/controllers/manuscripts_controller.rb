@@ -45,11 +45,11 @@ class ManuscriptsController < ApplicationController
     "#{@manuscript.shelfmark.strip.gsub /\s+/, '_'}.xml"
   end
 
-    def set_manuscript
-      @manuscript = Manuscript.find(params[:id])
-    end
+  def set_manuscript
+    @manuscript = Manuscript.find(params[:id])
+  end
 
-    def manuscript_params
-      params.require(:manuscript).permit(:title, :shelfmark, :url, :quire_number_input)
-    end
+  def manuscript_params
+    params.require(:manuscript).permit(:title, :shelfmark, :url, :quire_number_input)
+  end
 end

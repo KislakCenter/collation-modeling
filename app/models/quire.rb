@@ -14,7 +14,7 @@ class Quire < ActiveRecord::Base
   acts_as_list scope: :manuscript
 
   def name
-    sprintf "%s  Quire %s", manuscript.title, number
+    sprintf "%s  Quire %s", manuscript.title, position
   end
 
   def next

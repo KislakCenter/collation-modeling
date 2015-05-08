@@ -1,0 +1,5 @@
+<%= link_to 'Home', root_path %> |
+<%= link_to @quire.manuscript.shelfmark, @quire.manuscript %>
+<% unless @quire.new_record? -%>
+| <%= link_to "Quire #{@quire.number}", @quire %>
+<% end -%>

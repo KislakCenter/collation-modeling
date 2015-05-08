@@ -1,12 +1,21 @@
 Rails.application.routes.draw do
-  resources :manuscripts
+  resources :manuscripts do
+    resources :quires, only: [ :create, :new ]
+  end
 
   get 'manuscripts/xml/:id', to: 'manuscripts#export_xml', as: 'manuscript_xml'
 
   devise_for :users
   root to: 'manuscripts#index'
 
-  resources :quires, only: [ :edit, :update ]
+  resources :quires, only: [ :edit, :show, :update ]
+
+  # get ':controller/:action/:id/with_user/:user_id'
+
+
+
+  resources :leaves, only: [ :destroy ]
+
 
   get 'welcome/index'
 

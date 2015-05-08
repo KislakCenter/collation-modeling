@@ -37,6 +37,8 @@ gem 'devise'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
+gem 'nested_form_fields'
+
 # Use Unicorn as the app server
 gem 'unicorn'
 
@@ -54,6 +56,8 @@ group :development, :test do
   gem 'spring'
 
   gem 'redcarpet', '~> 3.1.2'
+
+  gem 'pry-rails'
 end
 
 group :development, :test do

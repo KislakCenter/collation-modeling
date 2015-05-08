@@ -1,39 +1,45 @@
 <p id="notice"><%= notice %></p>
 
+<p><%= render 'bread_crumbs' %></p>
+
 <h1>Manuscript: <%= @manuscript.title %></h1>
 
-<div class="container">
 
-  <div class="row">
-    <div class="col-sm-2">
-      <p class="field-label">Title</p>
-    </div>
-    <div class="col-sm-10">
-      <p class="field-value"><%= @manuscript.title %></p>
-    </div>
+<div class="row">
+  <div class="col-sm-2">
+    <p class="field-label">Title</p>
   </div>
-
-  <div class="row">
-    <div class="col-sm-2">
-      <p class="field-label">Shelfmark</p>
-    </div>
-    <div class="col-sm-10">
-      <p class="field-value"><%= @manuscript.shelfmark %></p>
-    </div>
+  <div class="col-sm-10">
+    <p class="field-value"><%= @manuscript.title %></p>
   </div>
-
-  <div class="row">
-    <div class="col-sm-2">
-      <p class="field-label">URL</p>
-    </div>
-    <div class="col-sm-10">
-      <p class="field-value"><%= @manuscript.url %></p>
-    </div>
-  </div>
-
 </div>
 
-<p><%= link_to "Export as XML", manuscript_xml_path(@manuscript) %></p>
+<div class="row">
+  <div class="col-sm-2">
+    <p class="field-label">Shelfmark</p>
+  </div>
+  <div class="col-sm-10">
+    <p class="field-value"><%= @manuscript.shelfmark %></p>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-2">
+    <p class="field-label">URL</p>
+  </div>
+  <div class="col-sm-10">
+    <p class="field-value">
+      <% if @manuscript.url.present? -%>
+        <%= link_to shorten(@manuscript.url), @manuscript.url %>
+      <% end -%>
+    </p>
+  </div>
+</div>
+
+<p>
+  <%= link_to 'Edit', edit_manuscript_path(@manuscript), class: 'btn btn-default' %>
+  <%= link_to "Export as XML", manuscript_xml_path(@manuscript), class: 'btn btn-default' %>
+</p>
 
 <% if @manuscript.quires.present? -%>
   <h3>Quires</h3>
@@ -41,10 +47,13 @@
 
     <div class="row">
       <div class="col-sm-3">
-        <p>Quire <%= quire.number %></p>
+        <p><%= link_to "Quire #{quire.number}", quire_path(quire) %></p>
       </div>
       <div class="col-sm-3">
-        <p class="field-value"><%= link_to "Edit", edit_quire_path(quire) %></p>
+        <p class="field-value">
+          <%= link_to 'View', quire_path(quire), class: 'btn btn-default' %>
+          <%= link_to 'Edit', edit_quire_path(quire), class: 'btn btn-default' %>
+        </p>
       </div>
     </div>
 
@@ -63,5 +72,9 @@
   <% end -%>
 <% end -%>
 
-<%= link_to 'Edit', edit_manuscript_path(@manuscript) %> |
-<%= link_to 'Back', manuscripts_path %>
+<div class="row">
+  <div class="col-sm-1">
+    <%= link_to 'Add Quire', new_manuscript_quire_path(manuscript_id: @manuscript),
+        class: 'btn btn-primary' %>
+  </div>
+</div>

@@ -1,0 +1,26 @@
+<div class="form-group">
+  <div class="col-sm-1">
+    <%= leaf.label :position, "Leaf #{leaf.object.position}",
+        class: "control-label" %>
+  </div>
+  <div class="col-sm-1">
+    <%= leaf.label :folio_number, "fol/pg", class: "col-sm-1 control-label" %>
+  </div>
+  <div class="col-sm-1">
+    <%= leaf.text_field :folio_number, class: "form-control" %>
+  </div>
+  <div class="col-sm-1">
+    <%= leaf.label :mode, "Mode", class: "col-sm-1 control-label" %>
+  </div>
+  <div class="col-sm-2">
+    <%= leaf.select :mode, Leaf::MODES, {}, { class: "form-control" } %>
+  </div>
+  <div class="col-sm-1">
+    <label class="checkbox-inline control-label">
+      <%= leaf.check_box :single %> <strong>Single</strong>
+    </label>
+  </div>
+  <div class="col-sm-3">
+    <%= leaf.remove_nested_fields_link 'x', class: 'btn btn-danger' %>
+  </div>
+</div>

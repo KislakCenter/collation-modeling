@@ -26,3 +26,4 @@
 
 # Ignore rails guides
 doc/guides
+doc/api

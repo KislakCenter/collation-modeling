@@ -1,0 +1,5 @@
+<%= link_to 'Home', root_path %>
+<% unless @manuscript.new_record? -%>
+ |
+<%= link_to @manuscript.shelfmark, @manuscript %>
+<% end -%>

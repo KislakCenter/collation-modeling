@@ -71,7 +71,7 @@ class Manuscript < ActiveRecord::Base
   def build_quires
     if quires.empty? && quire_number_input
       (1..quire_number_input.to_i).each do |i|
-        quires.build number: i
+        quires.build
       end
     end
   end

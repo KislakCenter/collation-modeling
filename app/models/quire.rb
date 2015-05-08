@@ -56,10 +56,24 @@ class Quire < ActiveRecord::Base
     leaves
   end
 
+  # Return +true+ if +leaves+ has at least one conjoin pair.
   def has_conjoins? leaves
     leaves.any? { |leaf| leaf.conjoin.present? }
   end
 
+  # For a quire of all single leaves, add conjoin placeholders
+  # at the end. So, the following:
+  #
+  #   n=1 - join=
+  #   n=2 - join=
+  #
+  # Becomes:
+  #
+  #   n=1 - join=
+  #   n=2 - join=
+  #   n=  - join=2
+  #   n=  - join=1
+  #
   def handle_all_singles leaves
     leaves.reverse!
     to_leaves.reverse.each do |leaf|

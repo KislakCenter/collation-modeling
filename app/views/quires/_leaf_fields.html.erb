@@ -1,4 +1,4 @@
-<div class="form-group">
+<div class="form-group leaf_fields">
   <div class="col-sm-1">
     <%= leaf.label :position, "Leaf #{leaf.object.position}",
         class: "control-label" %>
@@ -20,7 +20,8 @@
       <%= leaf.check_box :single %> <strong>Single</strong>
     </label>
   </div>
+  <%= leaf.hidden_field :_destroy %>
   <div class="col-sm-3">
-    <%= leaf.remove_nested_fields_link 'x', class: 'btn btn-danger' %>
+    <%= link_to 'x', '#', class: 'remove_fields btn btn-danger' %>
   </div>
 </div>

@@ -9,7 +9,6 @@ class QuiresController < ApplicationController
 
   def new
     @quire = Quire.new manuscript: @manuscript
-    @quire.leaves.build
   end
 
   def create

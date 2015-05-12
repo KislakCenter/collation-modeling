@@ -8,6 +8,16 @@ module ApplicationHelper
     link_to(name, '#', class: "add_fields", data: {id: id, fields: fields.gsub("\n", "")})
   end
 
+  def link_to_add_leaf name, f, options={}
+    leaf = Leaf.new
+    id = leaf.object_id
+    fields = f.fields_for(:leaves, leaf, child_index: id) do |builder|
+      render('leaf_fields', leaf: builder)
+    end
+    classes = 'add_leaf ' + options[:class]
+    link_to(name, '#', class: classes, data: { id: id, fields: fields.gsub("\n", "")})
+  end
+
   def shorten s, limit=60
     return s if s.size <= limit
     tail = 10

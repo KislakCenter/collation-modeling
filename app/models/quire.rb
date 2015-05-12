@@ -13,20 +13,25 @@ class Quire < ActiveRecord::Base
 
   acts_as_list scope: :manuscript
 
+  alias_method :next, :lower_item
+  alias_method :previous, :higher_item
+
   def name
     sprintf "%s  Quire %s", manuscript.title, position
   end
 
-  def next
-    lower_item
-  end
-
-  def previous
-    higher_item
-  end
-
   def to_struct
     OpenStruct.new n: position, units: units
+  end
+
+  # Return the last folio from the preceding quire if it exists.
+  def preceding_leaf
+    return nil if previous.blank?
+    previous.last_leaf
+  end
+
+  def preceding_folio_number
+    preceding_leaf and preceding_leaf.folio_number
   end
 
   # Return a list of leaves with conjoins, filling in `nil` leaf
@@ -294,6 +299,10 @@ class Quire < ActiveRecord::Base
     units
   end
 
+  def last_leaf
+    leaves.last
+  end
+
   private
 
   def create_leaves
@@ -310,7 +319,8 @@ class Quire < ActiveRecord::Base
   def must_have_even_bifolia
     conjoins = leaves.reject{ |leaf| leaf.single? }.size
     if conjoins.odd?
-      errors.add(:base, "The number of non-single leaves cannot be odd; found: #{conjoins}")
+      errors.add(:base,
+                 "The number of non-single leaves cannot be odd; found: #{conjoins}")
     end
   end
 
@@ -327,14 +337,6 @@ class Quire < ActiveRecord::Base
       # if number is not an integer, ArgumentError is raised
       # in either case, return nil
       nil
-    end
-  end
-
-  def prev_folio_number
-    if previous.present?
-      previous.leaves.last.folio_number.to_i
-    else
-      0
     end
   end
 end

@@ -16,24 +16,7 @@
 
 <h3>Leaves</h3>
 
-<% if @quire.leaves.blank? -%>
-  <div class="row" id="folio_number">
-    <div class="col-sm-10">
-      <%= hidden_field_tag 'last_folio_number', @quire.preceding_folio_number, id: 'last_folio_number' %>
-      <div class="form-group">
-        <div class="col-sm-2">
-          <%= label_tag 'leaf_count', 'Number of leaves', class: "control-label" %>
-        </div>
-        <div class="col-sm-1">
-          <%= text_field_tag 'leaf_count', nil, class: "form-control" %>
-        </div>
-        <div class="col-sm-2">
-          <%= link_to 'Add leaves', '#', class: 'generate-leaves btn btn-default' %>
-        </div>
-      </div>
-    </div>
-  </div>
-<% end -%>
+<%= hidden_field_tag 'last_folio_number', @quire.preceding_folio_number, id: 'last_folio_number' %>
 
 <div class="row" id="leaves_list">
   <%= f.fields_for :leaves do |leaf| %>

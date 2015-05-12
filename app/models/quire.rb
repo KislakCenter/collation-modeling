@@ -13,9 +13,6 @@ class Quire < ActiveRecord::Base
 
   acts_as_list scope: :manuscript
 
-  delegate :last_leaf, to: :manuscript, prefix: true, allow_nil: true
-  delegate :last_folio_number, to: :manuscript, prefix: true, allow_nil: true
-
   alias_method :next, :lower_item
   alias_method :previous, :higher_item
 
@@ -25,6 +22,16 @@ class Quire < ActiveRecord::Base
 
   def to_struct
     OpenStruct.new n: position, units: units
+  end
+
+  # Return the last folio from the preceding quire if it exists.
+  def preceding_leaf
+    return nil if previous.blank?
+    previous.last_leaf
+  end
+
+  def preceding_folio_number
+    preceding_leaf and preceding_leaf.folio_number
   end
 
   # Return a list of leaves with conjoins, filling in `nil` leaf

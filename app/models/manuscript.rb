@@ -9,6 +9,14 @@ class Manuscript < ActiveRecord::Base
 
   validates_presence_of :title, :shelfmark
 
+  def last_leaf
+    quires.last.last_leaf if quires.present?
+  end
+
+  def last_folio_number
+    last_leaf and last_leaf.folio_number
+  end
+
   def to_xml options={}
     case options[:xml_type]
     when :filled_quires

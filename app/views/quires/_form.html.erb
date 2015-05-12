@@ -16,17 +16,32 @@
 
 <h3>Leaves</h3>
 
-
-<div class="row">
-  <div class="col-sm-10">
-    <%= f.nested_fields_for :leaves do |leaf| %>
-      <%= render 'leaf_fields', leaf: leaf %>
-    <% end %>
-
-    <p><%= f.add_nested_fields_link :leaves, 'Add leaf',
-           class: 'btn btn-primary' %></p>
+<% if @quire.leaves.blank? -%>
+  <div class="row" id="folio_number">
+    <div class="col-sm-10">
+      <%= hidden_field_tag 'last_folio_number', @quire.manuscript_last_folio_number, id: 'last_folio_number' %>
+      <div class="form-group">
+        <div class="col-sm-2">
+          <%= label_tag 'leaf_count', 'Number of leaves', class: "control-label" %>
+        </div>
+        <div class="col-sm-1">
+          <%= text_field_tag 'leaf_count', nil, class: "form-control" %>
+        </div>
+        <div class="col-sm-2">
+          <%= link_to 'Add leaves', '#', class: 'generate-leaves btn btn-default' %>
+        </div>
+      </div>
+    </div>
   </div>
+<% end -%>
+
+<div class="row" id="leaves_list">
+  <%= f.fields_for :leaves do |leaf| %>
+    <%= render 'leaf_fields', leaf: leaf %>
+  <% end %>
 </div>
+
+<p><%= link_to_add_leaf 'Add leaf', f, class: 'btn btn-primary' %></p>
 
 <p>
   <%= f.submit class: 'btn btn-default' %>

@@ -5,6 +5,14 @@ class Leaf < ActiveRecord::Base
 
   MODES = %w( original added replaced missing )
 
+  def next
+    lower_item
+  end
+
+  def previous
+    higher_item
+  end
+
   def description
     s = "Leaf "
     s += position.to_s

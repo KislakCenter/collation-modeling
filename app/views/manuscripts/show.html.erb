@@ -38,7 +38,8 @@
 
 <p>
   <%= link_to 'Edit', edit_manuscript_path(@manuscript), class: 'btn btn-default' %>
-  <%= link_to "Export as XML", manuscript_xml_path(@manuscript), class: 'btn btn-default' %>
+  <%= link_to "Leaves XML", manuscript_xml_path(@manuscript, xml_type: :filled_quires), class: 'btn btn-default' %>
+  <%= link_to "Joins XML", manuscript_xml_path(@manuscript, xml_type: :default), class: 'btn btn-default' %>
 </p>
 
 <% if @manuscript.quires.present? -%>

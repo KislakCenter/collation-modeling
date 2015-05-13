@@ -18,7 +18,7 @@
 
 <%= hidden_field_tag 'last_folio_number', @quire.preceding_folio_number, id: 'last_folio_number' %>
 
-<div class="row" id="leaves_list">
+<div id="leaves_list">
   <%= f.fields_for :leaves do |leaf| %>
     <%= render 'leaf_fields', leaf: leaf %>
   <% end %>

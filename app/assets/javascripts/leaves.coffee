@@ -9,8 +9,8 @@ ready = ->
       folio_num = next_folio()
       time = new Date().getTime()
       regexp = new RegExp($(this).data('id'), 'g')
-      $(this).before($(this).data('fields').replace(regexp, time))
-      $(this).prev('.form-group').find('input[name*=folio_number]').val(folio_num)
+      $('#leaves_list').append($(this).data('fields').replace(regexp, time))
+      $('.leaf_fields').last().find('input[name*=folio_number]').val(folio_num)
       event.preventDefault()
 
     next_folio = ->

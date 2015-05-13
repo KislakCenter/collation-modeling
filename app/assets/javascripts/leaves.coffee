@@ -10,7 +10,7 @@ ready = ->
       time = new Date().getTime()
       regexp = new RegExp($(this).data('id'), 'g')
       $('#leaves_list').append($(this).data('fields').replace(regexp, time))
-      $('.leaf_fields').last().find('input[name*=folio_number]').val(folio_num)
+      $('.leaf_fields').last().find('input[name*=folio_number]').val(folio_num).focus()
       event.preventDefault()
 
     next_folio = ->

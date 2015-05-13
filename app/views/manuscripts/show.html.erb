@@ -38,40 +38,53 @@
 
 <p>
   <%= link_to 'Edit', edit_manuscript_path(@manuscript), class: 'btn btn-default' %>
-  <%= link_to "Export as XML", manuscript_xml_path(@manuscript), class: 'btn btn-default' %>
+  <%= link_to "Leaves XML", manuscript_xml_path(@manuscript, xml_type: :filled_quires), class: 'btn btn-default' %>
+  <%= link_to "Joins XML", manuscript_xml_path(@manuscript, xml_type: :default), class: 'btn btn-default' %>
 </p>
 
 <% if @manuscript.quires.present? -%>
   <h3>Quires</h3>
-  <% @manuscript.quires.each do |quire| -%>
 
-    <div class="row">
-      <div class="col-sm-3">
-        <p>Quire <%= quire.position %></p>
-      </div>
-      <div class="col-sm-3">
-        <p class="field-value">
-          <%= link_to 'View', quire_path(quire), class: 'btn btn-default' %>
-          <%= link_to 'Edit', edit_quire_path(quire), class: 'btn btn-default' %>
-          <%= link_to 'x', [ @manuscript, quire ], method: :delete,
-              data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
-      </p>
+  <div class="row">
+    <div class="col-sm-8">
+      <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <% @manuscript.quires.each do |quire| -%>
+
+          <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="quire_heading_<%= quire.id %>">
+              <div class="row">
+              <div class="col-sm-6">
+                <h4 class="panel-title">
+                  <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#quire_body_<%= quire.id %>" aria-expanded="false" aria-controls="quire_body_<%= quire.id %>">
+                    Quire <%= quire.position %> (<%= quire.leaves.size %> leaves)
+                  </a>
+                </h4>
+              </div>
+              <div class="col-sm-2 pull-right">
+                <%= link_to 'Edit', edit_quire_path(quire), class: 'btn btn-xs btn-default' %>
+                <%= link_to 'x', [ @manuscript, quire ], method: :delete,
+                    data: { confirm: 'Are you sure?' }, class: 'btn btn-xs btn-danger' %>
+              </div>
+              </div>
+            </div>
+            <div id="quire_body_<%= quire.id %>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="quire_heading_<%= quire.id %>">
+              <div class="panel-body">
+                <% if quire.leaves.present? %>
+                  <ul>
+                    <% quire.leaves.each do |leaf| %>
+                      <li><%= leaf.description %>
+                    <% end %>
+                  </ul>
+                <% end %>
+              </div>
+            </div>
+          </div>
+
+        <% end -%>
       </div>
     </div>
+  </div>
 
-    <% if quire.leaves.present? %>
-      <div class="row">
-        <div class="col-sm-4">
-          <ul>
-            <% quire.leaves.each do |leaf| %>
-              <li><%= leaf.description %>
-            <% end %>
-          </ul>
-        </div>
-      </div>
-    <% end %>
-
-  <% end -%>
 <% end -%>
 
 <div class="row">

@@ -1,335 +1,126 @@
 # README
 
-## Software version
+The collation-modeler is a Rails application for creating
+XML-formatted descriptions of quires, as "Leaves XML":
 
-Ruby v2.1.5
+```xml
+<?xml version="1.0"?>
+<manuscript>
+  <url>http://www.example.com</url>
+  <title>Test One Book</title>
+  <shelfmark>MS T1B</shelfmark>
+  <quire n="1">
+    <leaf n="1" mode="original" single="false" folio_number="1" conjoin="7" position="1"/>
+    <leaf n="2" mode="original" single="true" folio_number="2" conjoin="" position="2"/>
+    <leaf n="3" mode="original" single="false" folio_number="3" conjoin="6" position="3"/>
+    <leaf n="4" mode="original" single="false" folio_number="4" conjoin="5" position="4"/>
+    <leaf n="5" mode="original" single="false" folio_number="5" conjoin="4" position="5"/>
+    <leaf n="6" mode="original" single="false" folio_number="6" conjoin="3" position="6"/>
+    <leaf n="" conjoin="2" position="7"/>
+    <leaf n="7" mode="original" single="false" folio_number="7" conjoin="1" position="8"/>
+  </quire>
+  <quire n="2">
+    <leaf n="1" mode="original" single="false" folio_number="" conjoin="2" position="1"/>
+    <leaf n="2" mode="original" single="false" folio_number="" conjoin="1" position="2"/>
+  </quire>
+  <quire n="3">
+    <leaf n="1" mode="original" single="false" folio_number="" conjoin="6" position="1"/>
+    <leaf n="2" mode="original" single="false" folio_number="" conjoin="5" position="2"/>
+    <leaf n="3" mode="original" single="false" folio_number="" conjoin="4" position="3"/>
+    <leaf n="4" mode="original" single="false" folio_number="" conjoin="3" position="4"/>
+    <leaf n="5" mode="original" single="false" folio_number="" conjoin="2" position="5"/>
+    <leaf n="6" mode="original" single="false" folio_number="" conjoin="1" position="6"/>
+  </quire>
+</manuscript>
+```
 
-Rails 4.2.1
+Or "Joins XML":
 
+```xml
+<?xml version="1.0"?>
+<manuscript url="http://www.example.com">
+  <title>Test One Book</title>
+  <shelfmark>MS T1B</shelfmark>
+  <quires>
+    <quire n="1">
+      <unit>
+        <leaf n="1" mode="original" single="false" folio_number="1"/>
+        <leaf n="7" mode="original" single="false" folio_number="7"/>
+      </unit>
+      <unit>
+        <leaf n="2" mode="original" single="true" folio_number="2"/>
+      </unit>
+      <unit>
+        <leaf n="3" mode="original" single="false" folio_number="3"/>
+        <leaf n="6" mode="original" single="false" folio_number="6"/>
+      </unit>
+      <unit>
+        <leaf n="4" mode="original" single="false" folio_number="4"/>
+        <leaf n="5" mode="original" single="false" folio_number="5"/>
+      </unit>
+    </quire>
+    <quire n="2">
+      <unit>
+        <leaf n="1" mode="original" single="false" folio_number=""/>
+        <leaf n="2" mode="original" single="false" folio_number=""/>
+      </unit>
+    </quire>
+    <quire n="3">
+      <unit>
+        <leaf n="1" mode="original" single="false" folio_number=""/>
+        <leaf n="6" mode="original" single="false" folio_number=""/>
+      </unit>
+      <unit>
+        <leaf n="2" mode="original" single="false" folio_number=""/>
+        <leaf n="5" mode="original" single="false" folio_number=""/>
+      </unit>
+      <unit>
+        <leaf n="3" mode="original" single="false" folio_number=""/>
+        <leaf n="4" mode="original" single="false" folio_number=""/>
+      </unit>
+    </quire>
+  </quires>
+</manuscript>
+```
 
-* System dependencies
+The Leaves XML can be used as input for the collation visualization
+tool described on Dot Porter's
+[VisColl](https://github.com/leoba/VisColl) project page on GitHub.
 
-* Configuration
+## Set up
 
-* Database creation
+#### Required software
 
-* Database initialization
+- Ruby v2.1.5
 
-* How to run the test suite
+I recommend using Homebrew to install `rbenv` and `ruby-build`, and
+then use `rbenv` to install Ruby 2.1.5.
 
-* Services (job queues, cache servers, search engines, etc.)
+- Foreman
 
-* Deployment instructions
+`gem install foreman`
 
-* ...
+#### Setting up and running the Rails app
 
-# Install
+It's a pretty standard Rails app, you'll need a database.  Edit
+`config/database.yml` to fit your setup.  You'll need to change the
+`Gemfile` if you want to use a database other than MySQL.
 
-Install Ruby 2.1.5
+Once you've made those changes, run:
 
 ```bash
-# Update ruby-build; the following works on Mac with Homebrew
-$ brew update
-$ brew upgrade ruby-build
-$ rbenv install 2.1.5
-$ rbenv rehash
-$ rbenv shell 2.1.5 # <- Make sure you're using 2.1.5 before
-proceeding
+bundle install
+bundle exec rake db:setup
 ```
 
-Install rails 4.2
+Then run:
 
-`gem install rails`
+`foreman start`
 
-Create the collation-modeling app, skipping test unit with the `-T` flag:
+These instructions are not tested, so please contact me if you have
+any problems.
 
-`rails new collation-modeling -T`
-
-`$ cd collation-modeling`
-
-Set the local `rbenv` to 2.1.5
-
-```bash
-$ rbenv local 2.1.5
-```
-
-# RSPEC
-Add the following to the Gemfile test, development groups:
-
-```ruby
-group :development, :test do
-gem 'spring-commands-rspec'
-gem 'rspec-rails'
-gem 'guard-rspec'
-gem 'rb-fsevent' if `uname` =~ /Darwin/
-end
-```
-
-`$ bundle install`
-
-`$ rails g rspec:install`
-
-# GUARD
-
-`$ guard init`
-
-Change guard invocation line from:
-
-```ruby
-guard :rspec, cmd: "bundle exec rspec" do
-```
-
-to:
-
-```ruby
-guard :rspec, cmd:"spring rspec" do
-```
-
-# BOOTSTRAP
-
-The following instructions taken fromx
-<http://www.gotealeaf.com/blog/integrating-rails-and-bootstrap-part-1>.
-
-Add the gems:
-
-```ruby
-gem 'bootstrap-sass', '~> 3.2.0'
-gem 'autoprefixer-rails'
-```
-
-`$ bundle install`
-
-Rename `app/assets/stylesheets/application.css` to
-`app/assets/stylesheets/application.css.sass`
-
-```bash
-$ mv app/assets/stylesheets/application.css \
-app/assets/stylesheets/application.css.sass
-```
-
-Add the imports to `app/assets/stylesheets/application.css.sass`
-
-```sass
-@import "bootstrap-sprockets"
-@import "bootstrap"
-```
-
-To `app/assets/javascripts/application.js` add the following after the
-jquey import:
-
-```js
-//= require bootstrap-sprockets
-```
-
-It should look like this when done:
-
-```js
-//= require jquery
-//= require jquery_ujs
-//= require turbolinks
-//= require bootstrap-sprockets
-//= require_tree .
-```
-
-# Markdown over rdoc for readme
-
-rename README.rdoc -> README.md
-
-# MYSQL2
-
-Remove sqlite3 and add mysql2 database gem.
-
-
-```ruby
-# Use sqlite3 as the database for Active Record
-# gem 'sqlite3' # nope: de 20150113
-
-# Add mysql2 adapter - de 20150113
-gem 'mysql2'
-```
-
-Run bundle install:
-
-```bash
-$ bundle install
-```
-
-Replace config/database.yml contents with:
-
-```yaml
-# Using mysql2 gem:
-#
-# gem 'mysql2'
-#
-default: &default
-adapter: mysql2
-encoding: utf8
-pool: 5
-timeout: 5000
-
-development:
-<<: *default
-database: collation_development
-username: root
-password:
-
-# Warning: The database defined as "test" will be erased and
-# re-generated from your development database when you run "rake".
-# Do not set this db to the same as development or production.
-test:
-<<: *default
-database: collation_test
-username: root
-password:
-
-production:
-<<: *default
-database: collation
-username: collationuser
-password: ENV['COLLATION_DB_PASSWORD']
-```
-
-Try to create the database:
-
-```bash
-$ rake db:create
-```
-
-Now, try to connect to the database:
-
-```bash
-$ mysql collation_development -u root -p
-Enter password:  # <-- password is blank; hit enter
-# blah, blah, blah
-mysql> \r
-Connection id:    6450
-Current database: collation_development
-
-```
-
-The database is empty, but you should be able to connect to it.
-
-# DEVISE
-
-Add devise to Gemfile:
-
-```ruby
-gem 'devise'
-```
-
-Run bundle install:
-
-```bash
-$ bundle install
-```
-
-Generate the initializer:
-
-```bash
-$ rails generate devise:install
-```
-
-Be sure to follow configuration instructions:
-
-===============================================================================
-
-Some setup you must do manually if you haven't yet:
-
-1. Ensure you have defined default url options in your
-environments files. Here
-is an example of default_url_options appropriate for a
-development environment
-in config/environments/development.rb:
-
-config.action_mailer.default_url_options = { host:
-'localhost', port: 3000 }
-
-In production, :host should be set to the actual host of your
-application.
-
-2. Ensure you have defined root_url to *something* in your
-config/routes.rb.
-For example:
-
-root to: "home#index"
-
-3. Ensure you have flash messages in
-app/views/layouts/application.html.erb.
-For example:
-
-<p class="notice"><%= notice %></p>
-<p class="alert"><%= alert %></p>
-
-4. If you are deploying on Heroku with Rails 3.2 only, you may
-want to set:
-
-config.assets.initialize_on_precompile = false
-
-On config/application.rb forcing your application to not
-access the DB
-or load models when precompiling your assets.
-
-5. You can copy Devise views (for customization) to your app by
-running:
-
-rails g devise:views
-
-===============================================================================
-
-Edit config files as described above:
-
-```ruby
-# config/environments/development.rb
-
-# Devise stuff
-# Ensure you have defined default url options in your environments
-# files. Here
-# is an example of default_url_options appropriate for a
-# development environment
-# in config/environments/development.rb:
-# In production, :host should be set to the actual host of your
-# application.
-config.action_mailer.default_url_options = { host:
-# 'localhost', port: 3000 }
-```
-
-```ruby
-# config/environments/production.rb
-
-# Devise stuff
-# Ensure you have defined default url options in your environments
-# files. Here
-# is an example of default_url_options appropriate for a
-# development environment
-# in config/environments/development.rb:
-#
-#     config.action_mailer.default_url_options = { host:
-# 'localhost', port: 3000 }
-#
-# In production, :host should be set to the actual host of
-# your application.
-# TODO: set production host for action_mailer
-config.action_mailer.default_url_options = { host:
-# 'localhost', port: 3000 }
-```
-
-Add add a welcome#index controller and action for root:
-
-```bash
-$ rails g controller welcome index
-```
-
-Set the root in config/routes.rb to this action:
-
-```ruby
-# config/routes.rb
-
-# You can have the root of your site routed with "root"
-root to: 'welcome#index'
-```
-
-Start the rails server and make sure the route is working:
-
-```bash
-$ rails s
-```
+My installation notes are here: [SETUP.md](SETUP.md). You don't need
+to follow these, I've already set up the Gemfile, and so on. Note the
+Devise is listed as here and in the Gemfile but authentication has not
+been set up yet.

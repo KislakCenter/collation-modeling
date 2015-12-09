@@ -1,6 +1,6 @@
 # README
 
-For installation notes, see <SETUP.md>.
+For installation notes, see [SETUP.md](SETUP.md).
 
 ## Software version
 

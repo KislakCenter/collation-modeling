@@ -56,6 +56,8 @@ end
 
 # GUARD
 
+**Guard not required.**
+
 `$ guard init`
 
 Change guard invocation line from:
@@ -71,6 +73,8 @@ guard :rspec, cmd:"spring rspec" do
 ```
 
 # BOOTSTRAP
+
+**Bootstrap is required**
 
 The following instructions taken fromx
 <http://www.gotealeaf.com/blog/integrating-rails-and-bootstrap-part-1>.
@@ -100,7 +104,7 @@ Add the imports to `app/assets/stylesheets/application.css.sass`
 ```
 
 To `app/assets/javascripts/application.js` add the following after the
-jquey import:
+jQuery import:
 
 ```js
 //= require bootstrap-sprockets
@@ -121,6 +125,8 @@ It should look like this when done:
 rename README.rdoc -> README.md
 
 # MYSQL2
+
+**Any database should be fine.**
 
 Remove sqlite3 and add mysql2 database gem.
 

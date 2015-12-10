@@ -84,8 +84,8 @@ Or "Joins XML":
 ```
 
 The Leaves XML can be used as input for the collation visualization
-tool described on Dot Porter's project page on
-<https://github.com/leoba/VisColl>.
+tool described on Dot Porter's project page
+(<https://github.com/leoba/VisColl>).
 
 ## Set up
 

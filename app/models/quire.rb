@@ -61,7 +61,10 @@ class Quire < ActiveRecord::Base
         end
       end
     end
-    leaves.each_with_index { |leaf,index| leaf.position = (index+1) }
+    leaves.each_with_index { |leaf,index|
+      leaf.position = index + 1
+      leaf.opposite = leaves.size - index
+    }
     leaves
   end
 

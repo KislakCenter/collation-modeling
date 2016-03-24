@@ -24,6 +24,7 @@
 .\#*
 ~*
 
-# Ignore rails guides
+# Ignore generated guides and docs
 doc/guides
 doc/api
+doc/app

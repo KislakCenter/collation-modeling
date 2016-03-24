@@ -37,16 +37,16 @@ class Quire < ActiveRecord::Base
   # Return a list of leaves with conjoins, filling in `nil` leaf
   # placeholders for the partners of single leaves.  For example:
   #
-  # leaf n=1,   mode="original", folio_number="1", conjoin=8,   position=1
-  # leaf n=2,   mode="original", folio_number="2", conjoin=nil, position=2
-  # leaf n=3,   mode="original", folio_number="3", conjoin=7,   position=3
-  # leaf n=nil,                                    conjoin=6,   position=4
-  # leaf n=4,   mode="original", folio_number="4", conjoin=5,   position=5
-  # leaf n=5,   mode="original", folio_number="5", conjoin=4,   position=6
-  # leaf n=6,   mode="original", folio_number="6", conjoin=nil, position=7
-  # leaf n=7,   mode="original", folio_number="7", conjoin=3,   position=8
-  # leaf n=nil,                                    conjoin=2,   position=9
-  # leaf n=8,   mode="original", folio_number="8", conjoin=1,   position=10
+  #   leaf n=1,   mode="original", folio_number="1", conjoin=8,   position=1
+  #   leaf n=2,   mode="original", folio_number="2", conjoin=nil, position=2
+  #   leaf n=3,   mode="original", folio_number="3", conjoin=7,   position=3
+  #   leaf n=nil,                                    conjoin=6,   position=4
+  #   leaf n=4,   mode="original", folio_number="4", conjoin=5,   position=5
+  #   leaf n=5,   mode="original", folio_number="5", conjoin=4,   position=6
+  #   leaf n=6,   mode="original", folio_number="6", conjoin=nil, position=7
+  #   leaf n=7,   mode="original", folio_number="7", conjoin=3,   position=8
+  #   leaf n=nil,                                    conjoin=2,   position=9
+  #   leaf n=8,   mode="original", folio_number="8", conjoin=1,   position=10
   #
   # This presentation is a convenience for building quire diagrams
   # where single leaves are balanced with blank slots.
@@ -65,7 +65,7 @@ class Quire < ActiveRecord::Base
     leaves
   end
 
-  # Return +true+ if +leaves+ has at least one conjoin pair.
+  # Return ++true++ if ++leaves++ has at least one conjoin pair.
   def has_conjoins? leaves
     leaves.any? { |leaf| leaf.conjoin.present? }
   end
@@ -121,9 +121,9 @@ class Quire < ActiveRecord::Base
   #   n=6 - join=3
   #   n=7 - join=1
   #
-  # The numbering skips a step from +join=1+ to +join=3+. We assume that
-  # +n=2+ should have its placeholder between 1 and 3.  And thus we
-  # insert the placeholder between n=6 and n=7.
+  # The numbering skips a step from <tt>join=1</tt> to <tt>join=3</tt>. We
+  # assume that <tt>n=2</tt> should have its placeholder between 1 and 3.  And
+  # thus we insert the placeholder between n=6 and n=7.
   #
   # When the single leaf or a run of single leaves is at the end or
   # the beginning of the list there is no skip in the join counting:
@@ -190,7 +190,7 @@ class Quire < ActiveRecord::Base
   #   n=7 - join=
   #   n=8 - join=
   #
-  #  In the first pass, +n=7+ is handled. It is past the midpoint, so
+  #  In the first pass, +<tt>n=7</tt>+ is handled. It is past the midpoint, so
   #  the list is not reversed. As no gap is found in the join
   #  numbering, the placeholder leaf is inserted a position +0+:
   #
@@ -204,7 +204,7 @@ class Quire < ActiveRecord::Base
   #   n=7 - join=
   #   n=8 - join=
   #
-  # When the second pass happens with +n=8+, no gap is found in the
+  # When the second pass happens with <tt>n=8</tt>, no gap is found in the
   # numbering and the placeholder is again inserted at position +0+:
   #
   #   n=  - join=8

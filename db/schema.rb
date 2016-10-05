@@ -15,7 +15,7 @@ ActiveRecord::Schema.define(version: 20150328210717) do
 
   create_table "leaves", force: :cascade do |t|
     t.string   "mode",         limit: 255, default: "original"
-    t.boolean  "single",       limit: 1,   default: false
+    t.boolean  "single",                   default: false
     t.integer  "quire_id",     limit: 4
     t.integer  "position",     limit: 4
     t.datetime "created_at",                                    null: false

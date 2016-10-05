@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.2.4'
+ruby '2.2.5'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 4.2.7'
@@ -17,57 +17,57 @@ gem 'coffee-rails', '~> 4.1.0'
 # gem 'therubyracer', platforms: :ruby
 
 # Use jquery as the JavaScript library
-gem 'jquery-rails'
+gem 'jquery-rails', '~> 4.0.3'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
-gem 'turbolinks'
+gem 'turbolinks', '~> 2.5.3'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'bootstrap-sass', '~> 3.2.0'
-gem 'autoprefixer-rails'
+gem 'autoprefixer-rails', '~> 6.5.0'
 
-gem 'acts_as_list'
+gem 'acts_as_list', '~> 0.6.0'
 
-gem 'simple_form'
+gem 'simple_form', '~> 3.1.0'
 
-gem 'devise'
+gem 'devise', '~> 3.4.1'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
 # Use Unicorn as the app server
-gem 'unicorn'
+gem 'unicorn', '~> 4.9.0'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
 group :production do
-  gem 'pg'
+  gem 'pg', '~> 0.18.1'
 end
 
 group :development, :test do
-  gem 'mysql2'
+  gem 'mysql2', '~> 0.3.17'
 
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug'
+  gem 'byebug', '~> 4.0.3'
 
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 2.0'
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring'
+  gem 'spring', '~> 1.3.3'
 
   gem 'redcarpet', '~> 3.1.2'
 
-  gem 'pry-rails'
+  gem 'pry-rails', '~> 0.3.4'
 end
 
 group :development, :test do
-  gem 'spring-commands-rspec'
-  gem 'rspec-rails'
-  gem 'guard-rspec'
-  gem 'rb-fsevent'
-  gem 'factory_girl_rails'
+  gem 'spring-commands-rspec', '~> 1.0.4'
+  gem 'rspec-rails', '~> 3.1.0'
+  gem 'guard-rspec', '~> 4.5.0'
+  gem 'rb-fsevent', '~> 0.9.4'
+  gem 'factory_girl_rails', '~> 4.5.0'
 end

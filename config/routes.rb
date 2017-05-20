@@ -3,6 +3,8 @@ Rails.application.routes.draw do
     resources :quires, only: [ :create, :new, :destroy ]
   end
 
+  post 'manuscripts/:manuscript_id/create_quires' => 'bulk_quires#create', as: 'create_quires'
+
   get 'manuscripts/xml/:id', to: 'manuscripts#export_xml', as: 'manuscript_xml'
 
   devise_for :users

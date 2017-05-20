@@ -88,8 +88,29 @@
 <% end -%>
 
 <div class="row">
-  <div class="col-sm-1">
+  <div class="col-sm-2">
     <%= link_to 'Add Quire', new_manuscript_quire_path(manuscript_id: @manuscript),
-        class: 'btn btn-primary' %>
+    class: 'btn btn-primary' %>
+  </div>
+</div>
+<div class="row">
+&nbsp;
+</div>
+<div class="row">
+  <div class="col-sm-8">
+    <%= form_for @manuscript, url: create_quires_path(@manuscript), method: :post, html: { id: "manuscript_#{@manuscript.id}_create_quires", class: 'form-inline' } do |f| %>
+    <div class="form-group">
+      <%= f.label :number_of_quires, 'Quires', class: "control-label" %>
+      <%= f.select :number_of_quires, (1..100), { selected: 20 }, { class: "form-control" } %>
+    </div>
+    <div class="form-group">
+      <%= f.label :leaves_per_quire, 'Leaves/quire', class: "control-label"  %>
+      <%= f.select :leaves_per_quire, (2..30).step(2).map(&:itself), { selected: 8 }, { class: "form-control", style: 'max-width: 80px;' } %>
+    </div>
+    <div class="form-group">
+      <%= f.submit 'Add Quires', class: "btn btn-primary" %>
+    </div>
+    <% end %>
+
   </div>
 </div>

@@ -5,8 +5,6 @@ class BulkQuiresController < ApplicationController
     @manuscript.attributes = quire_params
     @manuscript.create_quires
 
-    # @manuscript.save!
-
     redirect_to @manuscript
   end
 

@@ -7,6 +7,8 @@ Rails.application.routes.draw do
 
   get 'manuscripts/xml/:id', to: 'manuscripts#export_xml', as: 'manuscript_xml'
 
+  put 'manuscripts/:manuscript_id/leaves/:id/renumber' => 'numberings#update', as: 'update_numbering'
+
   devise_for :users
   root to: 'manuscripts#index'
 

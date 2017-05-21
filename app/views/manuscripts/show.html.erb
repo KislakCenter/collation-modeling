@@ -72,7 +72,9 @@
                 <% if quire.leaves.present? %>
                   <ul>
                     <% quire.leaves.each do |leaf| %>
-                      <li><%= link_to 'Renumber from here', '#' %> <%= leaf.description %>
+                      <li><%= leaf.description %><% if leaf.next_skipped? %>
+                      <%= link_to "Renumber from fol/page #{leaf.folio_number}", update_numbering_path(@manuscript, leaf), method: :put %>
+                      <% end %>
                     <% end %>
                   </ul>
                 <% end %>

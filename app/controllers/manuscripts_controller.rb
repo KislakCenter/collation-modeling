@@ -1,5 +1,6 @@
 class ManuscriptsController < ApplicationController
-  before_action :set_manuscript, only: [:show, :edit, :update, :destroy, :export_xml]
+  before_action :set_manuscript, only: [:edit, :update, :destroy, :export_xml]
+  before_action :set_manuscript_eagerly, only: [:show]
 
   respond_to :html, :xml
 
@@ -48,6 +49,10 @@ class ManuscriptsController < ApplicationController
 
   def set_manuscript
     @manuscript = Manuscript.find(params[:id])
+  end
+
+  def set_manuscript_eagerly
+    @manuscript = Manuscript.includes(quires: :leaves).find(params[:id])
   end
 
   def manuscript_params

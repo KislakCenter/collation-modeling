@@ -96,6 +96,21 @@ class Manuscript < ActiveRecord::Base
     logger.info "=== #{self.quire_number_input} === #{self.leaves_per_quire_input} ==="
   end
 
+  def renumber_from start_leaf
+    next_num = nil
+    quires.includes(:leaves).each do |quire|
+      quire.leaves.each do |leaf|
+        if leaf == start_leaf
+          next_num = Integer(leaf.folio_number) + 1
+        elsif next_num.present?
+          leaf.folio_number = next_num
+          next_num += 1
+        end
+      end
+      quire.save if next_num.present?
+    end
+  end
+
   def create_quires
     if quire_number_input.present?
       (1..quire_number_input.to_i).each do |i|

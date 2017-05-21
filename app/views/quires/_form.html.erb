@@ -1,22 +1,19 @@
 <% if @quire.errors.any? %>
-
   <div id="error_explanation">
-    <h2>
-      <%= pluralize(@quire.errors.count, "error") %>
-      prohibited this quire from being saved:
-    </h2>
-
+    <div class="alert alert-danger">
+      The form contains <%= pluralize(@quire.errors.count, "error") %>.
+    </div>
     <ul>
-      <% @quire.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+    <% @quire.errors.full_messages.each do |message| %>
+      <li><%= message %></li>
+    <% end %>
     </ul>
   </div>
 <% end %>
 
 <h3>Leaves</h3>
 
-<%= hidden_field_tag 'last_folio_number', @quire.preceding_folio_number, id: 'last_folio_number' %>
+<%= f.hidden_field :preceding_folio_number %>
 
 <div id="leaves_list">
   <%= f.fields_for :leaves do |leaf| %>

@@ -19,7 +19,7 @@ module ApplicationHelper
   end
 
   def shorten s, limit=60
-    return s if s.size <= limit
+    return s if s.blank? || s.size <= limit
     tail = 10
     head = limit - (tail + 3)
     sprintf "%s...%s", s[0,head], s[-tail..-1]

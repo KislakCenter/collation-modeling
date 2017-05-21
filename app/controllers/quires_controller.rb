@@ -8,12 +8,11 @@ class QuiresController < ApplicationController
   end
 
   def new
-    @quire = Quire.new manuscript: @manuscript
+    @quire = @manuscript.quires.build
   end
 
   def create
-    @quire = Quire.new quire_params
-    @quire.manuscript = @manuscript
+    @quire = @manuscript.quires.build quire_params
     if @quire.save
       redirect_to @manuscript
     else
@@ -48,7 +47,6 @@ class QuiresController < ApplicationController
 
   def quire_params
     params.require(:quire).permit(
-      :leaf_count_input,
-      :leaves_attributes => [ :id, :mode, :single, :folio_number, :_destroy ])
+      leaves_attributes: [ :id, :mode, :single, :folio_number, :_destroy ])
   end
 end

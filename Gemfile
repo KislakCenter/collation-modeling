@@ -28,20 +28,17 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'bootstrap-sass', '~> 3.2.0'
 gem 'autoprefixer-rails', '~> 6.5.0'
 
-gem 'acts_as_list', '~> 0.6.0'
-
+gem 'acts_as_list', '~> 0.9.5'
 gem 'simple_form', '~> 3.1.0'
 
 gem 'devise', '~> 3.4.1'
+gem 'activerecord-import', '~> 0.18.3'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
 # Use Unicorn as the app server
 gem 'unicorn', '~> 4.9.0'
-
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
 
 group :production do
   gem 'pg', '~> 0.18.1'

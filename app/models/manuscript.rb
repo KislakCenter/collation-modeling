@@ -2,12 +2,38 @@ require 'ostruct'
 
 class Manuscript < ActiveRecord::Base
   has_many :quires, -> { order('position ASC') }, dependent: :destroy
+  has_many :leaves, -> { order 'quires.position, position' }, through: :quires
 
   attr_accessor :quire_number_input
+  attr_accessor :leaves_per_quire_input
 
-  before_save :build_quires
+  after_save :create_quires
 
   validates_presence_of :title, :shelfmark
+
+  ##
+  # Return the last quire persisted to the database. Quire is eager loaded.
+  def last_saved_quire
+    quires.includes(:leaves).where.not(id: nil).last
+  end
+
+  ##
+  # Return the last leaf of the last save quire; otherwise, return `nil`.
+  #
+  def last_saved_leaf
+    q = last_saved_quire
+    q.leaves.last if q.present?
+  end
+
+  ##
+  # Return the folio_number of the `last_saved_leaf`.
+  delegate :folio_number, to: :last_saved_leaf, prefix: true, allow_nil: true
+
+  def last_saved_folio_number
+    return 0 if quires.empty?
+    return 0 if leaves.empty?
+    last_saved_leaf_folio_number
+  end
 
   def to_xml options={}
     case options[:xml_type]
@@ -66,13 +92,18 @@ class Manuscript < ActiveRecord::Base
     end
   end
 
-  private
+  def show_attribures
+    logger.info "=== #{self.quire_number_input} === #{self.leaves_per_quire_input} ==="
+  end
 
-  def build_quires
-    if quires.empty? && quire_number_input
+  def create_quires
+    if quire_number_input.present?
       (1..quire_number_input.to_i).each do |i|
-        quires.build
+        quires.create
+        quires.last.create_leaves leaves_per_quire_input
       end
     end
+    self.quire_number_input = nil
+    self.leaves_per_quire_input = nil
   end
 end

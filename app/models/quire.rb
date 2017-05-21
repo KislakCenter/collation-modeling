@@ -1,13 +1,9 @@
 require 'ostruct'
 
 class Quire < ActiveRecord::Base
-  attr_accessor :leaf_count_input
-
   belongs_to :manuscript
   has_many :leaves, -> { order('position ASC') }, dependent: :destroy
   accepts_nested_attributes_for :leaves, allow_destroy: true
-
-  before_save :create_leaves
 
   validate :must_have_even_bifolia
 
@@ -26,12 +22,27 @@ class Quire < ActiveRecord::Base
 
   # Return the last folio from the preceding quire if it exists.
   def preceding_leaf
-    return nil if previous.blank?
-    previous.last_leaf
+    if persisted?
+      previous.blank? ? nil : previous.leaves.last
+    else
+      last_saved = manuscript.last_saved_quire
+      last_saved.blank? ? nil : last_saved.leaves.last
+    end
   end
 
   def preceding_folio_number
-    preceding_leaf and preceding_leaf.folio_number
+    if persisted?
+      return 0 if previous.blank?
+      previous_leaves = previous.leaves
+      return nil if previous_leaves.blank?
+      return previous_leaves.last.folio_number
+    else
+      last_saved_quire = manuscript.last_saved_quire
+      return 0 if last_saved_quire.blank?
+      previous_leaves = last_saved_quire.leaves
+      return nil if previous_leaves.blank?
+      return previous_leaves.last.folio_number
+    end
   end
 
   # Return a list of leaves with conjoins, filling in `nil` leaf
@@ -306,21 +317,23 @@ class Quire < ActiveRecord::Base
     leaves.last
   end
 
-  private
-
-  def create_leaves
-    if leaf_count_input && leaves.blank?
-      curr_folio = prev_folio_number
-      leaf_count_input.to_i.times do
+  def create_leaves num_leaves
+    if num_leaves.present? && leaves.blank?
+      curr_folio = preceding_folio_number
+      temp_leaves = []
+      num_leaves.to_i.times do |i|
         curr_folio = inc_folio curr_folio
-        leaves.build folio_number: curr_folio
+        temp_leaves << Leaf.new(folio_number: curr_folio, quire: self, position: i+1)
       end
+      Leaf.import temp_leaves
     end
   end
 
+  private
+
   # Make sure that the number of leaves not marked 'single' is even.
   def must_have_even_bifolia
-    conjoins = leaves.reject{ |leaf| leaf.single? }.size
+    conjoins = leaves.reject{ |leaf| leaf.single? || leaf._destroy.present? }.size
     if conjoins.odd?
       errors.add(:base,
                  "The number of non-single leaves cannot be odd; found: #{conjoins}")
@@ -333,6 +346,7 @@ class Quire < ActiveRecord::Base
   # TODO: Enable incrementing of paginated numbers, 1-2, 3-4, etc.
   #
   def inc_folio number
+    # Integer(number) + 1
     begin
       Integer(number) + 1
     rescue ArgumentError, TypeError

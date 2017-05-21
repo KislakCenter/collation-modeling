@@ -20,7 +20,7 @@ ready = ->
     next_folio = ->
       last_leaf = $('.leaf_fields:visible').last()
       val = if last_leaf.size() == 0
-        $('input[name=last_folio_number]').val()
+        $('input[name*=preceding_folio_number]').val()
       else
         last_leaf.find('input[name*=folio_number]').val()
 

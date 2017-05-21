@@ -21,3 +21,9 @@
 
 en:
   hello: "Hello world"
+  activerecord:
+    hints:
+      manuscript:
+        leaves_per_quire_input:
+          "Default number of leaves per quire; don't worry you can adjust this
+          for individual quires."

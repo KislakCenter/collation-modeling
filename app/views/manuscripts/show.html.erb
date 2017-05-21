@@ -47,7 +47,7 @@
 
   <div class="row">
     <div class="col-sm-8">
-      <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel-group" role="tablist" aria-multiselectable="true">
         <% @manuscript.quires.each do |quire| -%>
 
           <div class="panel panel-default">
@@ -55,7 +55,7 @@
               <div class="row">
               <div class="col-sm-6">
                 <h4 class="panel-title">
-                  <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#quire_body_<%= quire.id %>" aria-expanded="false" aria-controls="quire_body_<%= quire.id %>">
+                  <a class="collapsed" data-toggle="collapse" href="#quire_body_<%= quire.id %>" aria-expanded="false" aria-controls="quire_body_<%= quire.id %>">
                     Quire <%= quire.position %> (<%= quire.leaves.size %> leaves)
                   </a>
                 </h4>
@@ -72,7 +72,7 @@
                 <% if quire.leaves.present? %>
                   <ul>
                     <% quire.leaves.each do |leaf| %>
-                      <li><%= leaf.description %>
+                      <li><%= link_to 'Renumber from here', '#' %> <%= leaf.description %>
                     <% end %>
                   </ul>
                 <% end %>
@@ -100,12 +100,12 @@
   <div class="col-sm-8">
     <%= form_for @manuscript, url: create_quires_path(@manuscript), method: :post, html: { id: "manuscript_#{@manuscript.id}_create_quires", class: 'form-inline' } do |f| %>
     <div class="form-group">
-      <%= f.label :number_of_quires, 'Quires', class: "control-label" %>
-      <%= f.select :number_of_quires, (1..100), { selected: 20 }, { class: "form-control" } %>
+      <%= f.label :quire_number_input, 'Quires', class: "control-label" %>
+      <%= f.select :quire_number_input, (1..100), { selected: 20 }, { class: "form-control" } %>
     </div>
     <div class="form-group">
-      <%= f.label :leaves_per_quire, 'Leaves/quire', class: "control-label"  %>
-      <%= f.select :leaves_per_quire, (2..30).step(2).map(&:itself), { selected: 8 }, { class: "form-control", style: 'max-width: 80px;' } %>
+      <%= f.label :leaves_per_quire_input, 'Leaves/quire', class: "control-label"  %>
+      <%= f.select :leaves_per_quire_input, (2..30).step(2).map(&:itself), { selected: 8 }, { class: "form-control", style: 'max-width: 80px;' } %>
     </div>
     <div class="form-group">
       <%= f.submit 'Add Quires', class: "btn btn-primary" %>

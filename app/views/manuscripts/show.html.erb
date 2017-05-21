@@ -45,6 +45,8 @@
 <% if @manuscript.quires.present? -%>
   <h3>Quires</h3>
 
+  <% skips = @manuscript.leaf_skips %>
+
   <div class="row">
     <div class="col-sm-8">
       <div class="panel-group" role="tablist" aria-multiselectable="true">
@@ -72,8 +74,17 @@
                 <% if quire.leaves.present? %>
                   <ul>
                     <% quire.leaves.each do |leaf| %>
-                      <li><%= leaf.description %><% if leaf.next_skipped? %>
-                      <%= link_to "Renumber from fol/page #{leaf.folio_number}", update_numbering_path(@manuscript, leaf), method: :put %>
+                      <li><% if skips.include?(leaf.id) %>
+                      <%= form_for leaf, url: update_numbering_path(@manuscript, leaf), method: :put, html: {class: 'form-inline', id: "renumber_from_leaf_#{leaf.id}"} do |f| %>
+                      <%= leaf.description %>
+                      <%= f.submit 'Renumber from here', class: 'btn btn-primary btn-xs' %>
+                      <div class="form-group">
+                      <%= f.label :new_number %>
+                      <%= f.select :new_number, Leaf::FOLIO_NUMBERS, { selected: leaf.folio_number_int.pred }, { class: 'form-control input-sm'} %>
+                      </div>
+                      <% end %>
+                      <% else %>
+                      <%= leaf.description %>
                       <% end %>
                     <% end %>
                   </ul>

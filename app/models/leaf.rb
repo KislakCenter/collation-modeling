@@ -1,4 +1,9 @@
 class Leaf < ActiveRecord::Base
+
+  # Number for renumbering this quire
+  attr_accessor :new_number
+  FOLIO_NUMBERS = (1..600).to_a
+
   belongs_to :quire
 
   delegate :manuscript, to: :quire, prefix: false, allow_nil: true
@@ -14,6 +19,10 @@ class Leaf < ActiveRecord::Base
 
   def previous
     higher_item
+  end
+
+  def folio_number_int
+    folio_number.to_i
   end
 
   def following_leaf

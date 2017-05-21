@@ -3,6 +3,41 @@ require 'rails_helper'
 RSpec.describe Manuscript, :type => :model do
   let(:ms_with_8_quires) { FactoryGirl.create(:manuscript_with_empty_quires, quires_count: 8) }
   let(:manuscript) { FactoryGirl.create :manuscript }
+  let(:ms_with_leaves) { FactoryGirl.create(:manuscript_with_filled_quires, quires_count: 8)}
+
+  let(:numbers_without_skips) { (1..64).map &:to_s }
+  let(:numbers_with_one_skip) {
+    vals = (1..65).map &:to_s
+    vals.delete "10"
+    vals
+  }
+
+  let(:numbers_without_skips_and_stubs) {
+    vals = (1..64).map &:to_s
+    vals.insert 9, [ 'stub 1', 'stub 2' ]
+    vals.flatten
+  }
+
+  let(:numbers_with_skips_and_stubs) {
+    vals = (1..64).map &:to_s
+    vals[10] = 'stub 1'
+    vals[11] = 'stub 2'
+    vals.flatten
+  }
+
+  let(:numbers_starting_at_2) { (2..80).map &:to_s }
+  let(:numbers_starting_at_3) { (3..80).map &:to_s }
+
+
+  def fill_numbers ms, numbers
+    nums_dup = numbers.dup
+    ms.quires.includes(:leaves).each do |q|
+      q.leaves.each do |leaf|
+        leaf.update_column :folio_number, nums_dup.shift
+      end
+    end
+    # ms.save!
+  end
 
   context "factories" do
     it "create a manuscript" do
@@ -39,6 +74,46 @@ RSpec.describe Manuscript, :type => :model do
       expect {
         manuscript.create_quires
         }.to change { manuscript.leaves.count }.by 12
+    end
+  end
+
+  context "leaf_skips" do
+    it 'finds no skips' do
+      fill_numbers ms_with_leaves, numbers_without_skips
+      expect(ms_with_leaves.leaf_skips).to eq([])
+    end
+
+    it 'finds no skips with intervening stub' do
+      fill_numbers ms_with_leaves, numbers_without_skips_and_stubs
+      expect(ms_with_leaves.leaf_skips).to eq([])
+    end
+
+    it 'finds a skip after a stub' do
+      fill_numbers ms_with_leaves, numbers_with_skips_and_stubs
+      skips = ms_with_leaves.leaf_skips
+      expect(skips.size).to eq(1)
+      expect(Leaf.find(skips.first).folio_number).to eq("13")
+    end
+
+    it 'finds a skip' do
+      fill_numbers ms_with_leaves, numbers_with_one_skip
+      skips = ms_with_leaves.leaf_skips
+      expect(skips.size).to eq(1)
+      expect(Leaf.find(skips.first).folio_number).to eq("11")
+    end
+
+    it 'finds on skip when the first folio number is 2' do
+      fill_numbers ms_with_leaves, numbers_starting_at_2
+      skips = ms_with_leaves.leaf_skips
+      expect(skips.size).to eq(1)
+      expect(Leaf.find(skips.first).folio_number).to eq("2")
+    end
+
+    it 'finds on skip when the first folio number is 3' do
+      fill_numbers ms_with_leaves, numbers_starting_at_3
+      skips = ms_with_leaves.leaf_skips
+      expect(skips.size).to eq(1)
+      expect(Leaf.find(skips.first).folio_number).to eq("3")
     end
   end
 

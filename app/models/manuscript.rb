@@ -6,6 +6,7 @@ class Manuscript < ActiveRecord::Base
 
   attr_accessor :quire_number_input
   attr_accessor :leaves_per_quire_input
+  attr_accessor :skips
 
   after_save :create_quires
 
@@ -96,15 +97,94 @@ class Manuscript < ActiveRecord::Base
     logger.info "=== #{self.quire_number_input} === #{self.leaves_per_quire_input} ==="
   end
 
+  ##
+  # Return an array of ids of leaves preceded by numerical skips. An empty
+  # array is returned if no skips are found.
+  #
+  # For example, for
+  #
+  #   Leaf id:  3164,  folio_number: 1
+  #   Leaf id:  3165,  folio_number: 2
+  #   Leaf id:  3166,  folio_number: 3
+  #   Leaf id:  3167,  folio_number: 4
+  #   Leaf id:  3168,  folio_number: 5
+  #   Leaf id:  3169,  folio_number: 7 # <= preceding number is skipped
+  #   Leaf id:  3170,  folio_number: 8
+  #   Leaf id:  3171,  folio_number: 9
+  #
+  #  the array `[3169]` is returned because the expected preceding folio
+  #  number, `6`, is not used.
+  #
+  # Non-numerical folio numbers are ignored. For example, for
+  #
+  #   Leaf id:  3164,  folio_number: 1
+  #   Leaf id:  3165,  folio_number: 2
+  #   Leaf id:  3166,  folio_number: 3
+  #   Leaf id:  3167,  folio_number: 4
+  #   Leaf id:  3168,  folio_number: 4a
+  #   Leaf id:  3169,  folio_number: 4b
+  #   Leaf id:  3170,  folio_number: 5
+  #   Leaf id:  3171,  folio_number: 6
+  #
+  #  the empty array `[]` is returned because numbers '4a' and '4b' are
+  #  ignored.
+  #
+  # If the folio number 1 is not used, this also caught. For example, for
+  #
+  #   Leaf id:  3165,  folio_number: 3 <= preceding number is skipped
+  #   Leaf id:  3166,  folio_number: 4
+  #   Leaf id:  3167,  folio_number: 5
+  #   Leaf id:  3168,  folio_number: 6
+  #   Leaf id:  3169,  folio_number: 7
+  #   Leaf id:  3170,  folio_number: 8
+  #   Leaf id:  3171,  folio_number: 9
+  #
+  # the array `[3165]` is returned because "1" is skipped (as is "2", but the
+  # method does not determine intervening missing numbers).
+  #
+  def leaf_skips
+    return skips if skips.present?
+
+    last_leaf = nil
+    skips = quires.includes(:leaves).flat_map do |quire|
+      quire.leaves.flat_map do |leaf|
+        v = []
+        begin
+          # try to convert folio_number to integer; skip on error
+          Integer(leaf.folio_number)
+
+          # use "0", to catch manuscripts that don't start with folio "1"
+          comp_number = last_leaf.present? ? last_leaf.folio_number : "0"
+          unless comp_number.succ == leaf.folio_number
+            v = leaf.id
+          end
+          last_leaf = leaf
+        rescue ArgumentError
+          # not a numeric folio_number; skip
+        rescue TypeError
+          # folio_number is nil; skip
+        end
+        v
+      end
+    end
+    skips
+  end
+
   def renumber_from start_leaf
     next_num = nil
     quires.includes(:leaves).each do |quire|
       quire.leaves.each do |leaf|
         if leaf == start_leaf
-          next_num = Integer(leaf.folio_number) + 1
+          leaf.folio_number = start_leaf.new_number
+          next_num = leaf.folio_number_int + 1
         elsif next_num.present?
-          leaf.folio_number = next_num
-          next_num += 1
+          begin
+            Integer(leaf.folio_number)
+            leaf.folio_number = next_num
+            next_num += 1
+          rescue ArgumentError, TypeError
+            # non-numeric folio number; skip
+          end
         end
       end
       quire.save if next_num.present?

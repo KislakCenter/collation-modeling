@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150328210717) do
+ActiveRecord::Schema.define(version: 20170821192217) do
 
   create_table "leaves", force: :cascade do |t|
     t.string   "mode",         limit: 255, default: "original"
@@ -32,6 +32,17 @@ ActiveRecord::Schema.define(version: 20150328210717) do
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
   end
+
+  create_table "quire_leaves", force: :cascade do |t|
+    t.integer  "leaf_id",    limit: 4
+    t.integer  "quire_id",   limit: 4
+    t.integer  "certainty",  limit: 4
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
+
+  add_index "quire_leaves", ["leaf_id"], name: "index_quire_leaves_on_leaf_id", using: :btree
+  add_index "quire_leaves", ["quire_id"], name: "index_quire_leaves_on_quire_id", using: :btree
 
   create_table "quires", force: :cascade do |t|
     t.string   "number",        limit: 255
@@ -62,5 +73,7 @@ ActiveRecord::Schema.define(version: 20150328210717) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
   add_foreign_key "leaves", "quires"
+  add_foreign_key "quire_leaves", "leaves"
+  add_foreign_key "quire_leaves", "quires"
   add_foreign_key "quires", "manuscripts"
 end

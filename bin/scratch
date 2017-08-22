@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+alias rails >/dev/null 2>&1 || alias rails="bundle exec bin/rails"
+
+# make sure we're in the project root
+cd `dirname $0`/..
+
+generator_options="--no-helper --no-view-specs --no-helper-specs --no-assets --no-stylesheets"
+
+rails g model quire_leaf leaf:references \
+  quire:references \
+  certainty:integer

@@ -4,4 +4,8 @@ class QuireLeaf < ActiveRecord::Base
 
   validates :leaf, presence: true
   validates :quire, presence: true
+
+  acts_as_list scope: :quire
+
+  accepts_nested_attributes_for :leaf
 end

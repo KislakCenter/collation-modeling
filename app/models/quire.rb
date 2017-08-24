@@ -2,8 +2,10 @@ require 'ostruct'
 
 class Quire < ActiveRecord::Base
   belongs_to :manuscript
-  has_many :leaves, -> { order('position ASC') }, dependent: :destroy
-  accepts_nested_attributes_for :leaves, allow_destroy: true
+  has_many :quire_leaves, -> { order('position ASC') }, inverse_of: :quire
+  has_many :leaves, through: :quire_leaves, dependent: :destroy
+
+  accepts_nested_attributes_for :quire_leaves, allow_destroy: true
 
   validate :must_have_even_bifolia
 
@@ -321,11 +323,11 @@ class Quire < ActiveRecord::Base
     if num_leaves.present? && leaves.blank?
       curr_folio = preceding_folio_number
       temp_leaves = []
-      num_leaves.to_i.times do |i|
+      temp_quire_leaves = []
+      num_leaves.to_i.times do
         curr_folio = inc_folio curr_folio
-        temp_leaves << Leaf.new(folio_number: curr_folio, quire: self, position: i+1)
+        quire_leaves.create certainty: 1, leaf: Leaf.new(folio_number: curr_folio)
       end
-      Leaf.import temp_leaves
     end
   end
 

@@ -73,6 +73,7 @@ RSpec.describe Manuscript, :type => :model do
       manuscript.leaves_per_quire_input = 6
       expect {
         manuscript.create_quires
+        # }.to change { Leaf.count }.by 12
         }.to change { manuscript.leaves.count }.by 12
     end
   end

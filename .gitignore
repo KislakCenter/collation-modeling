@@ -29,3 +29,5 @@ doc/guides
 doc/api
 doc/app
 .projectrc
+# Don't track db dumps
+*.dmp

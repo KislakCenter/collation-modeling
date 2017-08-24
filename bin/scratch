@@ -7,6 +7,10 @@ cd `dirname $0`/..
 
 generator_options="--no-helper --no-view-specs --no-helper-specs --no-assets --no-stylesheets"
 
-rails g model quire_leaf leaf:references \
-  quire:references \
-  certainty:integer
+rails g migration convert_old_leaves_to_new
+# rails g migration add_position_to_quire_leaves \
+#   position:integer
+
+# rails g model quire_leaf leaf:references \
+#   quire:references \
+#   certainty:integer

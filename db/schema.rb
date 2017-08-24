@@ -34,13 +34,19 @@ ActiveRecord::Schema.define(version: 20170821192217) do
   end
 
   create_table "quire_leaves", force: :cascade do |t|
-    t.integer  "leaf_id",    limit: 4
-    t.integer  "quire_id",   limit: 4
-    t.integer  "certainty",  limit: 4
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
+    t.integer  "quire_id",          limit: 4
+    t.integer  "leaf_id",           limit: 4
+    t.integer  "position",          limit: 4
+    t.integer  "certainty",         limit: 4,   default: 1
+    t.string   "mode",              limit: 255, default: "original"
+    t.integer  "mode_certainty",    limit: 4,   default: 1
+    t.integer  "conjoin_id",        limit: 4
+    t.integer  "conjoin_certainty", limit: 4,   default: 1
+    t.datetime "created_at",                                         null: false
+    t.datetime "updated_at",                                         null: false
   end
 
+  add_index "quire_leaves", ["conjoin_id"], name: "fk_rails_8342731fed", using: :btree
   add_index "quire_leaves", ["leaf_id"], name: "index_quire_leaves_on_leaf_id", using: :btree
   add_index "quire_leaves", ["quire_id"], name: "index_quire_leaves_on_quire_id", using: :btree
 
@@ -74,6 +80,7 @@ ActiveRecord::Schema.define(version: 20170821192217) do
 
   add_foreign_key "leaves", "quires"
   add_foreign_key "quire_leaves", "leaves"
+  add_foreign_key "quire_leaves", "leaves", column: "conjoin_id"
   add_foreign_key "quire_leaves", "quires"
   add_foreign_key "quires", "manuscripts"
 end

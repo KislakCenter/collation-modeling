@@ -11,7 +11,11 @@ FactoryGirl.define do
       end
 
       after(:create) do |quire,evaluator|
-        create_list(:leaf, evaluator.leaves_count, quire: quire)
+        evaluator.leaves_count.times do
+          quire.leaves << create(:leaf)
+        end
+        # quire.save!
+        # create_list(:leaf, evaluator.leaves_count, quire: quire)
       end
     end
   end

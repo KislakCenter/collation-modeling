@@ -4,14 +4,21 @@ class Leaf < ActiveRecord::Base
   attr_accessor :new_number
   FOLIO_NUMBERS = (1..600).to_a
 
-  belongs_to :quire
+  has_many :quire_leaves, inverse_of: :leaf
+  has_many :quires, through: :quire_leaves
 
-  delegate :manuscript, to: :quire, prefix: false, allow_nil: true
-  delegate :next, to: :quire, prefix: true, allow_nil: true
+  scope :without_children, -> { includes(:quire_leaves).where(:quire_leaves => { :id => nil }) }
+
+  # delegate :manuscript, to: :quire, prefix: false, allow_nil: true
+  # delegate :next, to: :quire, prefix: true, allow_nil: true
 
   acts_as_list scope: :quire
 
   MODES = %w( original added replaced missing )
+
+  def manuscript
+    quires.present? and quires.first.manuscript or nil
+  end
 
   def next
     lower_item

@@ -51,7 +51,6 @@ RSpec.describe Quire, :type => :model do
     it "builds a reqular quire" do
       expect(quire_7_middle_single.leaves.size).to eq 7
     end
-
   end
 
   context "to_leaves" do
@@ -194,6 +193,20 @@ RSpec.describe Quire, :type => :model do
       expect(units.size).to eq 5
       expect(units.second.leaves.first.single).to eq true
       expect(units.third.leaves.first.single).to eq true
+    end
+  end
+
+  context "parent quire" do
+    it "has children" do
+      child = FactoryGirl.create :quire
+      expect(FactoryGirl.create(:quire, child_quires: [child]).child_quires.first).to eq child
+    end
+  end
+
+  context "child quire" do
+    it "belongs to a parent" do
+      parent = FactoryGirl.create :quire
+      expect(parent.child_quires.create.parent_quire).to eq parent
     end
   end
 end

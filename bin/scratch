@@ -7,7 +7,9 @@ cd `dirname $0`/..
 
 generator_options="--no-helper --no-view-specs --no-helper-specs --no-assets --no-stylesheets"
 
-rails g migration convert_old_leaves_to_new
+rails g migration add_parent_quire_to_quires quire_id:integer
+
+# rails g migration convert_old_leaves_to_new
 # rails g migration add_position_to_quire_leaves \
 #   position:integer
 

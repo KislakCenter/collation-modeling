@@ -46,7 +46,13 @@ class QuiresController < ApplicationController
   end
 
   def quire_params
-    params.require(:quire).permit(
-      leaves_attributes: [ :id, :mode, :single, :folio_number, :_destroy ])
+    params.require(:quire).permit(:preceding_folio_number,
+      quire_leaves_attributes: [
+        :mode,
+        :_destroy,
+        :id,
+        leaf_attributes: [:id, :single, :folio_number]
+      ]
+    )
   end
 end

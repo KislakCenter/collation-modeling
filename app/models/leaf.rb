@@ -7,10 +7,9 @@ class Leaf < ActiveRecord::Base
   has_many :quire_leaves, inverse_of: :leaf
   has_many :quires, through: :quire_leaves
 
-  scope :without_children, -> { includes(:quire_leaves).where(:quire_leaves => { :id => nil }) }
-
-  # delegate :manuscript, to: :quire, prefix: false, allow_nil: true
-  # delegate :next, to: :quire, prefix: true, allow_nil: true
+  scope :without_children, -> {
+    includes(:quire_leaves).where(:quire_leaves => { :id => nil })
+  }
 
   acts_as_list scope: :quire
 

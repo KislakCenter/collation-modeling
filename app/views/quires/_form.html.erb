@@ -16,8 +16,8 @@
 <%= f.hidden_field :preceding_folio_number %>
 
 <div id="leaves_list">
-  <%= f.fields_for :leaves do |leaf| %>
-    <%= render 'leaf_fields', leaf: leaf %>
+  <%= f.fields_for :quire_leaves do |quire_leaf| %>
+    <%= render 'quire_leaf_fields', quire_leaf: quire_leaf %>
   <% end %>
 </div>
 

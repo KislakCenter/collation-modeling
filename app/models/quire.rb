@@ -32,6 +32,10 @@ class Quire < ActiveRecord::Base
     end
   end
 
+  def preceding_folio_number= val
+    # do nothing; added to complement `preceding_folio_number` accessor
+  end
+
   def preceding_folio_number
     if persisted?
       return 0 if previous.blank?

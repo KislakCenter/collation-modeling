@@ -11,16 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170901140730) do
+ActiveRecord::Schema.define(version: 20170901191830) do
 
   create_table "leaves", force: :cascade do |t|
-    t.string   "mode",         limit: 255, default: "original"
-    t.boolean  "single",                   default: false
-    t.integer  "quire_id",     limit: 4
-    t.integer  "position",     limit: 4
-    t.datetime "created_at",                                    null: false
-    t.datetime "updated_at",                                    null: false
-    t.string   "folio_number", limit: 255
+    t.string   "mode",            limit: 255, default: "original"
+    t.boolean  "single",                      default: false
+    t.integer  "quire_id",        limit: 4
+    t.integer  "position",        limit: 4
+    t.datetime "created_at",                                       null: false
+    t.datetime "updated_at",                                       null: false
+    t.string   "folio_number",    limit: 255
+    t.boolean  "quire_uncertain",             default: false
   end
 
   add_index "leaves", ["quire_id"], name: "index_leaves_on_quire_id", using: :btree

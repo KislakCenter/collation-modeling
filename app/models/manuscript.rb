@@ -54,34 +54,37 @@ class Manuscript < ActiveRecord::Base
     #     </q>
     # </leaf>
     Nokogiri::XML::Builder.new do |xml|
-      xml.manuscript {
-        xml.url url
-        xml.shelfmark shelfmark
-        xml.title title
-        xml.quires {
-          quires.each do |q|
-            attrs = { "xml:id": q.xml_id, n: q.number }
-            attrs[:parent] = "##{q.parent_quire.xml_id}" if q.parent_quire.present?
-            xml.quire q.number, attrs
-          end
-        }
-        leaves(includes: quire_leaves).each do |leaf|
-          xml.leaf("xml:id": leaf.xml_id) {
-            xml.folioNumber leaf.folio_number, val: leaf.folio_number
-            xml.mode val: leaf.mode
-            leaf.quire_leaves.each do |quire_leaf|
-              attrs = {}
-              attrs[:target]   = "##{quire_leaf.quire_xml_id}"
-              attrs[:position] = quire_leaf.position
-              attrs[:n]        = quire_leaf.quire_number
-              xml.q(attrs) {
-                if quire_leaf.conjoin.present?
-                  xml.conjoin certainty: quire_leaf.conjoin_certainty, target: "##{quire_leaf.conjoin.leaf.xml_id}"
-                end
-              }
+      xml.viscoll("xmlns:tei": "http://www.tei-c.org/ns/1.0", xmlns: "http://schoenberginstitute.org/schema/collation") {
+        xml.manuscript {
+          xml.url url
+          xml.title title
+          xml.shelfmark shelfmark
+          xml.direction val: 'l-r'
+          xml.quires {
+            quires.each do |q|
+              attrs = { "xml:id": q.xml_id, n: q.number }
+              attrs[:parent] = "##{q.parent_quire.xml_id}" if q.parent_quire.present?
+              xml.quire q.number, attrs
             end
           }
-        end
+          leaves(includes: quire_leaves).each do |leaf|
+            xml.leaf("xml:id": leaf.xml_id) {
+              xml.folioNumber leaf.folio_number, val: leaf.folio_number, certainty: 1
+              xml.mode val: leaf.mode
+              leaf.quire_leaves.each do |quire_leaf|
+                attrs = {}
+                attrs[:target]   = "##{quire_leaf.quire_xml_id}"
+                attrs[:position] = quire_leaf.position
+                attrs[:n]        = quire_leaf.quire_number
+                xml.q(attrs) {
+                  if quire_leaf.conjoin.present?
+                    xml.conjoin certainty: quire_leaf.conjoin_certainty, target: "##{quire_leaf.conjoin.leaf.xml_id}"
+                  end
+                }
+              end
+            }
+          end
+        }
       }
     end
   end

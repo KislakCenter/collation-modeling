@@ -28,6 +28,7 @@ RSpec.describe Manuscript, :type => :model do
   let(:numbers_starting_at_2) { (2..80).map &:to_s }
   let(:numbers_starting_at_3) { (3..80).map &:to_s }
 
+  let(:viscoll_schema) { File.join(Rails.root, 'app', 'assets', 'xml', 'viscoll-datamodel2.rng') }
 
   def fill_numbers ms, numbers
     nums_dup = numbers.dup
@@ -118,4 +119,16 @@ RSpec.describe Manuscript, :type => :model do
     end
   end
 
+  context 'to_xml' do
+    it "generates an xml string" do
+      expect(ms_with_leaves.to_xml).to be_a String
+    end
+
+    it "generates valid xml" do
+      # schema  = Nokogiri::XML::RelaxNG(File.open(ADDRESS_SCHEMA_FILE))
+      rng = Nokogiri::XML::RelaxNG open(viscoll_schema)
+      doc = Nokogiri::XML(ms_with_leaves.to_xml)
+      expect(rng.validate doc).to be_blank
+    end
+  end
 end

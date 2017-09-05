@@ -2,7 +2,8 @@ require 'ostruct'
 
 class Manuscript < ActiveRecord::Base
   has_many :quires, -> { order('position ASC') }, dependent: :destroy
-  has_many :leaves, -> { order 'quires.position, position' }, through: :quires
+  has_many :quire_leaves, -> { order 'quires.position, position' }, through: :quires
+  has_many :leaves, -> { order('quires.position, position').distinct }, through: :quires
 
   attr_accessor :quire_number_input
   attr_accessor :leaves_per_quire_input
@@ -37,59 +38,58 @@ class Manuscript < ActiveRecord::Base
   end
 
   def to_xml options={}
-    case options[:xml_type]
-    when :filled_quires
-      filled_quires_xml.to_xml
-    else
-      build_xml.to_xml
-    end
-  end
-
-  def to_struct
-    s = OpenStruct.new title: title, shelfmark: shelfmark, url: url, quires: []
-    quires.each do |q|
-      s.quires << q.to_struct
-    end
-    s
+    build_xml.to_xml
   end
 
   def build_xml
-    struct = to_struct
-    Nokogiri::XML::Builder.new do |xml|
-      xml.manuscript(url: struct.url) {
-        xml.title struct.title
-        xml.shelfmark struct.shelfmark
-        xml.quires {
-          struct.quires.each do |q|
-            xml.quire(n: q.n) {
-              q.units.each do |u|
-                xml.unit {
-                  u.leaves.each do |leaf|
-                    xml.leaf leaf.to_h
-                  end
-                } # xml.unit
-              end
-            } # xml.quire
-          end
-        } # xml.quires
-      } # xml.manuscript
-    end
-  end
-
-  def filled_quires_xml
+    calculate_conjoins
+    # <leaf xml:id="lewis_e_001-13-1">
+    #     <folioNumber certainty="1" val="97">97</folioNumber>
+    #     <mode certainty="1" val="original"/>
+    #     <q target="#lewis_e_001-q-13" certainty="2" position="8" n="13">
+    #         <conjoin certainty="1" target="#lewis_e_001-13-1"/>
+    #     </q>
+    #     <q target="#lewis_e_001-q-14" certainty="2" position="1" n="14">
+    #         <conjoin certainty="1" target="#lewis_e_001-14-8"/>
+    #     </q>
+    # </leaf>
     Nokogiri::XML::Builder.new do |xml|
       xml.manuscript {
         xml.url url
-        xml.title title
         xml.shelfmark shelfmark
-        quires.each do |q|
-          xml.quire(n: q.position) {
-            q.filled_quire.each do |leaf|
-              xml.leaf leaf.marshal_dump
+        xml.title title
+        xml.quires {
+          quires.each do |q|
+            attrs = { "xml:id": q.xml_id, n: q.number }
+            attrs[:parent] = "##{q.parent_quire.xml_id}" if q.parent_quire.present?
+            xml.quire q.number, attrs
+          end
+        }
+        leaves(includes: quire_leaves).each do |leaf|
+          xml.leaf("xml:id": leaf.xml_id) {
+            xml.folioNumber leaf.folio_number, val: leaf.folio_number
+            xml.mode val: leaf.mode
+            leaf.quire_leaves.each do |quire_leaf|
+              attrs = {}
+              attrs[:target]   = "##{quire_leaf.quire_xml_id}"
+              attrs[:position] = quire_leaf.position
+              attrs[:n]        = quire_leaf.quire_number
+              xml.q(attrs) {
+                if quire_leaf.conjoin.present?
+                  xml.conjoin certainty: quire_leaf.conjoin_certainty, target: "##{quire_leaf.conjoin.leaf.xml_id}"
+                end
+              }
             end
           }
         end
       }
+    end
+  end
+
+  def calculate_conjoins
+    quires.each do |quire|
+      next if quire.has_parent?
+      quire.calculate_conjoins
     end
   end
 

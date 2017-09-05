@@ -16,12 +16,19 @@
 <%= f.hidden_field :preceding_folio_number %>
 
 <div id="leaves_list">
+  <div class="row">
+    <div class="col-sm-1 text-center"><strong>Leaf</strong></div>
+    <div class="col-sm-1 text-center"><strong>Folio number</strong></div>
+    <div class="col-sm-1 text-center"><strong>Single</strong></div>
+    <div class="col-sm-2 text-center"><strong>Quire uncertain</strong></div>
+    <div class="col-sm-2 text-center"><strong>Mode</strong></div>
+  </div>
   <%= f.fields_for :quire_leaves do |quire_leaf| %>
     <%= render 'quire_leaf_fields', quire_leaf: quire_leaf %>
   <% end %>
 </div>
 
-<p><%= link_to_add_leaf 'Add leaf', f, class: 'btn btn-primary' %></p>
+<p><%= link_to_add_quire_leaf 'Add leaf', f, class: 'btn btn-primary' %></p>
 <hr />
 
 <p id="control-buttons">

@@ -1,11 +1,13 @@
-<div class="col-sm-1">
-  <%= leaf.label :folio_number, "fol/pg", class: "col-sm-1 control-label" %>
-</div>
-<div class="col-sm-1">
+<div class="col-sm-1 text-center">
   <%= leaf.text_field :folio_number, class: "form-control" %>
 </div>
-<div class="col-sm-1">
+<div class="col-sm-1 text-center">
   <label class="checkbox-inline control-label">
-    <%= leaf.check_box :single %> <strong>Single</strong>
+    <%= leaf.check_box :single %>
+  </label>
+</div>
+<div class="col-sm-2 text-center checkbox">
+  <label class="checkbox-inline control-label">
+    <%= leaf.check_box :quire_uncertain %>
   </label>
 </div>

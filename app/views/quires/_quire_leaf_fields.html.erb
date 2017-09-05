@@ -1,16 +1,13 @@
 <div class="form-group leaf_fields">
-  <div class="col-sm-1">
+  <div class="col-sm-1 text-center">
     <%= quire_leaf.label :position, "Leaf #{quire_leaf.object.position}",
         class: "control-label" %>
   </div>
   <%= quire_leaf.fields_for :leaf do |leaf| %>
     <%= render 'leaf_fields', leaf: leaf %>
   <% end %>
-  <div class="col-sm-1">
-    <%= quire_leaf.label :mode, "Mode", class: "col-sm-1 control-label" %>
-  </div>
-  <div class="col-sm-2">
-    <%= quire_leaf.select :mode, Leaf::MODES, {}, { class: "form-control" } %>
+  <div class="col-sm-2 text-center">
+    <%= quire_leaf.select :mode, QuireLeaf::MODES, {}, { class: "form-control" } %>
   </div>
   <div class="col-sm-3">
     <%= quire_leaf.hidden_field :_destroy %>

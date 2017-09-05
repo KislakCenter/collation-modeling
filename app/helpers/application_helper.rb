@@ -18,6 +18,17 @@ module ApplicationHelper
     link_to(name, '#', class: classes, data: { id: id, fields: fields.gsub("\n", "")})
   end
 
+  def link_to_add_quire_leaf name, f, options={}
+    quire_leaf = QuireLeaf.new
+    quire_leaf.build_leaf
+    id = quire_leaf.object_id
+    fields = f.fields_for(:quire_leaves, quire_leaf, child_index: id) do |builder|
+      render('quire_leaf_fields', quire_leaf: builder)
+    end
+    classes = 'add_quire_leaf ' + options[:class]
+    link_to(name, '#', class: classes, data: { id: id, fields: fields.gsub("\n", "")})
+  end
+
   def shorten s, limit=60
     return s if s.blank? || s.size <= limit
     tail = 10

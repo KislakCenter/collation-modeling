@@ -38,8 +38,8 @@
 
 <p>
   <%= link_to 'Edit', edit_manuscript_path(@manuscript), class: 'btn btn-default' %>
-  <%= link_to "Leaves XML", manuscript_xml_path(@manuscript, xml_type: :filled_quires), class: 'btn btn-default' %>
-  <%= link_to "Joins XML", manuscript_xml_path(@manuscript, xml_type: :default), class: 'btn btn-default' %>
+  <%= link_to "Leaves XML", manuscript_xml_path(@manuscript, xml_type: :filled_quires, format: :xml), class: 'btn btn-default' %>
+  <%= link_to "Joins XML", manuscript_xml_path(@manuscript, xml_type: :default, format: :xml), class: 'btn btn-default' %>
 </p>
 
 <% if @manuscript.quires.present? -%>
@@ -71,20 +71,26 @@
             </div>
             <div id="quire_body_<%= quire.id %>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="quire_heading_<%= quire.id %>">
               <div class="panel-body">
-                <% if quire.leaves.present? %>
+                <% if quire.quire_leaves.present? %>
                   <ul>
-                    <% quire.leaves.each do |leaf| %>
-                      <li><% if skips.include?(leaf.id) %>
-                      <%= form_for leaf, url: update_numbering_path(@manuscript, leaf), method: :put, html: {class: 'form-inline', id: "renumber_from_leaf_#{leaf.id}"} do |f| %>
-                      <%= leaf.description %>
+                    <% quire.quire_leaves.each do |quire_leaf| %>
+                      <li><% if skips.include?(quire_leaf.leaf_id) %>
+                      <%= form_for quire_leaf.leaf, url: update_numbering_path(@manuscript, quire_leaf.leaf), method: :put, html: {class: 'form-inline', id: "renumber_from_leaf_#{quire_leaf.leaf_id}"} do |f| %>
+                      Leaf <%= quire_leaf.position %>;
+                      Folio: <%= quire_leaf.folio_number %>;
+                      Mode: <%= quire_leaf.mode %>;
+                      Single? <%= quire_leaf.leaf_single.yesno %>
                       <%= f.submit 'Renumber from here', class: 'btn btn-primary btn-xs' %>
                       <div class="form-group">
                       <%= f.label :new_number %>
-                      <%= f.select :new_number, Leaf::FOLIO_NUMBERS, { selected: leaf.folio_number_int.pred }, { class: 'form-control input-sm'} %>
+                      <%= f.select :new_number, Leaf::FOLIO_NUMBERS, { selected: quire_leaf.leaf.folio_number_int.pred }, { class: 'form-control input-sm'} %>
                       </div>
                       <% end %>
                       <% else %>
-                      <%= leaf.description %>
+                      Leaf <%= quire_leaf.position %>;
+                      Folio: <%= quire_leaf.folio_number %>;
+                      Mode: <%= quire_leaf.mode %>;
+                      Single? <%= quire_leaf.leaf_single.yesno %>
                       <% end %>
                     <% end %>
                   </ul>

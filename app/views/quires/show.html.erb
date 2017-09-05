@@ -20,21 +20,21 @@
 </div>
 
 
-<% if @quire.leaves.present? -%>
+<% if @quire.quire_leaves.present? -%>
   <h3>Leaves</h3>
-  <% @quire.leaves.each do |leaf| %>
+  <% @quire.quire_leaves.each do |quire_leaf| %>
     <div class="row">
       <div class="col-sm-1">
-        Leaf <%= leaf.position %>
+        Leaf <%= quire_leaf.position %>
       </div>
       <div class="col-sm-1">
-        Folio: <%= leaf.folio_number %>
+        Folio: <%= quire_leaf.folio_number %>
       </div>
       <div class="col-sm-2">
-        Mode: <%= leaf.mode %>
+        Mode: <%= quire_leaf.mode %>
       </div>
       <div class="col-sm-2">
-        Single? <%= leaf.single?.yesno %>
+        Single? <%= quire_leaf.leaf_single.yesno %>
       </div>
     </div>
   <% end %>

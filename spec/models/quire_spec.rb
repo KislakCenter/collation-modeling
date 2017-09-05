@@ -53,149 +53,6 @@ RSpec.describe Quire, :type => :model do
     end
   end
 
-  context "to_leaves" do
-    it "prints leaves from a quire" do
-      expect(quire_8_regular.to_leaves.size).to eq 8
-    end
-
-    it "prints leaves from a quire with a second single" do
-      expect(quire_7_second_single.to_leaves.size).to eq 7
-    end
-
-    it "prints leaves from a quire with a second single" do
-      expect(quire_8_second_sixth_single.to_leaves.size).to eq 8
-    end
-
-  end
-
-  context "filled_quire" do
-    it "prints a filled quire least" do
-      expect(quire_8_second_sixth_single.filled_quire.size).to eq 10
-      # puts quire_8_second_sixth_single.filled_quire
-    end
-
-    it "builds a filled quire with 8 conjoin leaves" do
-      leaves = quire_8_regular.filled_quire
-      expect(leaves.size).to eq 8
-    end
-
-    it "builds a filled quire with middle single" do
-      leaves = quire_7_middle_single.filled_quire
-      # puts leaves.pretty_inspect
-      expect(leaves.size).to eq 8
-    end
-
-    it "builds a filled quire with first single" do
-      leaves = quire_7_first_single.filled_quire
-      # puts leaves.pretty_inspect
-      expect(leaves.size).to eq 8
-      expect(leaves.last.n).to be_nil
-    end
-
-    it "builds a filled quire with penultimate single" do
-      leaves = quire_7_sixth_single.filled_quire
-      # puts leaves.pretty_inspect
-      expect(leaves.size).to eq 8
-      expect(leaves[1].n).to be_nil
-    end
-
-    it "builds a filled 8 quire with 7, 8 single" do
-      leaves = quire_8_seventh_eighth_single.filled_quire
-      # puts leaves.pretty_inspect
-      expect(leaves.size).to eq 10
-      expect(leaves.first.n).to be_nil
-      expect(leaves.second.n).to be_nil
-    end
-
-    it "builds a filled 7 quire with 7 single" do
-      leaves = quire_7_last_single.filled_quire
-      # puts leaves.pretty_inspect
-      expect(leaves.size).to eq 8
-      expect(leaves.first.n).to be_nil
-    end
-
-    it "builds a filled 1 quire" do
-      leaves = quire_1_single.filled_quire
-      # puts leaves.pretty_inspect
-      expect(leaves.size).to eq 2
-      expect(leaves.second.n).to be_nil
-    end
-
-    it "builds a filled 2 quire with 1, 2 single" do
-      leaves = quire_2_singles.filled_quire
-      # puts leaves.pretty_inspect
-      expect(leaves.size).to eq 4
-      expect(leaves[-1].n).to be_nil
-      expect(leaves[-2].n).to be_nil
-    end
-
-    it "builds a filled quire 4 with 3 & 4 single leaves" do
-      leaves = quire_4_third_fourth_singles.filled_quire
-      # puts leaves.pretty_inspect
-      expect(leaves.size).to eq 6
-      expect(leaves[0].n).to be_nil
-      expect(leaves[1].n).to be_nil
-    end
-
-    it "builds a filled quire 8 with 2, 7 single" do
-      leaves = quire_8_second_seventh_single.filled_quire
-      # puts leaves.pretty_inspect
-      expect(leaves.size).to eq 10
-      expect(leaves[2].n).to be_nil
-      expect(leaves[7].n).to be_nil
-    end
-
-    it "builds a filled quire 8 with 4, 5 single" do
-      leaves = quire_8_fourth_fifth_single.filled_quire
-      # puts leaves.pretty_inspect
-      expect(leaves.size).to eq 10
-      expect(leaves[6].n).to be_nil
-      expect(leaves[5].n).to be_nil
-    end
-
-  end
-
-  context "quire units" do
-    it "builds a quire model" do
-      expect(quire_8_regular.units.size).to eq 4
-    end
-
-    it "builds a quire model with a middle single" do
-      units = quire_7_middle_single.units
-      expect(units.size).to eq 4
-      expect(units.last.leaves.first.single).to eq true
-    end
-
-    it "builds a quire model with a first single" do
-      units = quire_7_first_single.units
-      expect(units.size).to eq 4
-      # puts quire_7_first_single.to_xml
-      expect(units.first.leaves.first.single).to eq true
-    end
-
-    it "builds a quire model with a second single" do
-      units = quire_7_second_single.units
-      expect(units.size).to eq 4
-      # puts quire_7_second_single.to_xml
-      expect(units.second.leaves.first.single).to eq true
-    end
-
-    it "builds a quire model with a third single" do
-      units = quire_7_third_single.units
-      expect(units.size).to eq 4
-      # puts quire_7_third_single.to_xml
-      expect(units.third.leaves.first.single).to eq true
-    end
-
-    it "builds a quire model with multiple singles" do
-      units = quire_8_third_second_single.units
-      # puts quire_8_third_second_single.to_xml
-      expect(units.size).to eq 5
-      expect(units.second.leaves.first.single).to eq true
-      expect(units.third.leaves.first.single).to eq true
-    end
-  end
-
   context "parent quire" do
     it "has children" do
       child = FactoryGirl.create :quire
@@ -208,5 +65,22 @@ RSpec.describe Quire, :type => :model do
       parent = FactoryGirl.create :quire
       expect(parent.child_quires.create.parent_quire).to eq parent
     end
+  end
+
+  context 'quire deletion' do
+    it "does not delete leaves shared between quires" do
+      quire1 = create :quire, leaves: [create(:leaf), create(:leaf)]
+      quire2 = create :quire, leaves: quire1.leaves
+      expect(quire1.leaves.count).to eq 2
+      expect(quire2.leaves.count).to eq 2
+      expect { quire2.destroy }.not_to change { Leaf.count }
+    end
+
+    it "does leaves not shared between quires" do
+      quire1 = create :quire, leaves: [create(:leaf), create(:leaf)]
+      expect(quire1.leaves.count).to eq 2
+      expect { quire1.destroy }.to change { Leaf.count }
+    end
+
   end
 end

@@ -11,7 +11,7 @@ class ManuscriptsController < ApplicationController
 
   def export_xml
     xml_type = params['xml_type'] || :filled_quires
-    send_data  "#{@manuscript.to_xml(xml_type: xml_type.to_sym)}", filename: xml_file_name
+    send_data  "#{@manuscript.to_xml(xml_type: xml_type.to_sym)}", filename: xml_file_name, type: 'text/xml'
   end
 
   def show

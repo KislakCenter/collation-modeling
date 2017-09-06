@@ -27,10 +27,6 @@ class Quire < ActiveRecord::Base
     sprintf "%s  Quire %s", manuscript.title, position
   end
 
-  def number
-    position
-  end
-
   # Return the last folio from the preceding quire if it exists.
   def preceding_leaf
     if persisted?

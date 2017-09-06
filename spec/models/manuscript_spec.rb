@@ -57,7 +57,8 @@ RSpec.describe Manuscript, :type => :model do
 
   context "xml" do
     it "creates some xml" do
-      expect(Nokogiri::XML(ms_with_8_quires.to_xml).xpath('//quire').length).to eq 8
+      ns = { x: 'http://schoenberginstitute.org/schema/collation' }
+      expect(Nokogiri::XML(ms_with_8_quires.to_xml).xpath('//x:quire', ns).length).to eq 8
     end
   end
 

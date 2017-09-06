@@ -53,7 +53,7 @@ class Manuscript < ActiveRecord::Base
     #         <conjoin certainty="1" target="#lewis_e_001-14-8"/>
     #     </q>
     # </leaf>
-    Nokogiri::XML::Builder.new do |xml|
+    Nokogiri::XML::Builder.new encoding: "UTF-8" do |xml|
       xml.viscoll("xmlns:tei": "http://www.tei-c.org/ns/1.0", xmlns: "http://schoenberginstitute.org/schema/collation") {
         xml.manuscript {
           xml.url url

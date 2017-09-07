@@ -76,11 +76,10 @@ RSpec.describe Quire, :type => :model do
       expect { quire2.destroy }.not_to change { Leaf.count }
     end
 
-    it "does leaves not shared between quires" do
+    it "does delete orphaned leaves" do
       quire1 = create :quire, leaves: [create(:leaf), create(:leaf)]
       expect(quire1.leaves.count).to eq 2
       expect { quire1.destroy }.to change { Leaf.count }
     end
-
   end
 end

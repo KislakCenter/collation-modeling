@@ -7,8 +7,8 @@ cd `dirname $0`/..
 
 generator_options="--no-helper --no-view-specs --no-helper-specs --no-assets --no-stylesheets"
 
-rails g migration add_quire_uncertain_to_leaves \
-  quire_uncertain:boolean
+rails g migration add_sub_quire_to_quire_leaves \
+  sub_quire:integer
 
 # rails g migration add_parent_quire_to_quires quire_id:integer
 

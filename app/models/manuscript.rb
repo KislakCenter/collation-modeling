@@ -91,7 +91,6 @@ class Manuscript < ActiveRecord::Base
 
   def calculate_conjoins
     quires.each do |quire|
-      next if quire.has_parent?
       quire.calculate_conjoins
     end
   end

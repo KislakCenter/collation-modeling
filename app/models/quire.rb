@@ -19,10 +19,6 @@ class Quire < ActiveRecord::Base
   alias_method :next, :lower_item
   alias_method :previous, :higher_item
 
-  def has_parent?
-    parent_quire_id.present?
-  end
-
   def name
     sprintf "%s  Quire %s", manuscript.title, position
   end
@@ -85,6 +81,16 @@ class Quire < ActiveRecord::Base
       right = pairs.pop
       left.update_attribute 'right_conjoin', right unless left.right_conjoin == right
     end
+  end
+
+  def subquires
+    subs = []
+    quire_leaves.each do |quire_leaf|
+      if quire_leaf.subquire.to_i > 0
+        (subs[quire_leaf.subquire] ||= []) << quire_leaf
+      end
+    end
+      subs.compact
   end
 
   private

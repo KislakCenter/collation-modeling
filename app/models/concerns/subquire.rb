@@ -31,6 +31,17 @@ class Subquire
   def contains? other
     return false unless other.is_a? self.class
     return false if empty? || other.empty?
+    return min_position <= other.min_position && other.max_position <= max_position
+  end
+
+  def adjacent? other
+    return false unless other.is_a? self.class
+    return true  if positions.include?(other.min_position - 1)
+    positions.include?(other.max_position + 1)
+  end
+
+  def immediate_container? other
+    contains? other && adjacent? other
   end
 
   def range

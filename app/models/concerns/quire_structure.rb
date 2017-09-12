@@ -24,7 +24,7 @@ module QuireStructure
     _structure.each do |outer|
       _structure.each do |inner|
         next if outer.equal? inner # don't compare same subquire
-        outer.add_child inner if outer.contains? innner
+        outer.add_child inner if outer.immediate_parent? innner
       end
     end
 

@@ -11,8 +11,8 @@ module QuireStructure
     add_position subquire0, 0
     add_position subquire0, (self.quire_leaves.size - 1)
 
-    quire_leaves.each_with_index do |quire_leaf, ndx|
-      add_position quire_leaf.subquire, ndx
+    quire_leaves.each do |quire_leaf|
+      add_position quire_leaf.subquire, quire_leaf.position
     end
 
     find_containment

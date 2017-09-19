@@ -1,4 +1,6 @@
 class Subquire
+  MAIN_QUIRE_NUM = 1
+
   attr_reader :subquire_num
 
   def initialize subquire_num
@@ -34,8 +36,14 @@ class Subquire
     return min_position <= other.min_position && other.max_position <= max_position
   end
 
+  def main_quire?
+    subquire_num == MAIN_QUIRE_NUM
+  end
+
   def adjacent? other
     return false unless other.is_a? self.class
+    return true if main_quire? && other.min_position == min_position
+    return true if main_quire? && other.max_position == max_position
     return true  if positions.include?(other.min_position - 1)
     positions.include?(other.max_position + 1)
   end

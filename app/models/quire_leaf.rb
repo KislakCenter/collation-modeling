@@ -15,11 +15,11 @@ class QuireLeaf < ActiveRecord::Base
 
   MODES = %w( original added replaced missing )
 
-  delegate :single, to: :leaf, prefix: true, allow_nil: true
-  delegate :folio_number, to: :leaf, prefix: false, allow_nil: true
-  delegate :quire_uncertain, to: :leaf, prefix: false, allow_nil: true
-  delegate :number, to: :quire, prefix: true, allow_nil: true
-  delegate :xml_id, to: :quire, prefix: true, allow_nil: true
+  delegate :single?,         to: :leaf,  prefix: true,  allow_nil: true
+  delegate :folio_number,    to: :leaf,  prefix: false, allow_nil: true
+  delegate :quire_uncertain, to: :leaf,  prefix: false, allow_nil: true
+  delegate :number,          to: :quire, prefix: true,  allow_nil: true
+  delegate :xml_id,          to: :quire, prefix: true,  allow_nil: true
 
   def has_conjoin?
     conjoin.present?

@@ -8,6 +8,10 @@ module Como
       @subquire_num = subquire_num
     end
 
+    def positions
+      (@slots ||= []).map(&:position).compact
+    end
+
     def max_position
       positions.max
     end
@@ -16,19 +20,23 @@ module Como
       positions.min
     end
 
-    def << position
-      (@positions ||= Set.new) << position
+    def << quire_slot
+      (@slots ||= []) << quire_slot
       # allow chaining of insertions
       self
     end
 
-    def positions
+    def has_position? position
+      positions.include? position
+    end
+
+    def slots
       # don't allow direct access to @positions
-      (@positions ||= Set.new).dup
+      (@slots ||= []).dup
     end
 
     def empty?
-      positions.empty?
+      @slots.nil? || @slots.empty?
     end
 
     def contains? other
@@ -78,11 +86,13 @@ module Como
       parent.blank?
     end
 
+    ##
+    # By definition a subquire cannot be discontinuous, if any of the parent
+    # subquire's positions fall with in our range, something is off.
+    #
     def discontinuous?
       return false if top_level?
-      parent.positions.any? { |posn|
-        range.include? posn
-      }
+      parent.slots.any? { |slot| range.include? slot.position }
     end
 
     def to_s

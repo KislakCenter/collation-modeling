@@ -81,5 +81,15 @@ module Como
         expect(structure_with_bad_subquire).not_to be_structurally_valid
       end
     end
+
+    context '#top_level_quire' do
+      it "returns the top level subquire" do
+        expect(structure_with_nested_subquires.top_level_quire).to be_a Subquire
+      end
+
+      it 'has one top level subquire' do
+        expect(structure_with_subquire.build_structure.select { |sq| sq.main_quire? }.size).to eq 1
+      end
+    end
   end
 end

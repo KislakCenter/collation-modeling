@@ -3,12 +3,12 @@ class QuireSlot
   attr_reader :quire_leaf
   attr_accessor :conjoin
 
-  def initialize quire_leaf
+  def initialize quire_leaf=nil
     @quire_leaf = quire_leaf
   end
 
   def single?
-    @quire_leaf && @quire_leaf.single?
+    @quire_leaf && @quire_leaf.leaf_single?
   end
 
   def position
@@ -19,8 +19,11 @@ class QuireSlot
     !!conjoin
   end
 
-  def == other
-    # using strict equivalence
-    self == other.equal
+  def unjoined?
+    conjoin.nil?
+  end
+
+  def to_s
+    "#{self.class}: position: #{position}; conjoin: #{conjoin.position}"
   end
 end

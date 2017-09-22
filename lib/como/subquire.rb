@@ -6,6 +6,7 @@ module Como
 
     def initialize subquire_num
       @subquire_num = subquire_num
+      @substructure = []
     end
 
     def positions
@@ -86,6 +87,27 @@ module Como
       parent.blank?
     end
 
+    def empty?
+      @slots.nil? || @slots.empty?
+    end
+
+    def size
+      return 0 if empty?
+      @slots.size
+    end
+
+    def non_singles
+      slots.reject &:single?
+    end
+
+    def even_bifolia?
+      return non_singles.size.even?
+    end
+
+    def singles
+      slots.select &:single?
+    end
+
     ##
     # By definition a subquire cannot be discontinuous, if any of the parent
     # subquire's positions fall with in our range, something is off.
@@ -95,12 +117,48 @@ module Como
       parent.slots.any? { |slot| range.include? slot.position }
     end
 
+    def calculate_conjoins
+      # don't calculate if structure doesn't make sense
+      return if discontinuous?
+      return unless even_bifolia?
+      join_bifolia
+      pair_up_singles
+    end
+
+    def join_bifolia
+      bifolia = non_singles
+      until bifolia.empty?
+        left, right   = bifolia.shift, bifolia.pop
+        left.conjoin  = right
+        right.conjoin = left
+      end
+    end
+
+    def pair_up_singles
+      slots.each_with_index do |slot, ndx|
+        next unless slot.unjoined?
+        if slot == @slots.first
+          new_slot = QuireSlot.new
+          @slots.push new_slot
+          slot.conjoin = new_slot
+          new_slot.conjoin = slot
+          return pair_up_singles
+        end
+        if slot == @slots.last
+          new_slot = QuireSlot
+          @slots.shift new_slot
+          slot.conjoin = new_slot
+          new_slot.conjoin = slot
+          return pair_up_singles
+        end
+      end
+    end
+
     def to_s
       "#{self.class.name}: subquire_num=#{subquire_num}"
     end
 
     protected
-
     def _set_parent subquire
       @parent = subquire
     end

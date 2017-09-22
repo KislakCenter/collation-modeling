@@ -23,6 +23,7 @@ module Como
       q.quire_leaves[3].update_attribute 'subquire', 2
       q.quire_leaves[4].update_attribute 'subquire', 2
       q.quire_leaves[5].update_attribute 'subquire', 1
+      q.quire_leaves[6].update_attribute 'subquire', 1
       QuireStructure.new q
     }
 
@@ -42,21 +43,32 @@ module Como
       QuireStructure.new q
     }
 
-    context '#build_structure' do
+    let(:quire_7_first_single) { build_quire_and_leaves 7, 1 }
+
+    context '#build' do
       it "builds a simple quire structure" do
-        expect(structure_for_simple_quire.build_structure.size).to eq 1
+        expect(structure_for_simple_quire.build.size).to eq 1
       end
 
       it "builds a structure for a quire with single subquire" do
-        expect(structure_with_subquire.build_structure.size).to eq 2
+        expect(structure_with_subquire.build.size).to eq 2
       end
 
       it "builds a structure for a quire with nested subquires" do
-        expect(structure_with_nested_subquires.build_structure.size).to eq 3
+        expect(structure_with_nested_subquires.build.size).to eq 3
       end
 
       it "builds a structure for a quire with nested subquires" do
-        expect(structure_with_adjacent_subquires.build_structure.size).to eq 3
+        expect(structure_with_adjacent_subquires.build.size).to eq 3
+      end
+
+      it 'calculates the conjoins for a simple quire of bifolia' do
+        expect(structure_for_simple_quire.build[0]).to have_balanced_conjoins
+      end
+
+      it 'calculates the conjoins for a simple quire with one single' do
+        structure = QuireStructure.new quire_7_first_single
+        expect(structure.build[0]).to have_balanced_conjoins
       end
     end
 
@@ -88,7 +100,7 @@ module Como
       end
 
       it 'has one top level subquire' do
-        expect(structure_with_subquire.build_structure.select { |sq| sq.main_quire? }.size).to eq 1
+        expect(structure_with_subquire.build.select { |sq| sq.main_quire? }.size).to eq 1
       end
     end
   end

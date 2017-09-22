@@ -1,12 +1,13 @@
 module Como
   class QuireStructure
     attr_reader :quire
+    attr_reader :errors
 
     def initialize quire
       @quire = quire
     end
 
-    def build_structure
+    def build
       return _structure unless _structure.blank?
 
       # add each quire_leaf to its subquire
@@ -19,9 +20,38 @@ module Como
       end
 
       find_containment
+
+      calculate_conjoins
       _structure
     end
 
+    def add_slot subquire_num, quire_leaf
+      _structure[subquire_num] ||= Subquire.new subquire_num
+      return _structure if _structure[subquire_num].has_position? quire_leaf.position
+      _structure[subquire_num] << QuireSlot.new(quire_leaf)
+    end
+
+    def structurally_valid?
+      build
+      @errors = []
+      _structure.each do |sq|
+        if sq.discontinuous?
+          @errors << "Subquire #{sq.subquire_num} is discontinuous"
+        end
+        unless sq.even_bifolia?
+          @errors << "Subquire #{sq.subquire_num} has an odd number of non-single leaves"
+        end
+      end
+
+      return @errors.empty?
+    end
+
+    def top_level_quire
+      build if _structure.blank?
+      _structure.find { |sq| sq.main_quire? }
+    end
+
+    private
     def find_containment
       return if _structure.size < 2
 
@@ -33,27 +63,10 @@ module Como
       end
     end
 
-    def add_slot subquire_num, quire_leaf
-      _structure[subquire_num] ||= Subquire.new subquire_num
-      return _structure if _structure[subquire_num].has_position? quire_leaf.position
-      _structure[subquire_num] << QuireSlot.new(quire_leaf)
+    def calculate_conjoins
+      _structure.each &:calculate_conjoins
     end
 
-    def structurally_valid?
-      build_structure
-      @errors = []
-      _structure.each do |sq|
-        @errors << "Subquire #{sq} is discontinuous" if sq.discontinuous?
-      end
-      return @errors.blank?
-    end
-
-    def top_level_quire
-      build_structure if _structure.blank?
-      _structure.find { |sq| sq.main_quire? }
-    end
-
-    private
     def _structure
       @structure ||= []
     end

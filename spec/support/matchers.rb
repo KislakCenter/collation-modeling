@@ -15,3 +15,13 @@ RSpec::Matchers.define :have_balanced_conjoins do
     "expected that #{actual} would have balanced conjoins"
   end
 end
+
+RSpec::Matchers.define :have_balanced_substructure do
+  match do |subquire|
+    slots = subquire.substructure
+    slots.size.times { |i| expect(slots[i].conjoin).to eq slots[-1 - i] }
+  end
+  failure_message do |actual|
+    "expected that #{actual} would have balanced conjoins"
+  end
+end

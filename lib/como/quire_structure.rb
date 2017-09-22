@@ -7,32 +7,34 @@ module Como
       @quire = quire
     end
 
+    def structure
+      _structure.dup
+    end
+
+    def size
+      _structure.size
+    end
+
     def build
-      return _structure unless _structure.blank?
+      return structure if built?
 
       # add each quire_leaf to its subquire
       quire.quire_leaves.each do |quire_leaf|
-        add_slot quire_leaf.subquire, quire_leaf
+        _add_quire_leaf quire_leaf.subquire, quire_leaf
         # quire0 is always in the first position
-        add_slot Subquire::MAIN_QUIRE_NUM, quire_leaf if quire_leaf.first?
+        _add_quire_leaf Subquire::MAIN_QUIRE_NUM, quire_leaf if quire_leaf.first?
         # quire0 is always in the last position
-        add_slot Subquire::MAIN_QUIRE_NUM, quire_leaf if quire_leaf.last?
+        _add_quire_leaf Subquire::MAIN_QUIRE_NUM, quire_leaf if quire_leaf.last?
       end
 
       find_containment
-
       calculate_conjoins
-      _structure
-    end
 
-    def add_slot subquire_num, quire_leaf
-      _structure[subquire_num] ||= Subquire.new subquire_num
-      return _structure if _structure[subquire_num].has_position? quire_leaf.position
-      _structure[subquire_num] << QuireSlot.new(quire_leaf)
+      structure
     end
 
     def structurally_valid?
-      build
+      build unless built?
       @errors = []
       _structure.each do |sq|
         if sq.discontinuous?
@@ -47,11 +49,30 @@ module Como
     end
 
     def top_level_quire
-      build if _structure.blank?
+      build unless built?
       _structure.find { |sq| sq.main_quire? }
+    end
+    alias_method :top, :top_level_quire
+
+    def subquire subquire_num
+      _structure[subquire_num]
+    end
+
+    def built?
+      !!@structure
+    end
+
+    def errors
+      @errors.dup
     end
 
     private
+    def _add_quire_leaf subquire_num, quire_leaf
+      _structure[subquire_num] ||= Subquire.new subquire_num
+      return _structure if _structure[subquire_num].has_quire_leaf? quire_leaf
+      _structure[subquire_num].add_quire_leaf quire_leaf
+    end
+
     def find_containment
       return if _structure.size < 2
 

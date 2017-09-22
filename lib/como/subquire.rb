@@ -10,7 +10,7 @@ module Como
     end
 
     def positions
-      (@slots ||= []).map(&:position).compact
+      _slots.map(&:position).compact
     end
 
     def max_position
@@ -22,9 +22,23 @@ module Como
     end
 
     def << quire_slot
-      (@slots ||= []) << quire_slot
+      _slots << quire_slot
       # allow chaining of insertions
       self
+    end
+
+    def add_quire_leaf quire_leaf
+      return if has_quire_leaf? quire_leaf
+      _slots << QuireSlot.new(quire_leaf)
+      _add_quire_leaf_slot_to_substructure @slots.last
+    end
+
+    def has_quire_leaf? quire_leaf
+      leaves.include? quire_leaf
+    end
+
+    def leaves
+      _slots.flat_map { |slot| slot.quire_leaf || [] }
     end
 
     def has_position? position
@@ -33,11 +47,19 @@ module Como
 
     def slots
       # don't allow direct access to @positions
-      (@slots ||= []).dup
+      _slots.dup
+    end
+
+    def substructure
+      _substructure.dup
+    end
+
+    def substructure_size
+      _substructure.size
     end
 
     def empty?
-      @slots.nil? || @slots.empty?
+      _slots.empty?
     end
 
     def contains? other
@@ -137,18 +159,18 @@ module Como
     def pair_up_singles
       slots.each_with_index do |slot, ndx|
         next unless slot.unjoined?
-        if slot == @slots.first
-          new_slot = QuireSlot.new
-          @slots.push new_slot
-          slot.conjoin = new_slot
+        if slot == _slots.first
+          new_slot         = QuireSlot.new
+          slot.conjoin     = new_slot
           new_slot.conjoin = slot
+          _add_slot new_slot, after: _slots.last
           return pair_up_singles
         end
-        if slot == @slots.last
-          new_slot = QuireSlot
-          @slots.shift new_slot
-          slot.conjoin = new_slot
+        if slot == _slots.last
+          new_slot         = QuireSlot.new
+          slot.conjoin     = new_slot
           new_slot.conjoin = slot
+          _add_slot new_slot, before: _slots.first
           return pair_up_singles
         end
       end
@@ -159,8 +181,83 @@ module Como
     end
 
     protected
+    def _add_quire_leaf_slot_to_substructure quire_slot
+      return if _substructure.include? quire_slot
+      raise "Can't add placeholder slot as quire_leaf" if quire_slot.placeholder?
+      raise "Can't add quire leaf to Subquire with placeholders" if _substructure.any?(&:placeholder?)
+      _substructure << quire_slot
+      _substructure.sort! { |a,b| a.position <=> b.position }
+    end
+
     def _set_parent subquire
       @parent = subquire
+      _fill_parent
+    end
+
+    def _fill_parent
+      return if parent.nil?
+      _substructure.each do |slot|
+        parent._add_quire_leaf_slot_to_substructure slot
+      end
+      parent._fill_parent
+    end
+
+    ##
+    # Add `quire_slot` to the main subquire structure before or after the slot
+    # given as the `:before` or `:after` slot in `opts`. Either `:before` or
+    # `:after` must be specified but not both. After adding the slot to the
+    # top level structure, the slot is added to the substructure.
+    def _add_slot quire_slot, opts={}
+      ndx = _get_index _slots, opts
+      _slots.insert ndx, quire_slot
+      _add_slot_to_substructure quire_slot, opts
+    end
+
+    ##
+    # Add `quire_slot` to the subquire substructure before or after the slot
+    # given as the `:before` or `:after` slot in `opts`. Either `:before` or
+    # `:after` must be specified but not both. After adding the slot to the
+    # top level structure, the slot is added to the substructure.
+    def _add_slot_to_substructure quire_slot, opts={}
+      return if _substructure.include? quire_slot
+      ndx = _get_index _substructure, opts
+      _substructure.insert ndx, quire_slot
+      parent._add_slot_to_substructure quire_slot, opts unless parent.nil?
+    end
+
+    private
+
+    ##
+    # Get the `:before` or `:after` index for the QuireSlot given as the
+    # `:before` or `:after` value in `opts` index. This index will be used for
+    # QuireSlot insertion; consequently, the `:before` index is the index of
+    # the given slot, while the `:after` index is the index of the given slot
+    # plus 1. Either `:before` or `:after` must be specified but not both.
+    def _get_index sequence, opts
+      _check_before_after_opts opts
+      !!opts[:before] ? sequence.index(opts[:before]) : (sequence.index(opts[:after]) + 1)
+    end
+
+    ##
+    # Confirm that opts has either `:before` or `:after` but not both and that
+    # the given opt is a QuireSlot.
+    def _check_before_after_opts opts={}
+      unless (!!opts[:before]) ^ (!!opts[:after])
+        msg = "opts must have :before or :after, but not both; got #{opts}"
+        raise ArgumentError.new msg
+      end
+      slot = opts[:before] || opts[:after]
+      unless slot.is_a? QuireSlot
+        msg "`:before|:after` opt must be a QuireSlot: got #{slot}"
+      end
+    end
+
+    def _slots
+      (@slots ||= [])
+    end
+
+    def _substructure
+      (@substructure ||= [])
     end
   end
 end

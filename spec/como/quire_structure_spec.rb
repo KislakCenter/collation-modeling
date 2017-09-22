@@ -10,14 +10,14 @@ module Como
     }
 
     let(:structure_with_subquire) {
-      q = build_quire_and_leaves
+      q = build_quire_and_leaves 8
       q.quire_leaves[1].update_attribute 'subquire', 1
       q.quire_leaves[2].update_attribute 'subquire', 1
       QuireStructure.new q
     }
 
     let(:structure_with_nested_subquires) {
-      q = build_quire_and_leaves
+      q = build_quire_and_leaves 8
       q.quire_leaves[1].update_attribute 'subquire', 1
       q.quire_leaves[2].update_attribute 'subquire', 1
       q.quire_leaves[3].update_attribute 'subquire', 2
@@ -28,7 +28,7 @@ module Como
     }
 
     let(:structure_with_bad_subquire) {
-      q = build_quire_and_leaves
+      q = build_quire_and_leaves 8
       q.quire_leaves[1].update_attribute 'subquire', 1
       q.quire_leaves[3].update_attribute 'subquire', 1
       QuireStructure.new q
@@ -45,32 +45,74 @@ module Como
 
     let(:quire_7_first_single) { build_quire_and_leaves 7, 1 }
 
+    let(:quire_7_last_single)  { build_quire_and_leaves 7, 7 }
+
     context '#build' do
       it "builds a simple quire structure" do
         expect(structure_for_simple_quire.build.size).to eq 1
       end
 
       it "builds a structure for a quire with single subquire" do
-        expect(structure_with_subquire.build.size).to eq 2
+        structure_with_subquire.build
+        expect(structure_with_subquire.size).to eq 2
       end
 
       it "builds a structure for a quire with nested subquires" do
-        expect(structure_with_nested_subquires.build.size).to eq 3
+        structure_with_nested_subquires.build
+        expect(structure_with_nested_subquires.size).to eq 3
       end
 
-      it "builds a structure for a quire with nested subquires" do
-        expect(structure_with_adjacent_subquires.build.size).to eq 3
+      it "builds a structure for a quire with adjacent nested subquires" do
+          structure_with_adjacent_subquires.build
+          expect(structure_with_adjacent_subquires.size).to eq 3
       end
 
-      it 'calculates the conjoins for a simple quire of bifolia' do
-        expect(structure_for_simple_quire.build[0]).to have_balanced_conjoins
+      context '(conjoins)' do
+        it 'calculates the conjoins for a simple quire of bifolia' do
+          expect(structure_for_simple_quire.build[0]).to have_balanced_conjoins
+        end
+
+        it 'calculates the conjoins for a simple quire with initial single' do
+          structure = QuireStructure.new quire_7_first_single
+          expect(structure.build[0]).to have_balanced_conjoins
+        end
+
+        it 'calculates the conjoins for a simple quire with final single' do
+          structure = QuireStructure.new quire_7_last_single
+          expect(structure.build[0]).to have_balanced_conjoins
+        end
       end
 
-      it 'calculates the conjoins for a simple quire with one single' do
-        structure = QuireStructure.new quire_7_first_single
-        expect(structure.build[0]).to have_balanced_conjoins
+      context '(substructures)' do
+        it "builds a substructure for a quire with nested subquires" do
+          structure_with_nested_subquires.build
+          expect(structure_with_nested_subquires.subquire(0).substructure_size).to eq 8
+          expect(structure_with_nested_subquires.subquire(1).substructure_size).to eq 6
+          expect(structure_with_nested_subquires.subquire(2).substructure_size).to eq 2
+        end
+
+        it 'creates balanced substructure for a simple quire of bifolia' do
+          structure_for_simple_quire.build
+          expect(structure_for_simple_quire.top.substructure.size).to eq 8
+          expect(structure_for_simple_quire.top).to have_balanced_substructure
+        end
+
+        it 'creates balanced substructure for a simple quire with initial single' do
+          structure = QuireStructure.new quire_7_first_single
+          structure.build
+          expect(structure.top.substructure.size).to eq 8
+          expect(structure.top).to have_balanced_substructure
+        end
+
+        it 'creates balanced substructure for a simple quire with final single' do
+          structure = QuireStructure.new quire_7_last_single
+          structure.build
+          expect(structure.top.substructure.size).to eq 8
+          expect(structure.top).to have_balanced_substructure
+        end
       end
     end
+
 
     context '#structurally_valid?' do
       it "reports a simple quire is structurally valid" do

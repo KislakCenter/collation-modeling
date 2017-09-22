@@ -110,16 +110,15 @@ module Como
     end
 
     def empty?
-      @slots.nil? || @slots.empty?
+      _slots.empty?
     end
 
     def size
-      return 0 if empty?
-      @slots.size
+      _slots.size
     end
 
     def non_singles
-      slots.reject &:single?
+      _slots.reject &:single?
     end
 
     def even_bifolia?
@@ -127,7 +126,37 @@ module Como
     end
 
     def singles
-      slots.select &:single?
+      _slots.select &:single?
+    end
+
+    def slot_after slot
+      ndx = _slots.index slot
+      _slots[ndx + 1]
+    end
+
+    def slot_before slot
+      ndx = _slots.index slot
+      _slots[ndx - 1]
+    end
+
+    def middle? slot
+      return false if size.even?
+      _slots.index(slot) == (size / 2)
+    end
+
+    def before_middle? slot
+      # If size is odd; middle index is size/2; before indices are less than
+      # size/2. If even, size/2 is one past middle index.
+      _slots.index(slot) < (size / 2)
+    end
+
+    def after_middle? slot
+      # If size is odd; middle index is size/2; after indices are greater than
+      # size/2.
+      _slots.index(slot) > (size / 2) if middle? slot
+      # If even, size/2 is one past middle index; after indices are greater
+      # than or equal to size/2.
+      _slots.index(slot) >= (size / 2)
     end
 
     ##
@@ -159,20 +188,36 @@ module Como
     def pair_up_singles
       slots.each_with_index do |slot, ndx|
         next unless slot.unjoined?
-        if slot == _slots.first
-          new_slot         = QuireSlot.new
-          slot.conjoin     = new_slot
-          new_slot.conjoin = slot
-          _add_slot new_slot, after: _slots.last
-          return pair_up_singles
-        end
-        if slot == _slots.last
-          new_slot         = QuireSlot.new
-          slot.conjoin     = new_slot
-          new_slot.conjoin = slot
-          _add_slot new_slot, before: _slots.first
-          return pair_up_singles
-        end
+        pair_single slot
+        #
+        pair_up_singles
+      end
+    end
+
+    def pair_single slot
+      case
+      when slot == _slots.first
+        new_slot = _new_conjoin slot
+        _add_slot new_slot, after: _slots.last
+      when slot == _slots.last
+        new_slot = _new_conjoin slot
+        _add_slot new_slot, before: _slots.first
+      when slot_after(slot).unjoined?
+        return pair_single slot_after slot
+      when middle?(slot)
+        # if this slot is in the middle, the placeholder follows it
+        new_slot = _new_conjoin slot
+        _add_slot new_slot, after: slot
+      when before_middle?(slot)
+        new_slot = _new_conjoin slot
+        # new_slot goes before previous slot's conjoin
+        raise "Not implmented"
+      when after_middle?(slot)
+        new_slot = _new_conjoin slot
+        # new_slot goes after following slot's conjoin
+        raise "Not implmented"
+      else
+        raise "Shouldn't have a slot that doesn't match."
       end
     end
 
@@ -250,6 +295,14 @@ module Como
       unless slot.is_a? QuireSlot
         msg "`:before|:after` opt must be a QuireSlot: got #{slot}"
       end
+    end
+
+    def _new_conjoin slot
+      new_slot         = QuireSlot.new
+      slot.conjoin     = new_slot
+      new_slot.conjoin = slot
+
+      new_slot
     end
 
     def _slots

@@ -27,6 +27,10 @@ module Como
       self
     end
 
+    def [] ndx
+      _slots[ndx]
+    end
+
     def add_quire_leaf quire_leaf
       return if has_quire_leaf? quire_leaf
       _slots << QuireSlot.new(quire_leaf)
@@ -129,6 +133,14 @@ module Como
       _slots.select &:single?
     end
 
+    def unjoined_slots
+      _slots.select &:unjoined?
+    end
+
+    def all_slots_joined?
+      unjoined_slots.empty?
+    end
+
     def slot_after slot
       ndx = _slots.index slot
       _slots[ndx + 1]
@@ -186,12 +198,10 @@ module Como
     end
 
     def pair_up_singles
-      slots.each_with_index do |slot, ndx|
-        next unless slot.unjoined?
-        pair_single slot
-        #
-        pair_up_singles
-      end
+      return if all_slots_joined?
+      pair_single unjoined_slots.first
+      # start over; positions have changed
+      pair_up_singles
     end
 
     def pair_single slot
@@ -202,8 +212,6 @@ module Como
       when slot == _slots.last
         new_slot = _new_conjoin slot
         _add_slot new_slot, before: _slots.first
-      when slot_after(slot).unjoined?
-        return pair_single slot_after slot
       when middle?(slot)
         # if this slot is in the middle, the placeholder follows it
         new_slot = _new_conjoin slot
@@ -211,14 +219,26 @@ module Como
       when before_middle?(slot)
         new_slot = _new_conjoin slot
         # new_slot goes before previous slot's conjoin
-        raise "Not implmented"
+        prev_slot = slot_before slot
+        _add_slot new_slot, before: prev_slot.conjoin
       when after_middle?(slot)
+        # new_slot goes after next slot's conjoin
+        # if the next slot is unjoined, we have to wait to process this one
+        return pair_single slot_after slot if slot_after(slot).unjoined?
         new_slot = _new_conjoin slot
-        # new_slot goes after following slot's conjoin
-        raise "Not implmented"
+        next_slot = slot_after slot
+        _add_slot new_slot, after: next_slot.conjoin
       else
         raise "Shouldn't have a slot that doesn't match."
       end
+    end
+
+    def conjoin_map
+      _slots.map { |slot| [slot_rep(slot), slot_rep(slot.conjoin)] }
+    end
+
+    def slot_rep slot
+      { index: _slots.index(slot), position: slot.position }
     end
 
     def to_s

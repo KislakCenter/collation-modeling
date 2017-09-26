@@ -65,17 +65,14 @@ Since we create `false` leaves to fill out the leaf structure for
                 - join leaf and false_leaf
                 - return process_singles()
             - if leaf.posn <= (size+1)/2:
-                - if next.unjoined?
-                    - process_single(next)
-                - else
-                    - insert false_leaf after next.conjoin
-                    - join leaf and false_leaf
-                    - return process_singles()
+                - insert false_leaf before prev.conjoin
+                - join leaf and false_leaf
+                - return process_singles()
             - if leaf.posn > (size+1)/2:
-                if prev.unjoined?
-                    - raise error "No previous leaf should be unjoined"
+                if next.unjoined?
+                    - process_single(next)
                 else
-                    - insert false_leaf before prev.conjoin
+                    - insert false_leaf after next.conjoin
                     - join leaf and false_leaf
                     - return process_singles()
 

@@ -24,11 +24,24 @@ RSpec.describe ManuscriptsController, :type => :controller do
   # Manuscript. As you add validations to Manuscript, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    {
+      title: 'Manuscript Title',
+      shelfmark: 'MS 123'
+    }
   }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    {
+      title: 'Manuscript Title',
+      shelfmark: ''
+    }
+  }
+
+  let(:new_attributes) {
+    {
+      title: 'New Manuscript',
+      shelfmark: 'MS 123x'
+    }
   }
 
   # This should return the minimal set of values that should be in the session
@@ -103,14 +116,17 @@ RSpec.describe ManuscriptsController, :type => :controller do
   describe "PUT update" do
     describe "with valid params" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        {
+          title: 'New Manuscript',
+          shelfmark: 'MS 123x'
+        }
       }
 
       it "updates the requested manuscript" do
         manuscript = Manuscript.create! valid_attributes
         put :update, {:id => manuscript.to_param, :manuscript => new_attributes}, valid_session
         manuscript.reload
-        skip("Add assertions for updated state")
+        expect(response).to redirect_to(manuscript)
       end
 
       it "assigns the requested manuscript as @manuscript" do

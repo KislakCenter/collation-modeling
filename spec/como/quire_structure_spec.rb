@@ -78,97 +78,87 @@ module Como
 
       context '(conjoins)' do
         it 'calculates the conjoins for a simple quire of bifolia' do
-          expect(structure_for_simple_quire.build[0]).to have_balanced_conjoins
+          expect(structure_for_simple_quire).to have_subquire_with_balanced_conjoins :top
         end
 
         it 'calculates the conjoins for a simple quire with initial single' do
           structure = QuireStructure.new quire_7_first_single
-          expect(structure.build[0]).to have_balanced_conjoins
-          expect(structure.top[0].conjoin).to eq structure.top[7]
+          expect(structure).to have_subquire_with_balanced_conjoins :top
+          expect(structure).to have_subquire_with_conjoin_positions :top, [1, 8]
         end
 
         it 'calculates the conjoins for a simple quire with final single' do
           structure = QuireStructure.new quire_7_last_single
-          structure.build
-          expect(structure.top).to have_balanced_conjoins
-          expect(structure.top).to have_conjoin_positions 8, 1
-          # expect(structure.top[7].conjoin).to eq structure.top[0]
+          expect(structure).to have_subquire_with_balanced_conjoins :top
+          expect(structure).to have_subquire_with_conjoin_positions :top, [8, 1]
         end
 
         it 'calculates the conjoins for a simple quire with middle single' do
           structure = QuireStructure.new quire_7_middle_single
           structure.build
-          expect(structure.top).to have_balanced_conjoins
-          expect(structure.top).to have_conjoin_positions 4, 5
+          expect(structure).to have_subquire_with_balanced_conjoins :top
+          expect(structure).to have_subquire_with_conjoin_positions :top, [4, 5]
         end
 
         it 'calculates the conjoins for a simple quire with pre-middle single' do
           structure = QuireStructure.new quire_7_second_single
-          expect(structure.build[0]).to have_balanced_conjoins
-          expect(structure.top).to have_conjoin_positions 2, 7
+          expect(structure).to have_subquire_with_balanced_conjoins :top
+          expect(structure).to have_subquire_with_conjoin_positions :top, [2, 7]
         end
 
         it 'calculates the conjoins for a simple quire with post-middle single' do
           structure = QuireStructure.new quire_7_sixth_single
-          expect(structure.build[0]).to have_balanced_conjoins
-          expect(structure.top).to have_conjoin_positions 7, 2
+          expect(structure).to have_subquire_with_balanced_conjoins :top
+          expect(structure).to have_subquire_with_conjoin_positions :top, [7, 2]
         end
 
         it 'calculates the conjoins for a simple quire with final and pre-final single' do
           structure = QuireStructure.new quire_8_seventh_eighth_single
-          expect(structure.build[0]).to have_balanced_conjoins
-          expect(structure.top).to have_conjoin_positions 1, 10
-          expect(structure.top).to have_conjoin_positions 2, 9
+          expect(structure).to have_subquire_with_balanced_conjoins :top
+          expect(structure).to have_subquire_with_conjoin_positions :top, [[1, 10], [2, 9]]
         end
       end
 
       context '(substructures)' do
         it "builds a substructure for a quire with nested subquires" do
-          structure_with_nested_subquires.build
-          expect(structure_with_nested_subquires.subquire(0).substructure_size).to eq 8
-          expect(structure_with_nested_subquires.subquire(1).substructure_size).to eq 6
-          expect(structure_with_nested_subquires.subquire(2).substructure_size).to eq 2
+          expect(structure_with_nested_subquires).to have_subquire_with_substructure_size :top, 8
+          expect(structure_with_nested_subquires).to have_subquire_with_substructure_size 1, 6
+          expect(structure_with_nested_subquires).to have_subquire_with_substructure_size 2, 2
         end
 
         it 'creates balanced substructure for a simple quire of bifolia' do
-          structure_for_simple_quire.build
-          expect(structure_for_simple_quire.top.substructure.size).to eq 8
-          expect(structure_for_simple_quire.top).to have_balanced_substructure
+          expect(structure_with_nested_subquires).to have_subquire_with_substructure_size :top, 8
+          expect(structure_for_simple_quire).to have_subquire_with_balanced_substructure :top
         end
 
         it 'creates balanced substructure for a simple quire with initial single' do
           structure = QuireStructure.new quire_7_first_single
-          structure.build
-          expect(structure.top.substructure.size).to eq 8
-          expect(structure.top).to have_balanced_substructure
+          expect(structure).to have_subquire_with_substructure_size :top, 8
+          expect(structure).to have_subquire_with_balanced_substructure :top
         end
 
         it 'creates balanced substructure for a simple quire with final single' do
           structure = QuireStructure.new quire_7_last_single
-          structure.build
-          expect(structure.top.substructure.size).to eq 8
-          expect(structure.top).to have_balanced_substructure
+          expect(structure).to have_subquire_with_substructure_size :top, 8
+          expect(structure).to have_subquire_with_balanced_substructure :top
         end
 
         it 'creates balanced substructure for a simple quire with middle single' do
           structure = QuireStructure.new quire_7_middle_single
-          structure.build
-          expect(structure.top.substructure.size).to eq 8
-          expect(structure.top).to have_balanced_substructure
+          expect(structure).to have_subquire_with_substructure_size :top, 8
+          expect(structure).to have_subquire_with_balanced_substructure :top
         end
 
         it 'creates balanced substructure for a simple quire with pre-middle single' do
           structure = QuireStructure.new quire_7_second_single
-          structure.build
-          expect(structure.top.substructure.size).to eq 8
-          expect(structure.top).to have_balanced_substructure
+          expect(structure).to have_subquire_with_substructure_size :top, 8
+          expect(structure).to have_subquire_with_balanced_substructure :top
         end
 
         it 'creates balanced substructure for a simple quire with post-middle single' do
           structure = QuireStructure.new quire_7_sixth_single
-          structure.build
-          expect(structure.top.substructure.size).to eq 8
-          expect(structure.top).to have_balanced_substructure
+          expect(structure).to have_subquire_with_substructure_size :top, 8
+          expect(structure).to have_subquire_with_balanced_substructure :top
         end
       end
     end

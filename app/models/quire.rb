@@ -7,9 +7,6 @@ class Quire < ActiveRecord::Base
   has_many :quire_leaves, -> { order('position ASC') }, inverse_of: :quire
   has_many :leaves, through: :quire_leaves, dependent: :destroy
 
-  belongs_to :parent_quire, class_name: "Quire", foreign_key: :parent_quire_id
-  has_many :child_quires, class_name: "Quire", foreign_key: :parent_quire_id
-
   accepts_nested_attributes_for :quire_leaves, allow_destroy: true
 
   validate :must_have_even_bifolia

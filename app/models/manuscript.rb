@@ -42,7 +42,9 @@ class Manuscript < ActiveRecord::Base
   end
 
   def build_xml
-    calculate_conjoins
+    quire_structures = build_quire_structures
+    leaves_hash      = collect_leaves quire_structures
+
     # <leaf xml:id="lewis_e_001-13-1">
     #     <folioNumber certainty="1" val="97">97</folioNumber>
     #     <mode certainty="1" val="original"/>
@@ -53,6 +55,14 @@ class Manuscript < ActiveRecord::Base
     #         <conjoin certainty="1" target="#lewis_e_001-14-8"/>
     #     </q>
     # </leaf>
+    #
+    # <leaf xml:id="lewis_e_101-1-5">
+    #     <folioNumber certainty="1" val="5">5</folioNumber>
+    #     <mode certainty="1" val="original"/>
+    #     <q target="#lewis_e_101-q-1" leafno="5" position="5" n="1">
+    #         <conjoin certainty="1" target="#lewis_e_101-1-2"/>
+    #     </q>
+    # </leaf>
     Nokogiri::XML::Builder.new encoding: "UTF-8" do |xml|
       xml.viscoll("xmlns:tei": "http://www.tei-c.org/ns/1.0", xmlns: "http://schoenberginstitute.org/schema/collation") {
         xml.manuscript {
@@ -61,31 +71,72 @@ class Manuscript < ActiveRecord::Base
           xml.shelfmark shelfmark
           xml.direction val: 'l-r'
           xml.quires {
-            quires.each do |q|
-              attrs = { "xml:id": q.xml_id, n: q.number }
-              attrs[:parent] = "##{q.parent_quire.xml_id}" if q.parent_quire.present?
-              xml.quire q.number, attrs
+            quire_structures.each do |structure|
+              structure.subquires.each do |squire|
+                # <quire xml:id="lewis_e_101-q-1" n="1">1</quire>
+                attrs = {
+                  n: squire.quire_number,
+                  "xml:id": squire.xml_id
+                }
+                if squire.has_parent?
+                  attrs[:parent] = "##{squire.parent.xml_id}"
+                end
+                xml.quire squire.quire_number, attrs
+              end
             end
           }
-          leaves(includes: quire_leaves).each do |leaf|
+          leaves_hash.keys.each do |leaf|
             xml.leaf("xml:id": leaf.xml_id) {
-              xml.folioNumber leaf.folio_number, val: leaf.folio_number, certainty: 1
-              xml.mode val: leaf.mode
-              leaf.quire_leaves.each do |quire_leaf|
-                attrs = {}
-                attrs[:target]   = "##{quire_leaf.quire_xml_id}"
-                attrs[:position] = quire_leaf.position
-                attrs[:n]        = quire_leaf.quire_number
+              if leaf.folio_number.present?
+                attrs = {
+                  val: leaf.folio_number,
+                  certainty: 1
+                }
+                xml.folioNumber leaf.folio_number, attrs
+              end
+              attrs = { val: (leaf.mode || 'false') }
+              attrs[:certainty] = 1
+              xml.mode attrs
+              leaves_hash[leaf].each do |slot,squire|
+                attrs = {
+                  target: "##{squire.quire.xml_id}",
+                  n: squire.quire.number,
+                  leafno: slot.leaf_no,
+                  position: squire.slot_position(slot)
+                }
                 xml.q(attrs) {
-                  if quire_leaf.conjoin.present?
-                    xml.conjoin certainty: quire_leaf.conjoin_certainty, target: "##{quire_leaf.conjoin.leaf.xml_id}"
-                  end
+                  attrs = {
+                    certainty: 1,
+                    target: "##{slot.conjoin.leaf.xml_id}"
+                  }
+                  xml.conjoin attrs
                 }
               end
             }
           end
         }
       }
+    end
+  end
+
+  def collect_leaves quire_structures
+    leaf_hash = Hash.new { |h, key| h[key] = [] }
+    quire_structures.each do |structure|
+      structure.subquires.each do |subquire|
+        subquire.slots.reduce(leaf_hash) do |leaf_hash,quire_slot|
+          leaf_hash[quire_slot.leaf] << [quire_slot, subquire]
+          leaf_hash
+        end
+      end
+    end
+    leaf_hash
+  end
+
+  def build_quire_structures
+    quires.map do |quire|
+      qs = Como::QuireStructure.new quire
+      qs.build
+      qs
     end
   end
 

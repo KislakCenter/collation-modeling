@@ -3,14 +3,30 @@ module Como
     MAIN_QUIRE_NUM = 0
 
     attr_reader :subquire_num
+    attr_reader :quire
 
-    def initialize subquire_num
+    def initialize quire, subquire_num
+      @quire        = quire
       @subquire_num = subquire_num
       @substructure = []
     end
 
+    def xml_id
+      return quire.xml_id if top_level?
+      "#{quire.xml_id}-#{subquire_num}"
+    end
+
+    def quire_number
+      return quire.number if top_level?
+      "#{quire.number}-#{subquire_num}"
+    end
+
     def positions
       _slots.map(&:position).compact
+    end
+
+    def slot_position slot
+      _slots.index(slot) + 1
     end
 
     def max_position
@@ -111,6 +127,10 @@ module Como
 
     def top_level?
       parent.blank?
+    end
+
+    def has_parent?
+      parent.present?
     end
 
     def empty?

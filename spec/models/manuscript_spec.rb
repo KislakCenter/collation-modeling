@@ -58,7 +58,8 @@ RSpec.describe Manuscript, :type => :model do
   context "#to_xml" do
     it "creates some xml" do
       ns = { x: 'http://schoenberginstitute.org/schema/collation' }
-      expect(Nokogiri::XML(ms_with_8_quires.to_xml).xpath('//x:quire', ns).length).to eq 8
+      # puts ms_with_8_quires.to_xml
+      expect(Nokogiri::XML(ms_with_leaves.to_xml).xpath('//x:quire', ns).length).to eq 8
     end
 
     it "generates an xml string" do
@@ -68,6 +69,7 @@ RSpec.describe Manuscript, :type => :model do
     it "generates valid xml" do
       # schema  = Nokogiri::XML::RelaxNG(File.open(ADDRESS_SCHEMA_FILE))
       rng = Nokogiri::XML::RelaxNG open(viscoll_schema)
+      # puts ms_with_leaves.to_xml
       doc = Nokogiri::XML(ms_with_leaves.to_xml)
       expect(rng.validate doc).to be_blank
     end
@@ -130,6 +132,13 @@ RSpec.describe Manuscript, :type => :model do
       skips = ms_with_leaves.leaf_skips
       expect(skips.size).to eq(1)
       expect(Leaf.find(skips.first).folio_number).to eq("3")
+    end
+  end
+
+  context 'build_quire_structures' do
+    it 'builds all QuireStructures' do
+      structures = ms_with_leaves.build_quire_structures
+      expect(structures).to be_an Array
     end
   end
 end

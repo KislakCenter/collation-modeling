@@ -10,6 +10,7 @@ module Como
     def structure
       _structure.dup
     end
+    alias_method :subquires, :structure
 
     def size
       _structure.size
@@ -68,7 +69,7 @@ module Como
 
     private
     def _add_quire_leaf subquire_num, quire_leaf
-      _structure[subquire_num] ||= Subquire.new subquire_num
+      _structure[subquire_num] ||= Subquire.new @quire, subquire_num
       return _structure if _structure[subquire_num].has_quire_leaf? quire_leaf
       _structure[subquire_num].add_quire_leaf quire_leaf
     end

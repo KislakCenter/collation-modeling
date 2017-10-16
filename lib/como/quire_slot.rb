@@ -16,6 +16,15 @@ module Como
       @quire_leaf && @quire_leaf.position
     end
 
+    def leaf
+      return @quire_leaf.leaf if @quire_leaf
+      @false_leaf || Leaf.new
+    end
+
+    def leaf_no
+      @quire_leaf.position
+    end
+
     def joined?
       !!conjoin
     end

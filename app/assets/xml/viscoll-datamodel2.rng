@@ -144,14 +144,14 @@
                     <data type="NCName"/>
                   </attribute>
                 </optional>
+                <!-- DE: Add @leafno to label non-"false" leaves -->
+                <optional><ref name="leafno"/></optional>
                 <!-- DE: Add @position to q element to accommodate multiple quires per leaf -->
                 <!-- DE: Move quire number from q body text to @n attribute -->
                 <!-- DE: q element body now contains conjoin element -->
                 <optional>
                   <ref name="n"/>
                 </optional>
-                <!-- DE: Add @leafno to label non-"false" leaves -->
-                <optional><ref name="leafno"/></optional>
                 <!-- DE: Move conjoin element from parent leaf to q element to work with multiple quires per leaf -->
                 <optional>
                   <element name="conjoin">

@@ -25,8 +25,21 @@ module Como
       _slots.map(&:position).compact
     end
 
+    def substructure_position slot
+      _substructure.index(slot) + 1
+    end
+
     def slot_position slot
+      return unless has_slot? slot
       _slots.index(slot) + 1
+    end
+
+    ##
+    # Return true if `slot` is in the list of slots, as opposed to its
+    # substructure.
+    #
+    def has_slot? slot
+      _slots.include? slot
     end
 
     def max_position
@@ -225,6 +238,7 @@ module Como
     end
 
     def pair_single slot
+      puts "=== pairing single #{slot}"
       case
       when slot == _slots.first
         new_slot = _new_conjoin slot
@@ -262,7 +276,7 @@ module Como
     end
 
     def to_s
-      "#{self.class.name}: subquire_num=#{subquire_num}"
+      "#{self.class.name}: subquire_num=#{quire_number}"
     end
 
     protected
@@ -341,7 +355,7 @@ module Como
       new_slot         = QuireSlot.new
       slot.conjoin     = new_slot
       new_slot.conjoin = slot
-
+      puts "===== Assigned new conjoin: #{new_slot}"
       new_slot
     end
 

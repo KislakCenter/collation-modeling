@@ -90,6 +90,10 @@ class Quire < ActiveRecord::Base
       subs.compact
   end
 
+  def to_s
+    "#{self.class.name}: number: #{number}"
+  end
+
   private
 
   # Make sure that the number of leaves not marked 'single' is even.

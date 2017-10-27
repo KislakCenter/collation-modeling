@@ -23,13 +23,15 @@ class Manuscript < ActiveRecord::Base
   # Return the last leaf of the last save quire; otherwise, return `nil`.
   #
   def last_saved_leaf
+
     q = last_saved_quire
     q.leaves.last if q.present?
+
+
   end
 
   ##
   # Return the folio_number of the `last_saved_leaf`.
-  delegate :folio_number, to: :last_saved_leaf, prefix: true, allow_nil: true
 
   def last_saved_folio_number
     return 0 if quires.empty?
@@ -37,7 +39,7 @@ class Manuscript < ActiveRecord::Base
     last_saved_leaf_folio_number
   end
 
-  def to_xml options={}
+  def to_xml _options = {}
     build_xml.to_xml
   end
 
@@ -64,13 +66,13 @@ class Manuscript < ActiveRecord::Base
     #     </q>
     # </leaf>
     Nokogiri::XML::Builder.new encoding: "UTF-8" do |xml|
-      xml.viscoll("xmlns:tei": "http://www.tei-c.org/ns/1.0", xmlns: "http://schoenberginstitute.org/schema/collation") {
-        xml.manuscript {
+      xml.viscoll("xmlns:tei": "http://www.tei-c.org/ns/1.0", xmlns: "http://schoenberginstitute.org/schema/collation") do
+        xml.manuscript do
           xml.url url
           xml.title title
           xml.shelfmark shelfmark
           xml.direction val: 'l-r'
-          xml.quires {
+          xml.quires do
             quire_structures.each do |structure|
               structure.subquires.each do |squire|
                 # <quire xml:id="lewis_e_101-q-1" n="1">1</quire>
@@ -84,9 +86,9 @@ class Manuscript < ActiveRecord::Base
                 xml.quire squire.quire_number, attrs
               end
             end
-          }
+          end
           leaves_hash.keys.each do |leaf|
-            xml.leaf("xml:id": leaf.xml_id) {
+            xml.leaf("xml:id": leaf.xml_id) do
               if leaf.folio_number.present?
                 attrs = {
                   val: leaf.folio_number,
@@ -97,25 +99,25 @@ class Manuscript < ActiveRecord::Base
               attrs = { val: (leaf.mode || 'false') }
               attrs[:certainty] = 1
               xml.mode attrs
-              leaves_hash[leaf].each do |slot,squire|
+              leaves_hash[leaf].each do |slot, squire|
                 attrs = {
-                  target: "##{squire.quire.xml_id}",
-                  n: squire.quire.number,
-                  leafno: slot.leaf_no,
-                  position: squire.slot_position(slot)
+                  target: "##{squire.xml_id}",
+                  n: squire.quire_number,
+                  position: squire.substructure_position(slot)
                 }
-                xml.q(attrs) {
+                attrs[:leafno] = slot.leaf_no if slot.leaf_no.present?
+                xml.q(attrs) do
                   attrs = {
                     certainty: 1,
                     target: "##{slot.conjoin.leaf.xml_id}"
                   }
                   xml.conjoin attrs
-                }
+                end
               end
-            }
+            end
           end
-        }
-      }
+        end
+      end
     end
   end
 
@@ -123,9 +125,9 @@ class Manuscript < ActiveRecord::Base
     leaf_hash = Hash.new { |h, key| h[key] = [] }
     quire_structures.each do |structure|
       structure.subquires.each do |subquire|
-        subquire.slots.reduce(leaf_hash) do |leaf_hash,quire_slot|
+        subquire.substructure.each_with_object(leaf_hash) do |quire_slot, leaf_hash|
+          # puts "Adding to #{quire_slot.leaf}: #{quire_slot} and #{subquire}"
           leaf_hash[quire_slot.leaf] << [quire_slot, subquire]
-          leaf_hash
         end
       end
     end
@@ -141,13 +143,11 @@ class Manuscript < ActiveRecord::Base
   end
 
   def calculate_conjoins
-    quires.each do |quire|
-      quire.calculate_conjoins
-    end
+    quires.each(&:calculate_conjoins)
   end
 
   def show_attribures
-    logger.info "=== #{self.quire_number_input} === #{self.leaves_per_quire_input} ==="
+    logger.info "=== #{quire_number_input} === #{leaves_per_quire_input} ==="
   end
 
   ##
@@ -208,9 +208,7 @@ class Manuscript < ActiveRecord::Base
 
           # use "0", to catch manuscripts that don't start with folio "1"
           comp_number = last_leaf.present? ? last_leaf.folio_number : "0"
-          unless comp_number.succ == leaf.folio_number
-            v = leaf.id
-          end
+          v = leaf.id unless comp_number.succ == leaf.folio_number
           last_leaf = leaf
         rescue ArgumentError
           # not a numeric folio_number; skip
@@ -246,7 +244,7 @@ class Manuscript < ActiveRecord::Base
 
   def create_quires
     if quire_number_input.present?
-      (1..quire_number_input.to_i).each do |i|
+      (1..quire_number_input.to_i).each do |_i|
         quires.create
         quires.last.create_leaves leaves_per_quire_input
       end

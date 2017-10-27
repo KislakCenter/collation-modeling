@@ -18,11 +18,11 @@ module Como
 
     def leaf
       return @quire_leaf.leaf if @quire_leaf
-      @false_leaf || Leaf.new
+      @false_leaf || Leaf.new(mode: 'false')
     end
 
     def leaf_no
-      @quire_leaf.position
+      @quire_leaf && @quire_leaf.position
     end
 
     def joined?
@@ -37,8 +37,12 @@ module Como
       @quire_leaf.nil?
     end
 
+    def conjoin_position
+      conjoin && conjoin.position
+    end
+
     def to_s
-      "#{self.class}: position: #{position}; conjoin: #{conjoin.position}"
+      "#{self.class}: position: #{position}; conjoin: #{conjoin_position}"
     end
   end
 end

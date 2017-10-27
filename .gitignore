@@ -31,3 +31,4 @@ doc/app
 .projectrc
 # Don't track db dumps
 *.dmp
+.idea

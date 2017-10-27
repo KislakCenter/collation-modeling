@@ -29,6 +29,10 @@ class QuireLeaf < ActiveRecord::Base
     left_conjoin || right_conjoin
   end
 
+  def to_s
+    "#{self.class.name}: quire: #{quire}; leaf: #{leaf}"
+  end
+
   private
 
   ##

@@ -1,9 +1,25 @@
 require 'rails_helper'
 
+include LetHelpers
+
 RSpec.describe Manuscript, :type => :model do
   let(:ms_with_8_quires) { FactoryGirl.create(:manuscript_with_empty_quires, quires_count: 8) }
   let(:manuscript) { FactoryGirl.create :manuscript }
   let(:ms_with_leaves) { FactoryGirl.create(:manuscript_with_filled_quires, quires_count: 8)}
+  let(:ms_with_subquire) {
+    ms = FactoryGirl.create(:manuscript_with_filled_quires, quires_count: 2)
+    q = ms.quires.first
+    q.quire_leaves[1].update_attribute 'subquire', 1
+    q.quire_leaves[2].update_attribute 'subquire', 1
+    ms
+  }
+
+  let(:manuscript_with_single_leaf) {
+    ms = FactoryGirl.create :manuscript
+    ms.quires << build_quire_and_leaves(7, 2)
+    ms.save
+    ms
+  }
 
   let(:numbers_without_skips) { (1..64).map &:to_s }
   let(:numbers_with_one_skip) {
@@ -28,7 +44,10 @@ RSpec.describe Manuscript, :type => :model do
   let(:numbers_starting_at_2) { (2..80).map &:to_s }
   let(:numbers_starting_at_3) { (3..80).map &:to_s }
 
-  let(:viscoll_schema) { File.join(Rails.root, 'app', 'assets', 'xml', 'viscoll-datamodel2.rng') }
+  let(:viscoll_schema2) {
+    rng = File.join(Rails.root, 'app', 'assets', 'xml', 'viscoll-datamodel2.rng')
+    Nokogiri::XML::RelaxNG open rng
+  }
 
   def fill_numbers ms, numbers
     nums_dup = numbers.dup
@@ -67,14 +86,22 @@ RSpec.describe Manuscript, :type => :model do
     end
 
     it "generates valid xml" do
-      # schema  = Nokogiri::XML::RelaxNG(File.open(ADDRESS_SCHEMA_FILE))
-      rng = Nokogiri::XML::RelaxNG open(viscoll_schema)
       # puts ms_with_leaves.to_xml
       doc = Nokogiri::XML(ms_with_leaves.to_xml)
-      expect(rng.validate doc).to be_blank
+      expect(viscoll_schema2.validate doc).to be_blank
     end
 
-    it "handles sub-quires"
+    it "handles a single sub-quire" do
+      xml = ms_with_subquire.to_xml
+      # puts xml
+      expect(viscoll_schema2.validate Nokogiri::XML xml).to be_blank
+    end
+
+    it 'handles single leaves' do
+      xml = manuscript_with_single_leaf.to_xml
+      puts xml
+      expect(viscoll_schema2.validate Nokogiri::XML xml).to be_blank
+    end
   end
 
   context "create_quires" do
@@ -90,7 +117,6 @@ RSpec.describe Manuscript, :type => :model do
       manuscript.leaves_per_quire_input = 6
       expect {
         manuscript.create_quires
-        # }.to change { Leaf.count }.by 12
         }.to change { manuscript.leaves.count }.by 12
     end
   end

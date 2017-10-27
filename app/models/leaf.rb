@@ -57,4 +57,8 @@ class Leaf < ActiveRecord::Base
     s += "; "
     s += single? ? "single" : "conjoin"
   end
+
+  def to_s
+    folio_number
+  end
 end

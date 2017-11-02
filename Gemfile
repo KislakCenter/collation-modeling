@@ -56,6 +56,7 @@ group :development, :test do
   gem 'redcarpet'#, '~> 3.1.2'
 
   gem 'pry-rails'#, '~> 0.3.4'
+  gem 'pry-nav'
 end
 
 # Access an IRB console on exception pages or by using <%= console %> in views

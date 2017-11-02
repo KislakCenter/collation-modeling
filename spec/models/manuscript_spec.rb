@@ -21,6 +21,16 @@ RSpec.describe Manuscript, :type => :model do
     ms
   }
 
+  let(:manuscript_with_single_leaf_and_subquire) {
+    ms = FactoryGirl.create :manuscript
+    ms.quires << build_quire_and_leaves(7, 2)
+    ms.save
+    ms.quires[0].quire_leaves[1].update_attribute 'subquire', 1
+    ms.quires[0].quire_leaves[2].update_attribute 'subquire', 1
+    ms.quires[0].quire_leaves[3].update_attribute 'subquire', 1
+    ms
+  }
+
   let(:numbers_without_skips) { (1..64).map &:to_s }
   let(:numbers_with_one_skip) {
     vals = (1..65).map &:to_s
@@ -99,6 +109,12 @@ RSpec.describe Manuscript, :type => :model do
 
     it 'handles single leaves' do
       xml = manuscript_with_single_leaf.to_xml
+      # puts xml
+      expect(viscoll_schema2.validate Nokogiri::XML xml).to be_blank
+    end
+
+    it 'handles single leaf in a subquire' do
+      xml = manuscript_with_single_leaf_and_subquire.to_xml
       puts xml
       expect(viscoll_schema2.validate Nokogiri::XML xml).to be_blank
     end

@@ -4,7 +4,6 @@ module LetHelpers
     leaf_count.times do |i|
       attrs = { folio_number: i+1 }
       attrs[:single] = singles.include?(attrs[:folio_number])
-      puts  attrs
       quire.leaves.create attrs
     end
     quire

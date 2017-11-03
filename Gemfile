@@ -29,7 +29,7 @@ gem 'bootstrap-sass', '~> 3.3.7'
 gem 'autoprefixer-rails', '~> 7.1.2.6'
 
 gem 'acts_as_list', '~> 0.9.5'
-gem 'simple_form', '~> 3.5.0'
+# gem 'simple_form', '~> 3.5.0'
 
 gem 'devise', '~> 3.4.1'
 gem 'activerecord-import', '~> 0.19.1'

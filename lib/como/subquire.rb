@@ -238,7 +238,6 @@ module Como
     end
 
     def pair_single slot
-      puts "=== pairing single #{slot}"
       case
       when slot == _slots.first
         new_slot = _new_conjoin slot
@@ -355,7 +354,6 @@ module Como
       new_slot         = QuireSlot.new
       slot.conjoin     = new_slot
       new_slot.conjoin = slot
-      puts "===== Assigned new conjoin: #{new_slot}"
       new_slot
     end
 

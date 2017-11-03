@@ -18,7 +18,7 @@ module Como
 
     def leaf
       return @quire_leaf.leaf if @quire_leaf
-      @false_leaf || Leaf.new(mode: 'false')
+      @false_leaf ||= Leaf.new(mode: 'false')
     end
 
     def leaf_no

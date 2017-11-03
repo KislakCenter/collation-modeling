@@ -66,7 +66,8 @@ class Manuscript < ActiveRecord::Base
     #     </q>
     # </leaf>
     Nokogiri::XML::Builder.new encoding: "UTF-8" do |xml|
-      xml.viscoll("xmlns:tei": "http://www.tei-c.org/ns/1.0", xmlns: "http://schoenberginstitute.org/schema/collation") do
+      xml.viscoll('xmlns:tei': 'http://www.tei-c.org/ns/1.0',
+                  xmlns: 'http://schoenberginstitute.org/schema/collation') do
         xml.manuscript do
           xml.url url
           xml.title title
@@ -121,12 +122,16 @@ class Manuscript < ActiveRecord::Base
     end
   end
 
+  # @param [QuireStructure] quire_structures
+  # @return [Hash]
   def collect_leaves quire_structures
     leaf_hash = Hash.new { |h, key| h[key] = [] }
     quire_structures.each do |structure|
       structure.subquires.each do |subquire|
         subquire.substructure.each_with_object(leaf_hash) do |quire_slot, leaf_hash|
-          # puts "Adding to #{quire_slot.leaf}: #{quire_slot} and #{subquire}"
+          Rails.logger.debug {
+            "Adding to Leaf #{quire_slot.leaf}: #{quire_slot} and #{subquire}"
+          }
           leaf_hash[quire_slot.leaf] << [quire_slot, subquire]
         end
       end

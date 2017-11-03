@@ -87,7 +87,6 @@ RSpec.describe Manuscript, :type => :model do
   context "#to_xml" do
     it "creates some xml" do
       ns = { x: 'http://schoenberginstitute.org/schema/collation' }
-      # puts ms_with_8_quires.to_xml
       expect(Nokogiri::XML(ms_with_leaves.to_xml).xpath('//x:quire', ns).length).to eq 8
     end
 
@@ -96,26 +95,23 @@ RSpec.describe Manuscript, :type => :model do
     end
 
     it "generates valid xml" do
-      # puts ms_with_leaves.to_xml
       doc = Nokogiri::XML(ms_with_leaves.to_xml)
       expect(viscoll_schema2.validate doc).to be_blank
     end
 
     it "handles a single sub-quire" do
       xml = ms_with_subquire.to_xml
-      # puts xml
       expect(viscoll_schema2.validate Nokogiri::XML xml).to be_blank
     end
 
     it 'handles single leaves' do
       xml = manuscript_with_single_leaf.to_xml
-      # puts xml
       expect(viscoll_schema2.validate Nokogiri::XML xml).to be_blank
     end
 
     it 'handles single leaf in a subquire' do
       xml = manuscript_with_single_leaf_and_subquire.to_xml
-      puts xml
+      # puts xml
       expect(viscoll_schema2.validate Nokogiri::XML xml).to be_blank
     end
   end

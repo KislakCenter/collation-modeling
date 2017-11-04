@@ -79,7 +79,7 @@
                       Leaf <%= quire_leaf.position %>;
                       Folio: <%= quire_leaf.folio_number %>;
                       Mode: <%= quire_leaf.mode %>;
-                      Single? <%= quire_leaf.leaf_single.yesno %>
+                      Single? <%= quire_leaf.leaf_single?.yesno %>
                       <%= f.submit 'Renumber from here', class: 'btn btn-primary btn-xs' %>
                       <div class="form-group">
                       <%= f.label :new_number %>
@@ -90,7 +90,7 @@
                       Leaf <%= quire_leaf.position %>;
                       Folio: <%= quire_leaf.folio_number %>;
                       Mode: <%= quire_leaf.mode %>;
-                      Single? <%= quire_leaf.leaf_single.yesno %>
+                      Single? <%= quire_leaf.leaf_single?.yesno %>
                       <% end %>
                     <% end %>
                   </ul>

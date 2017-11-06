@@ -7,6 +7,10 @@
     <%= render 'leaf_fields', leaf: leaf %>
   <% end %>
 
+  <div class="col-sm-1 text-center">
+    <%= quire_leaf.select :subquire, (0..6).to_a, {}, { class: 'form-control'} %>
+  </div>
+
   <div class="col-sm-3">
     <%= quire_leaf.hidden_field :_destroy %>
     <%= link_to 'x', '#', class: 'remove_fields btn btn-danger' %>

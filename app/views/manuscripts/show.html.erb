@@ -78,7 +78,7 @@
                       <%= form_for quire_leaf.leaf, url: update_numbering_path(@manuscript, quire_leaf.leaf), method: :put, html: {class: 'form-inline', id: "renumber_from_leaf_#{quire_leaf.leaf_id}"} do |f| %>
                       Leaf <%= quire_leaf.position %>;
                       Folio: <%= quire_leaf.folio_number %>;
-                      Mode: <%= quire_leaf.mode %>;
+                      Mode: <%= quire_leaf.leaf_mode %>;
                       Single? <%= quire_leaf.leaf_single?.yesno %>
                       <%= f.submit 'Renumber from here', class: 'btn btn-primary btn-xs' %>
                       <div class="form-group">
@@ -89,7 +89,7 @@
                       <% else %>
                       Leaf <%= quire_leaf.position %>;
                       Folio: <%= quire_leaf.folio_number %>;
-                      Mode: <%= quire_leaf.mode %>;
+                      Mode: <%= quire_leaf.leaf_mode %>;
                       Single? <%= quire_leaf.leaf_single?.yesno %>
                       <% end %>
                     <% end %>

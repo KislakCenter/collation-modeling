@@ -13,11 +13,14 @@
 
 ActiveRecord::Schema.define(version: 20170907175217) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "leaves", force: :cascade do |t|
     t.string   "mode",            limit: 255, default: "original"
     t.boolean  "single",                      default: false
-    t.integer  "quire_id",        limit: 4
-    t.integer  "position",        limit: 4
+    t.integer  "quire_id"
+    t.integer  "position"
     t.datetime "created_at",                                       null: false
     t.datetime "updated_at",                                       null: false
     t.string   "folio_number",    limit: 255
@@ -35,29 +38,26 @@ ActiveRecord::Schema.define(version: 20170907175217) do
   end
 
   create_table "quire_leaves", force: :cascade do |t|
-    t.integer  "quire_id",          limit: 4
-    t.integer  "leaf_id",           limit: 4
-    t.integer  "position",          limit: 4
-    t.integer  "certainty",         limit: 4,   default: 1
-    t.string   "mode",              limit: 255, default: "original"
-    t.integer  "mode_certainty",    limit: 4,   default: 1
-    t.integer  "conjoin_id",        limit: 4
-    t.integer  "conjoin_certainty", limit: 4,   default: 1
-    t.datetime "created_at",                                         null: false
-    t.datetime "updated_at",                                         null: false
-    t.integer  "subquire",          limit: 4,   default: 0
+    t.integer  "quire_id"
+    t.integer  "leaf_id"
+    t.integer  "position"
+    t.integer  "certainty",         default: 1
+    t.integer  "conjoin_id"
+    t.integer  "conjoin_certainty", default: 1
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.integer  "subquire",          default: 0
   end
 
-  add_index "quire_leaves", ["conjoin_id"], name: "fk_rails_8342731fed", using: :btree
   add_index "quire_leaves", ["leaf_id"], name: "index_quire_leaves_on_leaf_id", using: :btree
   add_index "quire_leaves", ["quire_id"], name: "index_quire_leaves_on_quire_id", using: :btree
 
   create_table "quires", force: :cascade do |t|
     t.string   "number",        limit: 255
-    t.integer  "position",      limit: 4
+    t.integer  "position"
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
-    t.integer  "manuscript_id", limit: 4
+    t.integer  "manuscript_id"
   end
 
   add_index "quires", ["manuscript_id"], name: "index_quires_on_manuscript_id", using: :btree
@@ -68,7 +68,7 @@ ActiveRecord::Schema.define(version: 20170907175217) do
     t.string   "reset_password_token",   limit: 255
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          limit: 4,   default: 0,  null: false
+    t.integer  "sign_in_count",                      default: 0,  null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip",     limit: 255

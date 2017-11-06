@@ -4,6 +4,7 @@ class Leaf < ActiveRecord::Base
   # Number for renumbering this quire
   attr_accessor :new_number
   FOLIO_NUMBERS = (1..600).to_a
+  MODES = %w( original added replaced missing )
 
   has_many :quire_leaves, inverse_of: :leaf
   has_many :quires, through: :quire_leaves

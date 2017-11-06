@@ -34,8 +34,6 @@ class CreateQuireLeaves < ActiveRecord::Migration
       t.references :leaf,                                   index: true, foreign_key: true
       t.integer    :position
       t.integer    :certainty,         default: 1
-      t.string     :mode,              default: 'original'
-      t.integer    :mode_certainty,    default: 1
       t.integer    :conjoin_id
       t.integer    :conjoin_certainty, default: 1
 

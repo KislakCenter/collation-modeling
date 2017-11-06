@@ -11,3 +11,6 @@
     <%= leaf.check_box :quire_uncertain %>
   </label>
 </div>
+<div class="col-sm-2 text-center">
+  <%= leaf.select :mode, Leaf::MODES, {}, { class: 'form-control'} %>
+</div>

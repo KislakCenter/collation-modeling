@@ -3,7 +3,7 @@
 # gem 'mysql2'
 #
 default: &default
-  adapter: mysql2
+  adapter: postgresql
   encoding: utf8
   pool: 5
   timeout: 5000
@@ -11,7 +11,7 @@ default: &default
 development:
   <<: *default
   database: collation_development
-  username: root
+  username: como
   password:
 
 # Warning: The database defined as "test" will be erased and
@@ -20,13 +20,14 @@ development:
 test:
   <<: *default
   database: collation_test
-  username: root
+  username: como
   password:
 
 production:
   <<: *default
   adapter: postgresql
   encoding: unicode
+  username: rook
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: 5

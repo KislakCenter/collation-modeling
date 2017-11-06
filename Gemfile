@@ -40,12 +40,12 @@ gem 'activerecord-import', '~> 0.19.1'
 # Use Unicorn as the app server
 gem 'unicorn', '~> 5.3.0'
 
-group :production do
-  gem 'pg', '~> 0.18.1'
-end
+# group :production do
+gem 'pg', '0.20.0'
+# end
 
 group :development, :test do
-  gem 'mysql2', '~> 0.4.9'
+  # gem 'mysql2', '~> 0.4.9'
 
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'#, '~> 4.0.3'

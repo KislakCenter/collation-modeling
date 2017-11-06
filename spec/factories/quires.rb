@@ -1,8 +1,5 @@
 FactoryGirl.define do
   factory :quire do
-    sequence :number do |n|
-      "#{n}"
-    end
     manuscript
 
     factory :quire_with_leaves do

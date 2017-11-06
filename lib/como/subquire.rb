@@ -17,8 +17,8 @@ module Como
     end
 
     def quire_number
-      return quire.number if top_level?
-      "#{quire.number}-#{subquire_num}"
+      return quire.position if top_level?
+      "#{quire.position}-#{subquire_num}"
     end
 
     def positions

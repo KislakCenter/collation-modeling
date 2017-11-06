@@ -4,7 +4,8 @@ module XmlID
   extend ActiveSupport::Concern
   included do
     def xml_id
-      "#{self.class.name.underscore}-#{id || object_id}"
+      return "#{self.class.name.underscore}-#{id}" if id.present?
+      "#{self.class.name.underscore}-o#{object_id}"
     end
   end
 end

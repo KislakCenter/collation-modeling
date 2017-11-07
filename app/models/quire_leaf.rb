@@ -37,7 +37,7 @@ class QuireLeaf < ActiveRecord::Base
   private
 
   ##
-  # Clearning up: if the associated leaf belongs to no other quire, destroy it
+  # Cleaning up: if the associated leaf belongs to no other quire, destroy it
   # now.
   def delete_orphan_leaves
     leaf.destroy if leaf.quires.count == 0

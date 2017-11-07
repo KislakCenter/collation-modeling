@@ -46,17 +46,11 @@ class Leaf < ActiveRecord::Base
   end
 
   def description
-    s = "Leaf "
-    s += position.to_s
-    if folio_number.present?
-      s += " (fol/pg "
-      s += folio_number
-      s += ")"
-    end
-    s += " "
-    s += mode
-    s += "; "
-    s += single? ? "single" : "conjoin"
+    s = "Leaf #{position.to_s}"
+    s += " (fol/pg #{folio_number})" if folio_number.present?
+    s += " #{mode}; "
+    s += single? ? 'single' : 'conjoins'
+    s
   end
 
   def to_s

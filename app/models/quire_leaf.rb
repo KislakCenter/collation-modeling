@@ -3,8 +3,6 @@ class QuireLeaf < ActiveRecord::Base
 
   belongs_to :leaf
   belongs_to :quire
-  belongs_to :right_conjoin, class_name: "QuireLeaf", foreign_key: :conjoin_id
-  has_one :left_conjoin, class_name: "QuireLeaf", foreign_key: :conjoin_id
 
   validates :leaf, presence: true
   validates :quire, presence: true
@@ -21,14 +19,6 @@ class QuireLeaf < ActiveRecord::Base
   delegate :mode,            to: :leaf,  prefix: true,  allow_nil: true
   delegate :number,          to: :quire, prefix: true,  allow_nil: true
   delegate :xml_id,          to: :quire, prefix: true,  allow_nil: true
-
-  def has_conjoin?
-    conjoin.present?
-  end
-
-  def conjoin
-    left_conjoin || right_conjoin
-  end
 
   def to_s
     "#{self.class.name}: quire: #{quire}; leaf: #{leaf}"

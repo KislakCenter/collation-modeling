@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171106191406) do
+ActiveRecord::Schema.define(version: 20171107205108) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,7 +42,6 @@ ActiveRecord::Schema.define(version: 20171106191406) do
     t.integer  "leaf_id"
     t.integer  "position"
     t.integer  "certainty",         default: 1
-    t.integer  "conjoin_id"
     t.integer  "conjoin_certainty", default: 1
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
@@ -81,7 +80,6 @@ ActiveRecord::Schema.define(version: 20171106191406) do
 
   add_foreign_key "leaves", "quires"
   add_foreign_key "quire_leaves", "leaves"
-  add_foreign_key "quire_leaves", "leaves", column: "conjoin_id"
   add_foreign_key "quire_leaves", "quires"
   add_foreign_key "quires", "manuscripts"
 end

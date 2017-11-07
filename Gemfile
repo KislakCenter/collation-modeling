@@ -4,8 +4,6 @@ ruby '2.4.1'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 4.2.9'
-# Use sqlite3 as the database for Active Record
-# gem 'sqlite3'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0.6'
@@ -29,7 +27,6 @@ gem 'bootstrap-sass', '~> 3.3.7'
 gem 'autoprefixer-rails', '~> 7.1.2.6'
 
 gem 'acts_as_list', '~> 0.9.5'
-# gem 'simple_form', '~> 3.5.0'
 
 gem 'devise', '~> 3.4.1'
 gem 'activerecord-import', '~> 0.19.1'
@@ -40,23 +37,19 @@ gem 'activerecord-import', '~> 0.19.1'
 # Use Unicorn as the app server
 gem 'unicorn', '~> 5.3.0'
 
-# group :production do
 gem 'pg', '0.20.0'
-# end
 
 group :development, :test do
-  # gem 'mysql2', '~> 0.4.9'
-
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug'#, '~> 4.0.3'
+  gem 'byebug', '~> 9.0.6'
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring'#, '~> 1.3.3'
+  gem 'spring', '~> 2.0.2'
 
-  gem 'redcarpet'#, '~> 3.1.2'
+  gem 'redcarpet', '~> 3.4.0'
 
-  gem 'pry-rails'#, '~> 0.3.4'
-  gem 'pry-nav'
+  gem 'pry-rails', '~> 0.3.6'
+  gem 'pry-nav', '~> 0.2.4'
 end
 
 # Access an IRB console on exception pages or by using <%= console %> in views

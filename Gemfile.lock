@@ -250,7 +250,7 @@ DEPENDENCIES
   acts_as_list (~> 0.9.5)
   autoprefixer-rails (~> 7.1.2.6)
   bootstrap-sass (~> 3.3.7)
-  byebug
+  byebug (~> 9.0.6)
   coffee-rails (~> 4.2.2)
   devise (~> 3.4.1)
   factory_girl_rails (~> 4.5.0)
@@ -258,15 +258,15 @@ DEPENDENCIES
   jbuilder (~> 2.7.0)
   jquery-rails (~> 4.3.1)
   pg (= 0.20.0)
-  pry-nav
-  pry-rails
+  pry-nav (~> 0.2.4)
+  pry-rails (~> 0.3.6)
   rails (~> 4.2.9)
   rb-fsevent (~> 0.9.4)
-  redcarpet
+  redcarpet (~> 3.4.0)
   rspec-rails (~> 3.6.1)
   sass-rails (~> 5.0.6)
   sdoc (~> 0.4.0)
-  spring
+  spring (~> 2.0.2)
   spring-commands-rspec (~> 1.0.4)
   turbolinks (~> 5.0.0)
   uglifier (>= 3.2.0)

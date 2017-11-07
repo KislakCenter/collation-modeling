@@ -91,7 +91,7 @@ class Quire < ActiveRecord::Base
         (subs[quire_leaf.subquire] ||= []) << quire_leaf
       end
     end
-      subs.compact
+    subs.compact
   end
 
   def to_s
@@ -102,11 +102,24 @@ class Quire < ActiveRecord::Base
 
   # Make sure that the number of leaves not marked 'single' is even.
   def must_have_even_bifolia
-    conjoins = leaves.reject{ |leaf| leaf.single? || leaf._destroy.present? }.size
-    if conjoins.odd?
-      errors.add(:base,
-                 "The number of non-single leaves cannot be odd; found: #{conjoins}")
+    subquire_groups.each do |group|
+      conjoins = group.reject { |quire_leaf|
+        quire_leaf.leaf_single? || quire_leaf._destroy.present?
+      }.size
+      if conjoins.odd?
+        sym = "subquire_#{group.first.subquire}"
+        msg = 'The number of non-single leaves cannot be odd; ' +
+              "found #{conjoins} conjoins"
+        errors.add(sym, msg)
+      end
     end
+  end
+
+  def subquire_groups
+    quire_leaves.inject({}) { |memo, quire_leaf|
+      (memo[quire_leaf.subquire] ||= []) << quire_leaf
+      memo
+    }.values
   end
 
   # Increment the folio number. If +number+ cannot be parsed as in Integer,
@@ -115,7 +128,6 @@ class Quire < ActiveRecord::Base
   # TODO: Enable incrementing of paginated numbers, 1-2, 3-4, etc.
   #
   def inc_folio number
-    # Integer(number) + 1
     begin
       Integer(number) + 1
     rescue ArgumentError, TypeError

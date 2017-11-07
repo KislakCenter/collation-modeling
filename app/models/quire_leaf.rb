@@ -9,6 +9,8 @@ class QuireLeaf < ActiveRecord::Base
   validates :leaf, presence: true
   validates :quire, presence: true
 
+  SUBQUIRES = [ [ 'Main quire', 0 ] ] + (1..10).map { |i| [ "Subquire #{i}", i ] }
+
   acts_as_list scope: :quire
 
   accepts_nested_attributes_for :leaf

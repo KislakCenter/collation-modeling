@@ -47,6 +47,11 @@ class Manuscript < ActiveRecord::Base
     quire_structures = build_quire_structures
     leaves_hash      = collect_leaves quire_structures
 
+    # TODO: Add single element
+    # TODO: Add folio_certainty
+    # TODO: Add mode_certainty
+    # TODO: Add single_certainty
+
     # <leaf xml:id="lewis_e_001-13-1">
     #     <folioNumber certainty="1" val="97">97</folioNumber>
     #     <mode certainty="1" val="original"/>

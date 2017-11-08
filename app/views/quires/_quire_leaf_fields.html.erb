@@ -1,18 +1,42 @@
 <div class="form-group leaf_fields">
   <div class="col-sm-1 text-center">
     <%= quire_leaf.label :position, "Leaf #{quire_leaf.object.position}",
-        class: "control-label" %>
+        class: 'control-label' %>
   </div>
   <%= quire_leaf.fields_for :leaf do |leaf| %>
-    <%= render 'leaf_fields', leaf: leaf %>
+      <div class="col-sm-1 text-center">
+        <%= leaf.text_field :folio_number, class: 'form-control  input-sm' %>
+      </div>
+      <div class="col-sm-1">
+        <%= leaf.select :folio_certainty, Como::Constants::CERTAINTY, {}, { class: 'form-control input-sm'} %>
+      </div>
+      <div class="col-sm-1 text-center">
+        <label class="checkbox-inline control-label">
+          <%= leaf.check_box :single %>
+        </label>
+      </div>
+      <div class="col-sm-1">
+        <%= leaf.select :single_certainty, Como::Constants::CERTAINTY, {}, { class: 'form-control input-sm'} %>
+      </div>
+      <div class="col-sm-1 text-center checkbox">
+        <label class="checkbox-inline control-label">
+          <%= leaf.check_box :quire_uncertain %>
+        </label>
+      </div>
+      <div class="col-sm-1 text-center">
+        <%= leaf.select :mode, Leaf::MODES, {}, { class: 'form-control input-sm' } %>
+      </div>
+      <div class="col-sm-1">
+        <%= leaf.select :mode_certainty, Como::Constants::CERTAINTY, {}, { class: 'form-control input-sm'} %>
+      </div>
   <% end %>
 
-  <div class="col-sm-2 text-center">
-    <%= quire_leaf.select :subquire, QuireLeaf::SUBQUIRES, {}, { class: 'form-control'} %>
+  <div class="col-sm-1 text-center">
+    <%= quire_leaf.select :subquire, QuireLeaf::SUBQUIRES, {}, { class: 'form-control input-sm' } %>
   </div>
 
-  <div class="col-sm-3">
+  <div class="col-sm-1">
     <%= quire_leaf.hidden_field :_destroy %>
-    <%= link_to 'x', '#', class: 'remove_fields btn btn-danger' %>
+    <%= link_to 'x', '#', class: 'remove_fields btn btn-danger ' %>
   </div>
 </div>

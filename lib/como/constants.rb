@@ -1,5 +1,8 @@
 module Como
   module Constants
-    CERTAINTY = [1, 2, 3]
+    CERTAINTY = [ ['High', 1 ],
+                  ['Medium', 2],
+                  [ 'Low', 3]
+    ].freeze
   end
 end

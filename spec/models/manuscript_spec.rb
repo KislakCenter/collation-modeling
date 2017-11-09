@@ -81,6 +81,7 @@ RSpec.describe Manuscript, :type => :model do
 
   end
 
+  # TODO: Move to_xml tests to separate spec
   context "#to_xml" do
     it "creates some xml" do
       ns = { x: 'http://schoenberginstitute.org/schema/collation' }
@@ -170,10 +171,11 @@ RSpec.describe Manuscript, :type => :model do
     end
   end
 
+  # TODO: Move build_quire_structures specs to separate spec
   context 'build_quire_structures' do
     it 'builds all QuireStructures' do
-      structures = ms_with_leaves.build_quire_structures
-      expect(structures).to be_an Array
+      xml = Como::XML.new ms_with_leaves
+      expect(xml.build_quire_structures).to be_an Array
     end
   end
 end

@@ -4,7 +4,8 @@ class Quire < ActiveRecord::Base
   include XmlID
 
   belongs_to :manuscript
-  has_many :quire_leaves, -> { order('position ASC') }, inverse_of: :quire
+  has_many :quire_leaves, -> { order('quire_leaves.position ASC') },
+           inverse_of: :quire
   has_many :leaves, through: :quire_leaves, dependent: :destroy
 
   accepts_nested_attributes_for :quire_leaves, allow_destroy: true

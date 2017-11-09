@@ -61,12 +61,9 @@ RSpec.describe Manuscript, :type => :model do
 
   def fill_numbers ms, numbers
     nums_dup = numbers.dup
-    ms.quires.includes(:leaves).each do |q|
-      q.leaves.each do |leaf|
-        leaf.update_column :folio_number, nums_dup.shift
-      end
+    ms.quire_leaves.includes(:leaf).each do |ql|
+      ql.leaf.update_column :folio_number, nums_dup.shift
     end
-    # ms.save!
   end
 
   context "factories" do
@@ -158,14 +155,14 @@ RSpec.describe Manuscript, :type => :model do
       expect(Leaf.find(skips.first).folio_number).to eq("11")
     end
 
-    it 'finds on skip when the first folio number is 2' do
+    it 'finds one skip when the first folio number is 2' do
       fill_numbers ms_with_leaves, numbers_starting_at_2
       skips = ms_with_leaves.leaf_skips
       expect(skips.size).to eq(1)
       expect(Leaf.find(skips.first).folio_number).to eq("2")
     end
 
-    it 'finds on skip when the first folio number is 3' do
+    it 'finds one skip when the first folio number is 3' do
       fill_numbers ms_with_leaves, numbers_starting_at_3
       skips = ms_with_leaves.leaf_skips
       expect(skips.size).to eq(1)

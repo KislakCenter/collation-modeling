@@ -1,9 +1,13 @@
 require 'ostruct'
 
 class Manuscript < ActiveRecord::Base
-  has_many :quires, -> { order('position ASC') }, dependent: :destroy
-  has_many :quire_leaves, -> { order 'quires.position, position' }, through: :quires
-  has_many :leaves, -> { order('quires.position, position').distinct }, through: :quires
+  has_many :quires, -> { order('quires.position ASC') }, dependent: :destroy
+  has_many :quire_leaves, lambda {
+    reorder('quires.position, quire_leaves.position')
+  }, through: :quires
+  # TODO: fix non-distinct leaves; `reorder(...).distinct` => broken SQL
+  has_many :leaves, -> { reorder('quires.position, quire_leaves.position') },
+           through: :quires
 
   attr_accessor :quire_number_input
   attr_accessor :leaves_per_quire_input
@@ -23,11 +27,8 @@ class Manuscript < ActiveRecord::Base
   # Return the last leaf of the last save quire; otherwise, return `nil`.
   #
   def last_saved_leaf
-
     q = last_saved_quire
     q.leaves.last if q.present?
-
-
   end
 
   ##
@@ -156,7 +157,7 @@ class Manuscript < ActiveRecord::Base
     quires.each(&:calculate_conjoins)
   end
 
-  def show_attribures
+  def show_attributes
     logger.info "=== #{quire_number_input} === #{leaves_per_quire_input} ==="
   end
 
@@ -209,46 +210,40 @@ class Manuscript < ActiveRecord::Base
     return skips if skips.present?
 
     last_leaf = nil
-    skips = quires.includes(:leaves).flat_map do |quire|
-      quire.leaves.flat_map do |leaf|
-        v = []
-        begin
-          # try to convert folio_number to integer; skip on error
-          Integer(leaf.folio_number)
-
-          # use "0", to catch manuscripts that don't start with folio "1"
-          comp_number = last_leaf.present? ? last_leaf.folio_number : "0"
-          v = leaf.id unless comp_number.succ == leaf.folio_number
-          last_leaf = leaf
-        rescue ArgumentError
-          # not a numeric folio_number; skip
-        rescue TypeError
-          # folio_number is nil; skip
-        end
-        v
-      end
+    quire_leaves.includes(:leaf).flat_map do |quire_leaf|
+      next [] unless integer? quire_leaf.folio_number
+      comp_number = last_leaf.present? ? last_leaf.folio_number.succ : "1"
+      last_leaf = quire_leaf
+      next [] if comp_number == quire_leaf.folio_number
+      quire_leaf.leaf_id
     end
-    skips
+  end
+
+  def integer? folio_number
+    begin
+      Integer folio_number
+    rescue TypeError, ArgumentError
+      # folio number is nil or non integer
+      return false
+    end
+    true
   end
 
   def renumber_from start_leaf
     next_num = nil
-    quires.includes(:leaves).each do |quire|
-      quire.leaves.each do |leaf|
-        if leaf == start_leaf
-          leaf.folio_number = start_leaf.new_number
-          next_num = leaf.folio_number_int + 1
-        elsif next_num.present?
-          begin
-            Integer(leaf.folio_number)
-            leaf.folio_number = next_num
-            next_num += 1
-          rescue ArgumentError, TypeError
-            # non-numeric folio number; skip
-          end
-        end
+    last_leaf = nil
+    quire_leaves.includes(:leaf).each do |quire_leaf|
+      next unless integer? quire_leaf.folio_number
+      next if last_leaf == quire_leaf.leaf # don't process a leaf more than once
+      last_leaf = quire_leaf.leaf
+      if quire_leaf.leaf == start_leaf
+        quire_leaf.leaf.update folio_number: start_leaf.new_number
+        next_num = quire_leaf.folio_number.succ
+        next
       end
-      quire.save if next_num.present?
+      next unless next_num.present?
+      quire_leaf.leaf.update folio_number: next_num
+      next_num.succ!
     end
   end
 

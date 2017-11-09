@@ -11,21 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171107215805) do
+ActiveRecord::Schema.define(version: 20171109155829) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "leaves", force: :cascade do |t|
-    t.string   "mode",             limit: 255, default: "original"
-    t.boolean  "single",                       default: false
+    t.string   "mode",                   limit: 255, default: "original"
+    t.boolean  "single",                             default: false
     t.integer  "quire_id"
-    t.integer  "position"
-    t.datetime "created_at",                                        null: false
-    t.datetime "updated_at",                                        null: false
-    t.string   "folio_number",     limit: 255
-    t.boolean  "quire_uncertain",              default: false
-    t.integer  "folio_certainty"
+    t.datetime "created_at",                                              null: false
+    t.datetime "updated_at",                                              null: false
+    t.string   "folio_number",           limit: 255
+    t.boolean  "quire_uncertain",                    default: false
+    t.integer  "folio_number_certainty"
     t.integer  "mode_certainty"
     t.integer  "single_certainty"
   end

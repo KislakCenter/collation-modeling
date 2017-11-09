@@ -36,6 +36,7 @@ class CreateQuireLeaves < ActiveRecord::Migration
       t.integer    :certainty,         default: 1
       t.integer    :conjoin_id
       t.integer    :conjoin_certainty, default: 1
+      t.integer    :subquire,          default: 0
 
       t.timestamps null: false
     end

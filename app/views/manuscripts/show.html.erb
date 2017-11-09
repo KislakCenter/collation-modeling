@@ -48,7 +48,7 @@
   <% skips = @manuscript.leaf_skips %>
 
   <div class="row">
-    <div class="col-sm-8">
+    <div class="col-sm-9">
       <div class="panel-group" role="tablist" aria-multiselectable="true">
         <% @manuscript.quires.each do |quire| -%>
 
@@ -72,28 +72,45 @@
             <div id="quire_body_<%= quire.id %>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="quire_heading_<%= quire.id %>">
               <div class="panel-body">
                 <% if quire.quire_leaves.present? %>
-                  <ul>
-                    <% quire.quire_leaves.each do |quire_leaf| %>
-                      <li><% if skips.include?(quire_leaf.leaf_id) %>
-                      <%= form_for quire_leaf.leaf, url: update_numbering_path(@manuscript, quire_leaf.leaf), method: :put, html: {class: 'form-inline', id: "renumber_from_leaf_#{quire_leaf.leaf_id}"} do |f| %>
-                      Leaf <%= quire_leaf.position %>;
-                      Folio: <%= quire_leaf.folio_number %>;
-                      Mode: <%= quire_leaf.leaf_mode %>;
-                      Single? <%= quire_leaf.leaf_single?.yesno %>
-                      <%= f.submit 'Renumber from here', class: 'btn btn-primary btn-xs' %>
-                      <div class="form-group">
-                      <%= f.label :new_number %>
-                      <%= f.select :new_number, Leaf::FOLIO_NUMBERS, { selected: quire_leaf.leaf.folio_number_int.pred }, { class: 'form-control input-sm'} %>
-                      </div>
+                    <table class="table">
+                      <thead>
+                      <th scope="col"><strong>Leaf</strong></th>
+                      <th scope="col"><strong>Folio number</strong></th>
+                      <th scope="col"><strong>Folio certainty</strong></th>
+                      <th scope="col"><strong>Single</strong></th>
+                      <th scope="col"><strong>Single certainty</strong></th>
+                      <th scope="col"><strong>Quire uncertain</strong></th>
+                      <th scope="col"><strong>Mode</strong></th>
+                      <th scope="col"><strong>Mode certainty</strong></th>
+                      <th scope="col"><strong>Subquire</strong></th>
+                      <th></th>
+                      </thead>
+                      <tbody>
+                      <% quire.quire_leaves.each do |quire_leaf| %>
+                          <tr>
+                            <td scope="row"><%= quire_leaf.position %></td>
+                            <td scope="row"><%= quire_leaf.folio_number %></td>
+                            <td scope="row"><%= quire_leaf.folio_number_certainty %></td>
+                            <td scope="row"><%= quire_leaf.leaf_single?.yesno %></td>
+                            <td scope="row"><%= quire_leaf.single_certainty %></td>
+                            <td scope="row"><%= quire_leaf.quire_uncertain.yesno %></td>
+                            <td scope="row"><%= quire_leaf.leaf_mode %></td>
+                            <td scope="row"><%= quire_leaf.leaf_mode_certainty %></td>
+                            <td scope="row"><%= quire_leaf.subquire %></td>
+                            <td scope="row">
+                              <% if skips.include?(quire_leaf.leaf_id) %>
+                                  <%= form_for quire_leaf.leaf, url: update_numbering_path(@manuscript, quire_leaf.leaf), method: :put, html: {class: 'form-inline', id: "renumber_from_leaf_#{quire_leaf.leaf_id}"} do |f| %>
+                                      <%= f.submit 'Renumber from here', class: 'btn btn-primary btn-xs' %>
+                                      <div class="form-group">
+                                        <%= f.select :new_number, Leaf::FOLIO_NUMBERS, { selected: quire_leaf.leaf.folio_number_int.pred }, { class: 'form-control input-sm'} %>
+                                      </div>
+                                  <% end %>
+                              <% end %>
+                            </td>
+                          </tr>
                       <% end %>
-                      <% else %>
-                      Leaf <%= quire_leaf.position %>;
-                      Folio: <%= quire_leaf.folio_number %>;
-                      Mode: <%= quire_leaf.leaf_mode %>;
-                      Single? <%= quire_leaf.leaf_single?.yesno %>
-                      <% end %>
-                    <% end %>
-                  </ul>
+                      </tbody>
+                    </table>
                 <% end %>
               </div>
             </div>

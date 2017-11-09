@@ -49,7 +49,7 @@ group :development, :test do
   gem 'redcarpet', '~> 3.4.0'
 
   gem 'pry-rails', '~> 0.3.6'
-  gem 'pry-nav', '~> 0.2.4'
+  # gem 'pry-nav', '~> 0.2.4'
 end
 
 # Access an IRB console on exception pages or by using <%= console %> in views
@@ -62,3 +62,5 @@ group :development, :test do
   gem 'rb-fsevent', '~> 0.9.4'
   gem 'factory_girl_rails', '~> 4.5.0'
 end
+
+gem 'database_cleaner', group: :test

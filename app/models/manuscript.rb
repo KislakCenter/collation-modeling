@@ -51,7 +51,6 @@ class Manuscript < ActiveRecord::Base
     # TODO: Add single element
     # TODO: Add folio_certainty
     # TODO: Add mode_certainty
-    # TODO: Add single_certainty
 
     # <leaf xml:id="lewis_e_001-13-1">
     #     <folioNumber certainty="1" val="97">97</folioNumber>
@@ -120,6 +119,10 @@ class Manuscript < ActiveRecord::Base
                   }
                   xml.conjoin attrs
                 end
+              end
+              if leaf.single?
+                attrs = { val: 'yes' }
+                xml.single attrs
               end
             end
           end

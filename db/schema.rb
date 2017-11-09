@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171109155829) do
+ActiveRecord::Schema.define(version: 20171109213938) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,9 +24,8 @@ ActiveRecord::Schema.define(version: 20171109155829) do
     t.datetime "updated_at",                                              null: false
     t.string   "folio_number",           limit: 255
     t.boolean  "quire_uncertain",                    default: false
-    t.integer  "folio_number_certainty"
-    t.integer  "mode_certainty"
-    t.integer  "single_certainty"
+    t.integer  "folio_number_certainty",             default: 1
+    t.integer  "mode_certainty",                     default: 1
   end
 
   add_index "leaves", ["quire_id"], name: "index_leaves_on_quire_id", using: :btree
@@ -45,9 +44,9 @@ ActiveRecord::Schema.define(version: 20171109155829) do
     t.integer  "position"
     t.integer  "certainty",         default: 1
     t.integer  "conjoin_certainty", default: 1
+    t.integer  "subquire",          default: 0
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
-    t.integer  "subquire",          default: 0
   end
 
   add_index "quire_leaves", ["leaf_id"], name: "index_quire_leaves_on_leaf_id", using: :btree

@@ -7,7 +7,11 @@ cd `dirname $0`/..
 
 generator_options="--no-helper --no-view-specs --no-helper-specs --no-assets --no-stylesheets"
 
-rails g migration remove_position_from_leaves position:integer
+rails g migration remove_single_certainty_from_leaves single_certainty:integer
+
+#rails g migration make_certainties_default_to_high_in_leaves
+
+#rails g migration remove_position_from_leaves position:integer
 
 #rails g migration rename_folio_certainty_to_folio_number_certainty_in_leaves
 

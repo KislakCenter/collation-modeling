@@ -50,7 +50,7 @@ class QuiresController < ApplicationController
       quire_leaves_attributes: [
         :mode, :subquire, :_destroy, :id,
         leaf_attributes: [:id, :single, :folio_number, :quire_uncertain, :mode,
-                          :folio_certainty, :mode_certainty, :single_certainty]
+                          :folio_certainty, :mode_certainty]
       ]
     )
   end

@@ -27,6 +27,10 @@ class Leaf < ActiveRecord::Base
     higher_item
   end
 
+  def false_leaf?
+    mode.present? && mode.casecmp?('false')
+  end
+
   def folio_number_int
     folio_number.to_i
   end

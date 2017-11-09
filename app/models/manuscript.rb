@@ -48,10 +48,6 @@ class Manuscript < ActiveRecord::Base
     quire_structures = build_quire_structures
     leaves_hash      = collect_leaves quire_structures
 
-    # TODO: Add single element
-    # TODO: Add folio_certainty
-    # TODO: Add mode_certainty
-
     # <leaf xml:id="lewis_e_001-13-1">
     #     <folioNumber certainty="1" val="97">97</folioNumber>
     #     <mode certainty="1" val="original"/>
@@ -98,12 +94,12 @@ class Manuscript < ActiveRecord::Base
               if leaf.folio_number.present?
                 attrs = {
                   val: leaf.folio_number,
-                  certainty: 1
+                  certainty: leaf.folio_number_certainty
                 }
                 xml.folioNumber leaf.folio_number, attrs
               end
-              attrs = { val: (leaf.mode || 'false') }
-              attrs[:certainty] = 1
+              attrs = { val: leaf.mode }
+              attrs[:certainty] = leaf.mode_certainty unless leaf.false_leaf?
               xml.mode attrs
               leaves_hash[leaf].each do |slot, squire|
                 attrs = {

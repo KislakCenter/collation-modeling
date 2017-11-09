@@ -1,6 +1,8 @@
 class Leaf < ActiveRecord::Base
   include XmlID
 
+  # TODO: Add attachment-method/certainty (form, show, xml)
+
   # Number for renumbering this quire
   attr_accessor :new_number
   FOLIO_NUMBERS = (1..600).to_a
@@ -12,8 +14,6 @@ class Leaf < ActiveRecord::Base
   scope :without_children, -> {
     includes(:quire_leaves).where(:quire_leaves => { :id => nil })
   }
-
-  acts_as_list scope: :quire
 
   def manuscript
     quires.present? and quires.first.manuscript or nil

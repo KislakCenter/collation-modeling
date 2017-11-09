@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171109213938) do
+ActiveRecord::Schema.define(version: 20171109221515) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,7 +19,6 @@ ActiveRecord::Schema.define(version: 20171109213938) do
   create_table "leaves", force: :cascade do |t|
     t.string   "mode",                   limit: 255, default: "original"
     t.boolean  "single",                             default: false
-    t.integer  "quire_id"
     t.datetime "created_at",                                              null: false
     t.datetime "updated_at",                                              null: false
     t.string   "folio_number",           limit: 255
@@ -27,8 +26,6 @@ ActiveRecord::Schema.define(version: 20171109213938) do
     t.integer  "folio_number_certainty",             default: 1
     t.integer  "mode_certainty",                     default: 1
   end
-
-  add_index "leaves", ["quire_id"], name: "index_leaves_on_quire_id", using: :btree
 
   create_table "manuscripts", force: :cascade do |t|
     t.string   "title",      limit: 255
@@ -79,7 +76,6 @@ ActiveRecord::Schema.define(version: 20171109213938) do
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
-  add_foreign_key "leaves", "quires"
   add_foreign_key "quire_leaves", "leaves"
   add_foreign_key "quire_leaves", "quires"
   add_foreign_key "quires", "manuscripts"

@@ -19,8 +19,6 @@
 
 ## Questions for Dot
 
-- TODO: Values for attachment-method
-
 ## Authentication and authorization
 
 - TODO: Install devise and add admin role
@@ -31,5 +29,3 @@
 - TODO: Create features for all pages
 
 ## Bugs
-
-- TODO: JS not loading until page reload on Quire form

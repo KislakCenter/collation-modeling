@@ -20,20 +20,24 @@ module Como
     def build
       return structure if built?
 
-      # add each quire_leaf to its subquire
-      first_ql = quire.quire_leaves.first
-      last_ql = quire.quire_leaves.last
-      quire.quire_leaves.each do |quire_leaf|
-        _add_quire_leaf quire_leaf.subquire, quire_leaf
-        if [first_ql, last_ql].include? quire_leaf
-          _add_quire_leaf Subquire::MAIN_QUIRE_NUM, quire_leaf
-        end
-      end
-
+      add_quire_leaves
       find_containment
       calculate_conjoins
 
       structure
+    end
+
+    def add_quire_leaves
+      # add each quire_leaf to its subquire
+      first_ql = quire.quire_leaves.first
+      last_ql = quire.quire_leaves.last
+      quire.quire_leaves.each do |quire_leaf|
+        if [first_ql, last_ql].include? quire_leaf
+          # first and last quire leaf are always in main subquire
+          _add_quire_leaf Subquire::MAIN_QUIRE_NUM, quire_leaf
+        end
+        _add_quire_leaf quire_leaf.subquire, quire_leaf
+      end
     end
 
     def structurally_valid?

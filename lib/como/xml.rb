@@ -66,14 +66,15 @@ module Como
 
     def add_qs xml, leaves_hash, leaf
       leaves_hash[leaf].each do |slot, squire|
-        add_q xml, slot, squire
+        add_q xml, leaf, slot, squire
       end
     end
 
-    def add_q xml, slot, subquire
+    def add_q xml, leaf, slot, subquire
       attrs = { target: "##{subquire.xml_id}", n: subquire.quire_number,
                 position: subquire.substructure_position(slot) }
-      attrs[:leafno] = slot.leaf_no if slot.leaf_no.present?
+      attrs[:certainty] = leaf.q_certainty if leaf.q_certainty.present?
+      attrs[:leafno]    = slot.leaf_no if slot.leaf_no.present?
       xml.q(attrs) do
         add_conjoin xml, slot
       end

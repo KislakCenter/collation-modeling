@@ -19,7 +19,8 @@ class QuireLeaf < ActiveRecord::Base
   delegate :attachment_method,      to: :leaf,  prefix: false, allow_nil: true
   delegate :attachment_method_certainty, to: :leaf, prefix: false,
                                          allow_nil: true
-  delegate :quire_uncertain,        to: :leaf,  prefix: false, allow_nil: true
+  delegate :quire_certainty,        to: :leaf,  prefix: false, allow_nil: true
+  delegate :false_leaf?,            to: :leaf,  prefix: false, allow_nil: true
   delegate :mode,                   to: :leaf,  prefix: true,  allow_nil: true
   delegate :mode_certainty,         to: :leaf,  prefix: true,  allow_nil: true
   delegate :number,                 to: :quire, prefix: true,  allow_nil: true
@@ -35,7 +36,7 @@ class QuireLeaf < ActiveRecord::Base
   # Cleaning up: if the associated leaf belongs to no other quire, destroy it
   # now.
   def delete_orphan_leaves
-    leaf.destroy if leaf.quires.count == 0
+    leaf.destroy if leaf.quires.count.zero?
     true
   end
 end

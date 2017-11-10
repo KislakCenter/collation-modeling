@@ -8,29 +8,27 @@
         <%= leaf.text_field :folio_number, class: 'form-control  input-sm' %>
       </div>
       <div class="col-sm-1">
-        <%= leaf.select :folio_number_certainty, Como::Constants::CERTAINTY, {}, { class: 'form-control input-sm'} %>
+        <%= leaf.select :folio_number_certainty, Como::Constants::CERTAINTIES, {}, {class: 'form-control input-sm'} %>
       </div>
       <div class="col-sm-1">
         <%= leaf.select :attachment_method, Leaf::ATTACHMENT_METHODS, { include_blank: true }, { class: 'form-control input-sm'} %>
       </div>
       <div class="col-sm-1">
-        <%= leaf.select :attachment_method_certainty, Como::Constants::CERTAINTY, { include_blank: true }, { class: 'form-control input-sm'} %>
+        <%= leaf.select :attachment_method_certainty, Como::Constants::CERTAINTIES, {include_blank: true }, {class: 'form-control input-sm'} %>
       </div>
       <div class="col-sm-1 text-center">
         <label class="checkbox-inline control-label">
           <%= leaf.check_box :single %>
         </label>
       </div>
-      <div class="col-sm-1 text-center checkbox">
-        <label class="checkbox-inline control-label">
-          <%= leaf.check_box :quire_uncertain %>
-        </label>
+      <div class="col-sm-1">
+        <%= leaf.select :quire_certainty, Como::Constants::CERTAINTIES, {include_blank: true }, {class: 'form-control input-sm'} %>
       </div>
       <div class="col-sm-1 text-center">
         <%= leaf.select :mode, Leaf::MODES, {}, { class: 'form-control input-sm' } %>
       </div>
       <div class="col-sm-1">
-        <%= leaf.select :mode_certainty, Como::Constants::CERTAINTY, {}, { class: 'form-control input-sm'} %>
+        <%= leaf.select :mode_certainty, Como::Constants::CERTAINTIES, {}, {class: 'form-control input-sm'} %>
       </div>
   <% end %>
 

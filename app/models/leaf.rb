@@ -1,8 +1,6 @@
 class Leaf < ActiveRecord::Base
   include XmlID
 
-  # TODO: Change quire_uncertain to quire_certainty
-
   # Number for renumbering this quire
   attr_accessor :new_number
 
@@ -52,6 +50,13 @@ class Leaf < ActiveRecord::Base
     rescue ArgumentError, TypeError
       false
     end
+  end
+
+  ##
+  # #q_certainty only returns #quire_certainty when leaf is non-false.
+  def q_certainty
+    return if false_leaf?
+    quire_certainty
   end
 
   def description

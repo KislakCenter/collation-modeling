@@ -7,9 +7,11 @@ cd `dirname $0`/..
 
 generator_options="--no-helper --no-view-specs --no-helper-specs --no-assets --no-stylesheets"
 
-rails g migration add_attachment_method_fields_to_leaves \
-    attachment_method:string \
-    attachment_method_certainty:integer
+rails g migration add_quire_certainty_to_leaves quire_certainty:integer
+
+#rails g migration add_attachment_method_fields_to_leaves \
+#    attachment_method:string \
+#    attachment_method_certainty:integer
 
 #rails g migration add_text_direction_to_manuscript text_direction:string
 

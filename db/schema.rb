@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171110164605) do
+ActiveRecord::Schema.define(version: 20171110191125) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,11 +22,11 @@ ActiveRecord::Schema.define(version: 20171110164605) do
     t.datetime "created_at",                                                   null: false
     t.datetime "updated_at",                                                   null: false
     t.string   "folio_number",                limit: 255
-    t.boolean  "quire_uncertain",                         default: false
     t.integer  "folio_number_certainty",                  default: 1
     t.integer  "mode_certainty",                          default: 1
     t.string   "attachment_method"
     t.integer  "attachment_method_certainty"
+    t.integer  "quire_certainty",                         default: 1
   end
 
   create_table "manuscripts", force: :cascade do |t|

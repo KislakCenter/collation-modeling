@@ -53,7 +53,7 @@ class QuiresController < ApplicationController
                                     leaf_attributes: [:id,
                                                       :single,
                                                       :folio_number, :folio_number_certainty,
-                                                      :quire_uncertain,
+                                                      :quire_certainty,
                                                       :mode, :mode_certainty,
                                                       :attachment_method, :attachment_method_certainty
                                     ]

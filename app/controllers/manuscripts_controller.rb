@@ -56,6 +56,9 @@ class ManuscriptsController < ApplicationController
   end
 
   def manuscript_params
-    params.require(:manuscript).permit(:title, :shelfmark, :url, :quire_number_input, :leaves_per_quire_input)
+    params.require(:manuscript).permit(:title, :shelfmark, :url,
+                                       :quire_number_input,
+                                       :leaves_per_quire_input,
+                                       :text_direction)
   end
 end

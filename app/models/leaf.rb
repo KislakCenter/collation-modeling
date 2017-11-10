@@ -2,6 +2,7 @@ class Leaf < ActiveRecord::Base
   include XmlID
 
   # TODO: Add attachment-method/certainty (form, show, xml)
+  # TODO: Change quire_uncertain to quire_certainty
 
   # Number for renumbering this quire
   attr_accessor :new_number

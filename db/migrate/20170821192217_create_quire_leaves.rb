@@ -11,7 +11,7 @@ class CreateQuireLeaves < ActiveRecord::Migration
         quire = Quire.find leaf.quire_id
       end
       leaf.update_column 'quire_id', nil
-      quire.quire_leaves.build leaf: leaf, certainty: 1
+      quire.quire_leaves.build leaf: leaf
       Rails.logger.info "Updated leaf #{leaf.inspect}"
     end
     quire.save! unless quire.blank?
@@ -33,17 +33,10 @@ class CreateQuireLeaves < ActiveRecord::Migration
       t.references :quire,                                  index: true, foreign_key: true
       t.references :leaf,                                   index: true, foreign_key: true
       t.integer    :position
-      t.integer    :certainty,         default: 1
-      t.integer    :conjoin_id
-      t.integer    :conjoin_certainty, default: 1
       t.integer    :subquire,          default: 0
 
       t.timestamps null: false
     end
-
-    # `:references` doesn't handle different table-column situations;
-    # `:manuually create the foreign key
-    add_foreign_key :quire_leaves, :leaves, column: :conjoin_id
 
     update_leaf_assignments
   end

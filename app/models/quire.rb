@@ -70,7 +70,7 @@ class Quire < ActiveRecord::Base
       temp_quire_leaves = []
       num_leaves.to_i.times do
         curr_folio = inc_folio curr_folio
-        quire_leaves.create certainty: 1, leaf: Leaf.new(folio_number: curr_folio)
+        quire_leaves.create leaf: Leaf.new(folio_number: curr_folio)
       end
     end
   end

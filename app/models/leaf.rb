@@ -16,7 +16,8 @@ class Leaf < ActiveRecord::Base
   }
 
   validates :attachment_method,
-            inclusion: { in: ATTACHMENT_METHODS }, allow_nil: true
+            inclusion: { in: ATTACHMENT_METHODS },
+            allow_nil: true, allow_blank: true
 
   def manuscript
     quires.present? and quires.first.manuscript or nil

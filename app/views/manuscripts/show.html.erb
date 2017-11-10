@@ -36,6 +36,15 @@
   </div>
 </div>
 
+<div class="row">
+  <div class="col-sm-2">
+    <p class="field-label">Text direction</p>
+  </div>
+  <div class="col-sm-10">
+    <p class="field-value"><%= @manuscript.text_direction_name %></p>
+  </div>
+</div>
+
 <p>
   <%= link_to 'Edit', edit_manuscript_path(@manuscript), class: 'btn btn-default' %>
   <%= link_to "Leaves XML", manuscript_xml_path(@manuscript, xml_type: :filled_quires, format: :xml), class: 'btn btn-default' %>

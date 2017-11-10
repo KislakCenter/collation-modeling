@@ -30,8 +30,7 @@ module Como
       xml.url manuscript.url
       xml.title manuscript.title
       xml.shelfmark manuscript.shelfmark
-      # TODO: remove hard-coded direction
-      xml.direction val: 'l-r'
+      xml.direction val: manuscript.text_direction
     end
 
     def add_leaves xml, quire_structures

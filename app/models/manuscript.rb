@@ -1,8 +1,10 @@
 require 'ostruct'
 
+##
+# Manuscript collects data about each manuscript,
 class Manuscript < ActiveRecord::Base
   has_many :quires, -> { order('quires.position ASC') }, dependent: :destroy
-  has_many :quire_leaves, lambda {
+  has_many :quire_leaves, -> {
     reorder('quires.position, quire_leaves.position')
   }, through: :quires
   # TODO: fix non-distinct leaves; `reorder(...).distinct` => broken SQL
@@ -13,7 +15,12 @@ class Manuscript < ActiveRecord::Base
   attr_accessor :leaves_per_quire_input
   attr_accessor :skips
 
-  # TODO: add text direction to db, controller, views [default='l-r']
+  validates :text_direction, inclusion: { in: %w(l-r r-l) }
+
+  TEXT_DIRECTIONS = [['Left to right', 'l-r'], ['Right to left', 'r-l']].freeze
+  TEXT_DIRECTION_NAMES_BY_CODE = TEXT_DIRECTIONS.inject({}) { |memo,pair|
+    memo.merge(pair.last => pair.first)
+  }.freeze
 
   after_save :create_quires
 
@@ -31,6 +38,10 @@ class Manuscript < ActiveRecord::Base
   def last_saved_leaf
     q = last_saved_quire
     q.leaves.last if q.present?
+  end
+
+  def text_direction_name
+    TEXT_DIRECTION_NAMES_BY_CODE[text_direction]
   end
 
   ##

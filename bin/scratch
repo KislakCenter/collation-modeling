@@ -7,7 +7,9 @@ cd `dirname $0`/..
 
 generator_options="--no-helper --no-view-specs --no-helper-specs --no-assets --no-stylesheets"
 
-rails g migration remove_quire_id_from_leaves quire_id:integer
+rails g migration add_text_direction_to_manuscript text_direction:string
+
+#rails g migration remove_quire_id_from_leaves quire_id:integer
 
 #rails g migration remove_single_certainty_from_leaves single_certainty:integer
 

@@ -21,12 +21,13 @@ module Como
       return structure if built?
 
       # add each quire_leaf to its subquire
+      first_ql = quire.quire_leaves.first
+      last_ql = quire.quire_leaves.last
       quire.quire_leaves.each do |quire_leaf|
         _add_quire_leaf quire_leaf.subquire, quire_leaf
-        # quire0 is always in the first position
-        _add_quire_leaf Subquire::MAIN_QUIRE_NUM, quire_leaf if quire_leaf.first?
-        # quire0 is always in the last position
-        _add_quire_leaf Subquire::MAIN_QUIRE_NUM, quire_leaf if quire_leaf.last?
+        if [first_ql, last_ql].include? quire_leaf
+          _add_quire_leaf Subquire::MAIN_QUIRE_NUM, quire_leaf
+        end
       end
 
       find_containment

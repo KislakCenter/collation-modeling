@@ -130,7 +130,7 @@ module Como
 
     # TODO: move build_quire_structures to better class
     def build_quire_structures
-      manuscript.quires.map do |quire|
+      manuscript.quires.includes(quire_leaves: :leaf).map do |quire|
         qs = Como::QuireStructure.new quire
         qs.build
         qs

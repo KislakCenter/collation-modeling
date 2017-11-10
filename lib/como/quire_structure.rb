@@ -1,5 +1,6 @@
 module Como
   class QuireStructure
+    # TODO: Refactor QuireStructure arrays and child arrays as classes
     attr_reader :quire
     attr_reader :errors
 

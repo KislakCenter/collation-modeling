@@ -51,6 +51,7 @@
   <%= link_to "Joins XML", manuscript_xml_path(@manuscript, xml_type: :default, format: :xml), class: 'btn btn-default' %>
 </p>
 
+<%# TODO: Pull out this junk into separate partials %>
 <% if @manuscript.quires.present? -%>
   <h3>Quires</h3>
 

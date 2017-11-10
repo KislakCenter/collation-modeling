@@ -87,6 +87,8 @@
                       <th scope="col"><strong>Leaf</strong></th>
                       <th scope="col"><strong>Folio number</strong></th>
                       <th scope="col"><strong>Folio certainty</strong></th>
+                      <th scope="col"><strong>Attachment method</strong></th>
+                      <th scope="col"><strong>Attachment certainty</strong></th>
                       <th scope="col"><strong>Single</strong></th>
                       <th scope="col"><strong>Single certainty</strong></th>
                       <th scope="col"><strong>Quire uncertain</strong></th>
@@ -101,6 +103,8 @@
                             <td scope="row"><%= quire_leaf.position %></td>
                             <td scope="row"><%= quire_leaf.folio_number %></td>
                             <td scope="row"><%= quire_leaf.folio_number_certainty %></td>
+                            <td scope="row"><%= quire_leaf.attachment_method %></td>
+                            <td scope="row"><%= quire_leaf.attachment_method_certainty %></td>
                             <td scope="row"><%= quire_leaf.leaf_single?.yesno %></td>
                             <td scope="row"><%= quire_leaf.quire_uncertain.yesno %></td>
                             <td scope="row"><%= quire_leaf.leaf_mode %></td>

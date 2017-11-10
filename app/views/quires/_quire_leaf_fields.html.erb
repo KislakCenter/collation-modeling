@@ -10,6 +10,12 @@
       <div class="col-sm-1">
         <%= leaf.select :folio_number_certainty, Como::Constants::CERTAINTY, {}, { class: 'form-control input-sm'} %>
       </div>
+      <div class="col-sm-1">
+        <%= leaf.select :attachment_method, Leaf::ATTACHMENT_METHODS, { include_blank: true }, { class: 'form-control input-sm'} %>
+      </div>
+      <div class="col-sm-1">
+        <%= leaf.select :attachment_method_certainty, Como::Constants::CERTAINTY, { include_blank: true }, { class: 'form-control input-sm'} %>
+      </div>
       <div class="col-sm-1 text-center">
         <label class="checkbox-inline control-label">
           <%= leaf.check_box :single %>

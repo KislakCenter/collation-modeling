@@ -1,13 +1,14 @@
 class Leaf < ActiveRecord::Base
   include XmlID
 
-  # TODO: Add attachment-method/certainty (form, show, xml)
   # TODO: Change quire_uncertain to quire_certainty
 
   # Number for renumbering this quire
   attr_accessor :new_number
-  FOLIO_NUMBERS = (1..600).to_a
-  MODES = %w( original added replaced missing )
+
+  FOLIO_NUMBERS       = (1..1000).to_a.freeze
+  MODES               = %w( original added replaced missing ).freeze
+  ATTACHMENT_METHODS  = %w( sewn glued tipped drummed ).freeze
 
   has_many :quire_leaves, inverse_of: :leaf
   has_many :quires, through: :quire_leaves
@@ -15,6 +16,9 @@ class Leaf < ActiveRecord::Base
   scope :without_children, -> {
     includes(:quire_leaves).where(:quire_leaves => { :id => nil })
   }
+
+  validates :attachment_method,
+            inclusion: { in: ATTACHMENT_METHODS }, allow_nil: true
 
   def manuscript
     quires.present? and quires.first.manuscript or nil

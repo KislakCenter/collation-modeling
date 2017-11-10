@@ -4,6 +4,8 @@ include LetHelpers
 
 RSpec.describe 'Como::XML' do
 
+  # TODO: Add specs to check XML content
+
   let(:ms_with_leaves) {
     FactoryGirl.create(:manuscript_with_filled_quires, quires_count: 8)
   }
@@ -37,8 +39,6 @@ RSpec.describe 'Como::XML' do
   let(:xml_for_ms_with_subquire) { Como::XML.new ms_with_subquire }
   let(:xml_for_manuscript_with_single_leaf) { Como::XML.new manuscript_with_single_leaf }
   let(:xml_for_manuscript_with_single_leaf_and_subquire) { Como::XML.new manuscript_with_single_leaf_and_subquire }
-
-
 
   let(:viscoll_schema2) {
     rng = File.join(Rails.root, 'app', 'assets', 'xml', 'viscoll-datamodel2.rng')

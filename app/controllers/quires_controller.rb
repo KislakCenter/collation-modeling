@@ -37,6 +37,7 @@ class QuiresController < ApplicationController
   end
 
   private
+
   def set_quire
     @quire = Quire.find(params[:id])
   end
@@ -47,10 +48,15 @@ class QuiresController < ApplicationController
 
   def quire_params
     params.require(:quire).permit(:preceding_folio_number,
-      quire_leaves_attributes: [
-        :mode, :subquire, :_destroy, :id,
-        leaf_attributes: [:id, :single, :folio_number, :quire_uncertain, :mode,
-                          :folio_certainty, :mode_certainty]
+                                  quire_leaves_attributes: [
+                                    :subquire, :_destroy, :id,
+                                    leaf_attributes: [:id,
+                                                      :single,
+                                                      :folio_number, :folio_number_certainty,
+                                                      :quire_uncertain,
+                                                      :mode, :mode_certainty,
+                                                      :attachment_method, :attachment_method_certainty
+                                    ]
       ]
     )
   end

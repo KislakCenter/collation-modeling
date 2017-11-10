@@ -75,6 +75,7 @@ class Quire < ActiveRecord::Base
     end
   end
 
+  # TODO: Remove calculate_conjoins
   def calculate_conjoins
     by_position = quire_leaves.inject({}) { |h, ql| h.merge(ql.position => ql) }
     pairs = quire_leaves.reject &:leaf_single?

@@ -16,6 +16,9 @@ class QuireLeaf < ActiveRecord::Base
   delegate :single?,                to: :leaf,  prefix: true,  allow_nil: true
   delegate :folio_number,           to: :leaf,  prefix: false, allow_nil: true
   delegate :folio_number_certainty, to: :leaf,  prefix: false, allow_nil: true
+  delegate :attachment_method,      to: :leaf,  prefix: false, allow_nil: true
+  delegate :attachment_method_certainty, to: :leaf, prefix: false,
+                                         allow_nil: true
   delegate :quire_uncertain,        to: :leaf,  prefix: false, allow_nil: true
   delegate :mode,                   to: :leaf,  prefix: true,  allow_nil: true
   delegate :mode_certainty,         to: :leaf,  prefix: true,  allow_nil: true

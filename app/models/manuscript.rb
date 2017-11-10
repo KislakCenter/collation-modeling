@@ -58,6 +58,7 @@ class Manuscript < ActiveRecord::Base
     xml.build_xml.to_xml
   end
 
+  # TODO: Remove calculate_conjoins
   def calculate_conjoins
     quires.each(&:calculate_conjoins)
   end

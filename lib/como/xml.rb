@@ -41,8 +41,16 @@ module Como
           add_mode xml, leaf
           add_qs xml, leaves_hash, leaf
           add_single xml if leaf.single?
+          add_attachment_method xml, leaf if leaf.attachment_method.present?
         end
       end
+    end
+
+    def add_attachment_method xml, leaf
+      attrs = { type: leaf.attachment_method }
+      certainty = leaf.attachment_method_certainty
+      attrs[:certainty] = certainty if certainty.present?
+      xml.send :"attachment-method", leaf.attachment_method, attrs
     end
 
     def add_single xml

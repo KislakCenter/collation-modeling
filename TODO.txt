@@ -1,14 +1,14 @@
 # TODO
 
-## QuireLeaf
+## General
 
-- Upon destroy, QuireLeaf instance should destroy associated leaf if that leaf
-  belongs to no other QuireLeaf
+- TODO: Validate XML returned to user (controller?)
+
+## QuireLeaf
 
 ## Leaf
 
 - Add Leaf#attachment_method list or ?? QuireLeaf#attachment_method
-- Add Leaf#quire_uncertain; when quire_uncertain, folio number cannot be edited
 
 - When Leaf#quire_uncertain and ...
   - Adding following quire: add leaf to following quire, copying details from
@@ -19,10 +19,17 @@
 
 ## Questions for Dot
 
-- Attachment method; belongs to `<leaf>`: Can have ZeroOrMore ocurrences? Is
-  any NCName? Support this?
+- TODO: Values for attachment-method
 
 ## Authentication and authorization
 
-- Install devise and add admin role
-- Install cancancan
+- TODO: Install devise and add admin role
+- TODO: Install cancancan
+
+## Features
+
+- TODO: Create features for all pages
+
+## Bugs
+
+- TODO: JS not loading until page reload on Quire form

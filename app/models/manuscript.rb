@@ -53,7 +53,7 @@ class Manuscript < ActiveRecord::Base
     last_saved_leaf_folio_number
   end
 
-  def to_xml _options = {}
+  def to_xml
     xml = Como::XML.new self
     xml.build_xml.to_xml
   end

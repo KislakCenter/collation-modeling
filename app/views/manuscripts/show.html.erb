@@ -47,8 +47,7 @@
 
 <p>
   <%= link_to 'Edit', edit_manuscript_path(@manuscript), class: 'btn btn-default' %>
-  <%= link_to "Leaves XML", manuscript_xml_path(@manuscript, xml_type: :filled_quires, format: :xml), class: 'btn btn-default' %>
-  <%= link_to "Joins XML", manuscript_xml_path(@manuscript, xml_type: :default, format: :xml), class: 'btn btn-default' %>
+  <%= link_to "Model XML", manuscript_xml_path(@manuscript, format: :xml), class: 'btn btn-default' %>
 </p>
 
 <%# TODO: Pull out this junk into separate partials %>

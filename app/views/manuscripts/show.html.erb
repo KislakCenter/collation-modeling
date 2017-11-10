@@ -101,13 +101,13 @@
                           <tr>
                             <td scope="row"><%= quire_leaf.position %></td>
                             <td scope="row"><%= quire_leaf.folio_number %></td>
-                            <td scope="row"><%= quire_leaf.folio_number_certainty %></td>
+                            <td scope="row"><%= certainty_name quire_leaf.folio_number_certainty %></td>
                             <td scope="row"><%= quire_leaf.attachment_method %></td>
-                            <td scope="row"><%= quire_leaf.attachment_method_certainty %></td>
+                            <td scope="row"><%= certainty_name quire_leaf.attachment_method_certainty %></td>
                             <td scope="row"><%= quire_leaf.leaf_single?.yesno %></td>
-                            <td scope="row"><%= quire_leaf.quire_certainty %></td>
+                            <td scope="row"><%= certainty_name quire_leaf.quire_certainty %></td>
                             <td scope="row"><%= quire_leaf.leaf_mode %></td>
-                            <td scope="row"><%= quire_leaf.leaf_mode_certainty %></td>
+                            <td scope="row"><%= certainty_name quire_leaf.leaf_mode_certainty %></td>
                             <td scope="row"><%= quire_leaf.subquire %></td>
                             <td scope="row">
                               <% if skips.include?(quire_leaf.leaf_id) %>

@@ -35,4 +35,9 @@ module ApplicationHelper
     head = limit - (tail + 3)
     sprintf "%s...%s", s[0,head], s[-tail..-1]
   end
+
+  def certainty_name number
+    return unless Como::Constants::CERTAINTY_NUMBERS.include? number.to_i
+    Como::Constants::CERTAINTY_NAMES_BY_CODE[number.to_i]
+  end
 end

@@ -10,5 +10,6 @@ module Como
       memo.merge(pair.last => pair.first)
     }.freeze
 
+    CERTAINTY_NUMBERS = CERTAINTIES.map(&:last).freeze
   end
 end

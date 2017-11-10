@@ -127,5 +127,9 @@ module Como
         qs
       end
     end
+
+    def to_xml
+      build_xml.to_xml
+    end
   end
 end

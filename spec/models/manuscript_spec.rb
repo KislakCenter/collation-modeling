@@ -6,30 +6,6 @@ RSpec.describe Manuscript, :type => :model do
   let(:ms_with_8_quires) { FactoryGirl.create(:manuscript_with_empty_quires, quires_count: 8) }
   let(:manuscript) { FactoryGirl.create :manuscript }
   let(:ms_with_leaves) { FactoryGirl.create(:manuscript_with_filled_quires, quires_count: 8)}
-  let(:ms_with_subquire) {
-    ms = FactoryGirl.create(:manuscript_with_filled_quires, quires_count: 2)
-    q = ms.quires.first
-    q.quire_leaves[1].update_attribute 'subquire', 1
-    q.quire_leaves[2].update_attribute 'subquire', 1
-    ms
-  }
-
-  let(:manuscript_with_single_leaf) {
-    ms = FactoryGirl.create :manuscript
-    ms.quires << build_quire_and_leaves(7, 2)
-    ms.save
-    ms
-  }
-
-  let(:manuscript_with_single_leaf_and_subquire) {
-    ms = FactoryGirl.create :manuscript
-    ms.quires << build_quire_and_leaves(7, 2)
-    ms.save
-    ms.quires[0].quire_leaves[1].update_attribute 'subquire', 1
-    ms.quires[0].quire_leaves[2].update_attribute 'subquire', 1
-    ms.quires[0].quire_leaves[3].update_attribute 'subquire', 1
-    ms
-  }
 
   let(:numbers_without_skips) { (1..64).map &:to_s }
   let(:numbers_with_one_skip) {
@@ -79,39 +55,6 @@ RSpec.describe Manuscript, :type => :model do
       expect(FactoryGirl.create(:manuscript_with_filled_quires).quires.first.leaves.length).to eq 8
     end
 
-  end
-
-  # TODO: Move to_xml tests to separate spec
-  context "#to_xml" do
-    it "creates some xml" do
-      ns = { x: 'http://schoenberginstitute.org/schema/collation' }
-      expect(Nokogiri::XML(ms_with_leaves.to_xml).xpath('//x:quire', ns).length).to eq 8
-    end
-
-    it "generates an xml string" do
-      expect(ms_with_leaves.to_xml).to be_a String
-    end
-
-    it "generates valid xml" do
-      doc = Nokogiri::XML(ms_with_leaves.to_xml)
-      expect(viscoll_schema2.validate doc).to be_blank
-    end
-
-    it "handles a single sub-quire" do
-      xml = ms_with_subquire.to_xml
-      expect(viscoll_schema2.validate Nokogiri::XML xml).to be_blank
-    end
-
-    it 'handles single leaves' do
-      xml = manuscript_with_single_leaf.to_xml
-      expect(viscoll_schema2.validate Nokogiri::XML xml).to be_blank
-    end
-
-    it 'handles single leaf in a subquire' do
-      xml = manuscript_with_single_leaf_and_subquire.to_xml
-      # puts xml
-      expect(viscoll_schema2.validate Nokogiri::XML xml).to be_blank
-    end
   end
 
   context "create_quires" do
@@ -168,14 +111,6 @@ RSpec.describe Manuscript, :type => :model do
       skips = ms_with_leaves.leaf_skips
       expect(skips.size).to eq(1)
       expect(Leaf.find(skips.first).folio_number).to eq("3")
-    end
-  end
-
-  # TODO: Move build_quire_structures specs to separate spec
-  context 'build_quire_structures' do
-    it 'builds all QuireStructures' do
-      xml = Como::XML.new ms_with_leaves
-      expect(xml.build_quire_structures).to be_an Array
     end
   end
 end

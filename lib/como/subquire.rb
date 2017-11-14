@@ -4,11 +4,13 @@ module Como
 
     attr_reader :subquire_num
     attr_reader :quire
+    attr_reader :super_structure
 
     def initialize quire, subquire_num
       @quire        = quire
       @subquire_num = subquire_num
       @substructure = []
+      @super_structure = SuperStructure.new self
     end
 
     def xml_id
@@ -25,22 +27,9 @@ module Como
       _slots.map(&:position).compact
     end
 
-    def substructure_position slot
-      _substructure.index(slot) + 1
-    end
-
-    def slot_position slot
-      return unless has_slot? slot
-      _slots.index(slot) + 1
-    end
-
-    ##
-    # Return true if `slot` is in the list of slots, as opposed to its
-    # substructure.
-    #
-    def has_slot? slot
-      _slots.include? slot
-    end
+    # def substructure_position slot
+    #   _substructure.index(slot) + 1
+    # end
 
     def max_position
       positions.max
@@ -62,20 +51,16 @@ module Como
 
     def add_quire_leaf quire_leaf
       return if has_quire_leaf? quire_leaf
-      _slots << QuireSlot.new(quire_leaf)
+      super_structure << QuireSlot.new(quire_leaf)
       _add_quire_leaf_slot_to_substructure @slots.last
     end
 
     def has_quire_leaf? quire_leaf
-      leaves.include? quire_leaf
+      super_structure.include? quire_leaf
     end
 
     def leaves
       _slots.flat_map { |slot| slot.quire_leaf || [] }
-    end
-
-    def has_position? position
-      positions.include? position
     end
 
     def slots
@@ -83,23 +68,19 @@ module Como
       _slots.dup
     end
 
-    def substructure
-      _substructure.dup
-    end
-
-    def substructure_size
-      _substructure.size
-    end
-
-    def empty?
-      _slots.empty?
-    end
+    # def substructure
+    #   _substructure.dup
+    # end
+    #
+    # def substructure_size
+    #   _substructure.size
+    # end
 
     def contains? other
       return false unless other.is_a? self.class
       return false if empty? || other.empty?
       return min_position <= other.min_position &&
-        other.max_position <= max_position
+             other.max_position <= max_position
     end
 
     def main_quire?
@@ -279,6 +260,7 @@ module Como
     end
 
     protected
+
     def _add_quire_leaf_slot_to_substructure quire_slot
       return if _substructure.include? quire_slot
       raise "Can't add placeholder slot as quire_leaf" if quire_slot.placeholder?

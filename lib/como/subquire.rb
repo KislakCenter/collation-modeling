@@ -25,24 +25,6 @@ module Como
       "#{quire.position}-#{subquire_num}"
     end
 
-    # def max_position
-    #   super_structure.max_position
-    # end
-    #
-    # def min_position
-    #   super_structure.min_position
-    # end
-
-    # def << quire_slot
-    #   _slots << quire_slot
-    #   # allow chaining of insertions
-    #   self
-    # end
-
-    # def [] ndx
-    #   _slots[ndx]
-    # end
-
     def add_quire_leaf quire_leaf
       quire_slot = QuireSlot.new quire_leaf
       # super_structure.add_quire_leaf quire_leaf
@@ -54,15 +36,6 @@ module Como
     def has_quire_leaf? quire_leaf
       super_structure.include? quire_leaf
     end
-
-    # def slots
-    #   # don't allow direct access to @positions
-    #   _slots.dup
-    # end
-
-    # def substructure_size
-    #   substructure.size
-    # end
 
     def contains? other
       super_structure.contains? other.super_structure
@@ -81,25 +54,11 @@ module Como
       adjacent?(other)
     end
 
-    # def parent
-    #   "x"
-    # end
-
-    # def range
-    #   return nil if empty?
-    #
-    #   min_position..max_position
-    # end
-
     def add_child subquire
       (@children ||= Set.new) << subquire
       subquire._set_parent self
       self
     end
-
-    # def children
-    #   (@children ||= Set.new).dup
-    # end
 
     def top_level?
       parent.blank?
@@ -109,63 +68,9 @@ module Como
       parent.present?
     end
 
-    # def empty?
-    #   _slots.empty?
-    # end
-
-    # def size
-    #   _slots.size
-    # end
-
-    # def non_singles
-    #   _slots.reject &:single?
-    # end
-
     def even_bifolia?
       super_structure.non_singles.size.even?
     end
-
-    # def singles
-    #   _slots.select &:single?
-    # end
-
-    # def unjoined_slots
-    #   _slots.select &:unjoined?
-    # end
-
-    # def all_slots_joined?
-    #   unjoined_slots.empty?
-    # end
-
-    # def slot_after slot
-    #   ndx = _slots.index slot
-    #   _slots[ndx + 1]
-    # end
-    #
-    # def slot_before slot
-    #   ndx = _slots.index slot
-    #   _slots[ndx - 1]
-    # end
-
-    # def middle? slot
-    #   return false if size.even?
-    #   _slots.index(slot) == (size / 2)
-    # end
-
-    # def before_middle? slot
-    #   # If size is odd; middle index is size/2; before indices are less than
-    #   # size/2. If even, size/2 is one past middle index.
-    #   _slots.index(slot) < (size / 2)
-    # end
-
-    # def after_middle? slot
-    #   # If size is odd; middle index is size/2; after indices are greater than
-    #   # size/2.
-    #   _slots.index(slot) > (size / 2) if middle? slot
-    #   # If even, size/2 is one past middle index; after indices are greater
-    #   # than or equal to size/2.
-    #   _slots.index(slot) >= (size / 2)
-    # end
 
     ##
     # By definition a subquire cannot be discontinuous, if any of the parent
@@ -233,14 +138,6 @@ module Como
       end
     end
 
-    # def conjoin_map
-    #   _slots.map { |slot| [slot_rep(slot), slot_rep(slot.conjoin)] }
-    # end
-
-    # def slot_rep slot
-    #   { index: _slots.index(slot), position: slot.position }
-    # end
-
     def to_s
       "#{self.class.name}: subquire_num=#{quire_number}"
     end
@@ -278,13 +175,5 @@ module Como
       new_slot.conjoin = slot
       new_slot
     end
-
-    # def _slots
-    #   (@slots ||= [])
-    # end
-    #
-    # def _substructure
-    #   (@substructure ||= [])
-    # end
   end
 end

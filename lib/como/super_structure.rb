@@ -1,5 +1,6 @@
 module Como
   class SuperStructure
+    include Como::Slotted
 
     attr_reader :subquire
 
@@ -12,39 +13,6 @@ module Como
       {index: _slots.index(slot), position: slot.position}
     end
 
-    # def conjoin_map
-    #   _slots.map {|slot| [slot_rep(slot), slot_rep(slot.conjoin)]}
-    # end
-
-    # def pair_single slot
-    #   case
-    #     when slot == _slots.first
-    #       new_slot = _new_conjoin slot
-    #       _add_slot new_slot, after: _slots.last
-    #     when slot == _slots.last
-    #       new_slot = _new_conjoin slot
-    #       _add_slot new_slot, before: _slots.first
-    #     when middle?(slot)
-    #       # if this slot is in the middle, the placeholder follows it
-    #       new_slot = _new_conjoin slot
-    #       _add_slot new_slot, after: slot
-    #     when before_middle?(slot)
-    #       new_slot = _new_conjoin slot
-    #       # new_slot goes before previous slot's conjoin
-    #       prev_slot = slot_before slot
-    #       _add_slot new_slot, before: prev_slot.conjoin
-    #     when after_middle?(slot)
-    #       # new_slot goes after next slot's conjoin
-    #       # if the next slot is unjoined, we have to wait to process this one
-    #       return pair_single slot_after slot if slot_after(slot).unjoined?
-    #       new_slot = _new_conjoin slot
-    #       next_slot = slot_after slot
-    #       _add_slot new_slot, after: next_slot.conjoin
-    #     else
-    #       raise "Shouldn't have a slot that doesn't match."
-    #   end
-    # end
-
     ##
     # Add `quire_slot` to the main subquire structure before or after the slot
     # given as the `:before` or `:after` slot in `opts`. Either `:before` or
@@ -56,29 +24,15 @@ module Como
       _slots.insert ndx, quire_slot
     end
 
-    # def pair_up_singles
-    #   return if all_slots_joined?
-    #   pair_single unjoined_slots.first
-    #   # start over; positions have changed
-    #   pair_up_singles
-    # end
-    #
     def join_bifolia
       bifolia = non_singles
       until bifolia.empty?
+        # TODO: change to left, right to leading, trailing
         left, right = bifolia.shift, bifolia.pop
         left.conjoin = right
         right.conjoin = left
       end
     end
-
-    # def calculate_conjoins
-    #   # don't calculate if structure doesn't make sense
-    #   return if discontinuous?
-    #   return unless even_bifolia?
-    #   join_bifolia
-    #   pair_up_singles
-    # end
 
     def contains_any? positions
       positions.any? { |posn|
@@ -137,23 +91,10 @@ module Como
       _slots.reject &:single?
     end
 
-    def size
-      _slots.size
-    end
-
-    def empty?
-      _slots.empty?
-    end
-
     def range
       return nil if empty?
 
       min_position..max_position
-    end
-
-    def slots
-      # don't allow direct access to @positions
-      _slots.dup
     end
 
     def leaves
@@ -182,29 +123,12 @@ module Como
       positions.max
     end
 
-    def [] ndx
-      _slots[ndx]
-    end
-
-    def first? slot
-      _slots.first == slot
-    end
-
-    def last? slot
-      _slots.last == slot
-    end
-
     ##
     # Return true if `slot` is in the list of slots, as opposed to its
     # substructure.
     #
     def has_slot? slot
       _slots.include? slot
-    end
-
-    def slot_position slot
-      return unless has_slot? slot
-      _slots.index(slot) + 1
     end
 
     def positions
@@ -231,37 +155,6 @@ module Como
     end
 
     private
-
-    ##
-    # Get the `:before` or `:after` index for the QuireSlot given as the
-    # `:before` or `:after` value in `opts` index. This index will be used for
-    # QuireSlot insertion; consequently, the `:before` index is the index of
-    # the given slot, while the `:after` index is the index of the given slot
-    # plus 1. Either `:before` or `:after` must be specified but not both.
-    def _get_index opts
-      # TODO: Extract to module HasSlots
-      _check_before_after_opts opts
-      !!opts[:before] ? _slots.index(opts[:before]) : (_slots.index(opts[:after]) + 1)
-    end
-
-    ##
-    # Confirm that opts has either `:before` or `:after` but not both and that
-    # the given opt is a QuireSlot.
-    def _check_before_after_opts opts={}
-      # TODO: Extract to module HasSlots
-      unless (!!opts[:before]) ^ (!!opts[:after])
-        msg = "opts must have :before or :after, but not both; got #{opts}"
-        raise ArgumentError.new msg
-      end
-      slot = opts[:before] || opts[:after]
-      unless slot.is_a? QuireSlot
-        msg "`:before|:after` opt must be a QuireSlot: got #{slot}"
-      end
-    end
-
-    def _slots
-      (@slots ||= [])
-    end
 
     def _new_conjoin slot
       new_slot = QuireSlot.new

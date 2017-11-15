@@ -31,6 +31,14 @@ module Como
       _slots.sort! { |a, b| a.position <=> b.position }
     end
 
+    def append quire_slot
+      return if include? quire_slot
+      raise "Can't add placeholder slot as quire_leaf" if quire_slot.placeholder?
+      raise "Can't add quire leaf to Subquire with placeholders" if has_placeholder?
+      _slots << quire_slot
+      _slots.sort! { |a, b| a.position <=> b.position }
+    end
+
     def fill_parent substructure
       slots.each do |quire_slot|
         substructure.add_quire_leaf_slot quire_slot
@@ -66,8 +74,6 @@ module Como
     def _get_index opts
       # TODO: Extract to module HasSlots
       _check_before_after_opts opts
-      puts opts.inspect
-      puts _slots.inspect
       !!opts[:before] ? _slots.index(opts[:before]) : (_slots.index(opts[:after]) + 1)
     end
 
@@ -78,7 +84,7 @@ module Como
       # TODO: Extract to module HasSlots
       unless (!!opts[:before]) ^ (!!opts[:after])
         msg = "opts must have :before or :after, but not both; got #{opts}"
-        raise ArgumentError.new msg
+        raise ArgumentError, msg
       end
       slot = opts[:before] || opts[:after]
       unless slot.is_a? QuireSlot

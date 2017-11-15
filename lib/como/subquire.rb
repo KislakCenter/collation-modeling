@@ -44,8 +44,11 @@ module Como
     # end
 
     def add_quire_leaf quire_leaf
-      super_structure.add_quire_leaf quire_leaf
-      substructure.add_quire_leaf_slot QuireSlot.new quire_leaf
+      quire_slot = QuireSlot.new quire_leaf
+      # super_structure.add_quire_leaf quire_leaf
+      # substructure.add_quire_leaf_slot QuireSlot.new quire_leaf
+      super_structure.append quire_slot
+      substructure.append quire_slot
     end
 
     def has_quire_leaf? quire_leaf
@@ -204,27 +207,27 @@ module Como
       when super_structure.first?(slot)
         new_slot = _new_conjoin slot
         last_slot = super_structure.slots.last
-        _add_slot new_slot, after: last_slot
+        _insert_placeholder new_slot, after: last_slot
       when super_structure.last?(slot)
         new_slot = _new_conjoin slot
         first_slot = super_structure.slots.first
-        _add_slot new_slot, after: first_slot
+        _insert_placeholder new_slot, before: first_slot
       when super_structure.middle?(slot)
         # if this slot is in the middle, the placeholder follows it
         new_slot = _new_conjoin slot
-        _add_slot new_slot, after: slot
+        _insert_placeholder new_slot, after: slot
       when super_structure.before_middle?(slot)
         new_slot = _new_conjoin slot
         # new_slot goes before previous slot's conjoin
         prev_slot = super_structure.slot_before slot
-        _add_slot new_slot, before: prev_slot.conjoin
+        _insert_placeholder new_slot, before: prev_slot.conjoin
       when super_structure.after_middle?(slot)
         # new_slot goes after next slot's conjoin
         # if the next slot is unjoined, we have to wait to process this one
         next_slot = super_structure.slot_after(slot)
         return pair_single next_slot if next_slot.unjoined?
         new_slot = _new_conjoin slot
-        _add_slot new_slot, after: next_slot.conjoin
+        _insert_placeholder new_slot, after: next_slot.conjoin
       else
         raise "Shouldn't have a slot that doesn't match."
       end
@@ -260,7 +263,7 @@ module Como
     # given as the `:before` or `:after` slot in `opts`. Either `:before` or
     # `:after` must be specified but not both. After adding the slot to the
     # top level structure, the slot is added to the substructure.
-    def _add_slot quire_slot, opts={}
+    def _insert_placeholder quire_slot, opts={}
       # TODO: Rename to add_place_holder or add_false_leaf
       super_structure.add_slot quire_slot, opts
       substructure.add_slot quire_slot, opts

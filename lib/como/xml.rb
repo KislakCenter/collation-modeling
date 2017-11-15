@@ -72,7 +72,7 @@ module Como
 
     def add_q xml, leaf, slot, subquire
       attrs = { target: "##{subquire.xml_id}", n: subquire.quire_number,
-                position: subquire.substructure_position(slot) }
+                position: subquire.substructure.position(slot) }
       attrs[:certainty] = leaf.q_certainty if leaf.q_certainty.present?
       attrs[:leafno]    = slot.leaf_no if slot.leaf_no.present?
       xml.q(attrs) do
@@ -117,7 +117,7 @@ module Como
       leaf_hash = Hash.new { |h, key| h[key] = [] }
       quire_structures.each do |structure|
         structure.subquires.each do |subquire|
-          subquire.substructure.each_with_object(leaf_hash) do |quire_slot, leaf_hash|
+          subquire.substructure.slots.each_with_object(leaf_hash) do |quire_slot, leaf_hash|
             Rails.logger.debug {
               "Adding to Leaf #{quire_slot.leaf}: #{quire_slot} and #{subquire}"
             }

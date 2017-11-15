@@ -56,15 +56,13 @@ module Como
       _slots.insert ndx, quire_slot
     end
 
-
-
-    def pair_up_singles
-      return if all_slots_joined?
-      pair_single unjoined_slots.first
-      # start over; positions have changed
-      pair_up_singles
-    end
-
+    # def pair_up_singles
+    #   return if all_slots_joined?
+    #   pair_single unjoined_slots.first
+    #   # start over; positions have changed
+    #   pair_up_singles
+    # end
+    #
     def join_bifolia
       bifolia = non_singles
       until bifolia.empty?
@@ -82,8 +80,11 @@ module Como
     #   pair_up_singles
     # end
 
-    def contains_any? *positions
-      positions.any? { |posn| range.include? posn }
+    def contains_any? positions
+      positions.any? { |posn|
+        # binding.pry
+        range.include? posn
+      }
     end
 
     def after_middle? slot
@@ -166,6 +167,11 @@ module Como
     def add_quire_leaf quire_leaf
       return if include? quire_leaf
       _slots << QuireSlot.new(quire_leaf)
+    end
+
+    def append quire_slot
+      return if _slots.include? quire_slot
+      _slots << quire_slot
     end
 
     def min_position

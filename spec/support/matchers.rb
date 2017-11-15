@@ -19,11 +19,12 @@ end
 # Ensure the Subquire has balance conjoins
 RSpec::Matchers.define :have_balanced_conjoins do
   match do |subquire|
-    slots = subquire.slots
+    slots = subquire.super_structure.slots
     slots.size.times { |i| expect(slots[i].conjoin).to eq slots[-1 - i] }
   end
   failure_message do |actual|
-    "expected that #{actual} would have balanced conjoins"
+    # binding.pry
+    "expected that #{actual.super_structure.slots} would have balanced conjoins"
   end
 end
 
@@ -72,7 +73,7 @@ end
 # Ensure the Subquire has balanced conjoins in its substructure.
 RSpec::Matchers.define :have_balanced_substructure do
   match do |subquire|
-    slots = subquire.substructure
+    slots = subquire.substructure.slots
     slots.size.times { |i| expect(slots[i].conjoin).to eq slots[-1 - i] }
   end
   failure_message do |actual|
@@ -107,7 +108,7 @@ RSpec::Matchers.define :have_conjoin_positions do |posns|
   match do |subquire|
     ra = posns.first.respond_to?(:first) ? posns : [posns]
     ra.each do |pair|
-      slots = subquire.slots
+      slots = subquire.super_structure.slots
       slot1 = slots[pair.first - 1]
       slot2 = slots[pair.last - 1]
       expect(slot1.conjoin).to eq slot2
@@ -116,7 +117,7 @@ RSpec::Matchers.define :have_conjoin_positions do |posns|
     end
   end
   failure_message do |actual|
-    slots = actual.slots
+    slots = actual.super_structure.slots
     "expected that #{slots[position - 1]} would be conjoin with #{slots[conjoin_position - 1]}"
   end
 end

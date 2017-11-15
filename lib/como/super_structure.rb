@@ -2,50 +2,61 @@ module Como
   class SuperStructure
 
     attr_reader :subquire
-    attr_reader :substructure
 
     def initialize subquire
       @subquire     = subquire
       @slots        = []
-      @substructure = Substructure.new
     end
 
     def slot_rep slot
       {index: _slots.index(slot), position: slot.position}
     end
 
-    def conjoin_map
-      _slots.map {|slot| [slot_rep(slot), slot_rep(slot.conjoin)]}
+    # def conjoin_map
+    #   _slots.map {|slot| [slot_rep(slot), slot_rep(slot.conjoin)]}
+    # end
+
+    # def pair_single slot
+    #   case
+    #     when slot == _slots.first
+    #       new_slot = _new_conjoin slot
+    #       _add_slot new_slot, after: _slots.last
+    #     when slot == _slots.last
+    #       new_slot = _new_conjoin slot
+    #       _add_slot new_slot, before: _slots.first
+    #     when middle?(slot)
+    #       # if this slot is in the middle, the placeholder follows it
+    #       new_slot = _new_conjoin slot
+    #       _add_slot new_slot, after: slot
+    #     when before_middle?(slot)
+    #       new_slot = _new_conjoin slot
+    #       # new_slot goes before previous slot's conjoin
+    #       prev_slot = slot_before slot
+    #       _add_slot new_slot, before: prev_slot.conjoin
+    #     when after_middle?(slot)
+    #       # new_slot goes after next slot's conjoin
+    #       # if the next slot is unjoined, we have to wait to process this one
+    #       return pair_single slot_after slot if slot_after(slot).unjoined?
+    #       new_slot = _new_conjoin slot
+    #       next_slot = slot_after slot
+    #       _add_slot new_slot, after: next_slot.conjoin
+    #     else
+    #       raise "Shouldn't have a slot that doesn't match."
+    #   end
+    # end
+
+    ##
+    # Add `quire_slot` to the main subquire structure before or after the slot
+    # given as the `:before` or `:after` slot in `opts`. Either `:before` or
+    # `:after` must be specified but not both.
+    def add_slot quire_slot, opts={}
+      # TODO: Extract to module HasSlots
+      return if _slots.include? quire_slot
+      ndx = _get_index opts
+      _slots.insert ndx, quire_slot
     end
 
-    def pair_single slot
-      case
-        when slot == _slots.first
-          new_slot = _new_conjoin slot
-          _add_slot new_slot, after: _slots.last
-        when slot == _slots.last
-          new_slot = _new_conjoin slot
-          _add_slot new_slot, before: _slots.first
-        when middle?(slot)
-          # if this slot is in the middle, the placeholder follows it
-          new_slot = _new_conjoin slot
-          _add_slot new_slot, after: slot
-        when before_middle?(slot)
-          new_slot = _new_conjoin slot
-          # new_slot goes before previous slot's conjoin
-          prev_slot = slot_before slot
-          _add_slot new_slot, before: prev_slot.conjoin
-        when after_middle?(slot)
-          # new_slot goes after next slot's conjoin
-          # if the next slot is unjoined, we have to wait to process this one
-          return pair_single slot_after slot if slot_after(slot).unjoined?
-          new_slot = _new_conjoin slot
-          next_slot = slot_after slot
-          _add_slot new_slot, after: next_slot.conjoin
-        else
-          raise "Shouldn't have a slot that doesn't match."
-      end
-    end
+
 
     def pair_up_singles
       return if all_slots_joined?
@@ -63,21 +74,16 @@ module Como
       end
     end
 
-    def calculate_conjoins
-      # don't calculate if structure doesn't make sense
-      return if discontinuous?
-      return unless even_bifolia?
-      join_bifolia
-      pair_up_singles
-    end
+    # def calculate_conjoins
+    #   # don't calculate if structure doesn't make sense
+    #   return if discontinuous?
+    #   return unless even_bifolia?
+    #   join_bifolia
+    #   pair_up_singles
+    # end
 
-    ##
-    # By definition a subquire cannot be discontinuous, if any of the parent
-    # subquire's positions fall with in our range, something is off.
-    #
-    def discontinuous?
-      return false if top_level?
-      parent.slots.any? {|slot| range.include? slot.position}
+    def contains_any? *positions
+      positions.any? { |posn| range.include? posn }
     end
 
     def after_middle? slot
@@ -123,7 +129,7 @@ module Como
     end
 
     def even_bifolia?
-      return non_singles.size.even?
+      non_singles.size.even?
     end
 
     def non_singles
@@ -141,7 +147,7 @@ module Como
     def range
       return nil if empty?
 
-      min_position..maposition
+      min_position..max_position
     end
 
     def slots
@@ -153,14 +159,13 @@ module Como
       _slots.flat_map {|slot| slot.quire_leaf || []}
     end
 
-    def has_quire_leaf? quire_leaf
+    def include? quire_leaf
       leaves.include? quire_leaf
     end
 
     def add_quire_leaf quire_leaf
-      return if has_quire_leaf? quire_leaf
+      return if include? quire_leaf
       _slots << QuireSlot.new(quire_leaf)
-      _add_quire_leaf_slot_to_substructure @slots.last
     end
 
     def min_position
@@ -173,6 +178,14 @@ module Como
 
     def [] ndx
       _slots[ndx]
+    end
+
+    def first? slot
+      _slots.first == slot
+    end
+
+    def last? slot
+      _slots.last == slot
     end
 
     ##
@@ -192,17 +205,53 @@ module Como
       _slots.map(&:position).compact
     end
 
-    protected
+    def contains? super_struct
+      return false if [self, super_struct].any? &:empty?
+      return false unless min_position <= super_struct.min_position
+      max_position >= super_struct.max_position
+    end
 
-    def _add_quire_leaf_slot_to_substructure quire_slot
-      return if _substructure.include? quire_slot
-      raise "Can't add placeholder slot as quire_leaf" if quire_slot.placeholder?
-      raise "Can't add quire leaf to Subquire with placeholders" if _substructure.any?(&:placeholder?)
-      _substructure << quire_slot
-      _substructure.sort! { |a,b| a.position <=> b.position }
+    def adjacent? super_struct
+      return false if empty? || super_struct.empty?
+      return true  if shares_edge? super_struct
+      # TODO: works only for contains adjacent; add contained_by adjacent
+      return true if positions.include?(super_struct.min_position + 1)
+      positions.include?(super_struct.max_position + 1)
+    end
+
+    def shares_edge? super_struct
+      return true if super_struct.min_position == min_position
+      super_struct.max_position == max_position
     end
 
     private
+
+    ##
+    # Get the `:before` or `:after` index for the QuireSlot given as the
+    # `:before` or `:after` value in `opts` index. This index will be used for
+    # QuireSlot insertion; consequently, the `:before` index is the index of
+    # the given slot, while the `:after` index is the index of the given slot
+    # plus 1. Either `:before` or `:after` must be specified but not both.
+    def _get_index opts
+      # TODO: Extract to module HasSlots
+      _check_before_after_opts opts
+      !!opts[:before] ? _slots.index(opts[:before]) : (_slots.index(opts[:after]) + 1)
+    end
+
+    ##
+    # Confirm that opts has either `:before` or `:after` but not both and that
+    # the given opt is a QuireSlot.
+    def _check_before_after_opts opts={}
+      # TODO: Extract to module HasSlots
+      unless (!!opts[:before]) ^ (!!opts[:after])
+        msg = "opts must have :before or :after, but not both; got #{opts}"
+        raise ArgumentError.new msg
+      end
+      slot = opts[:before] || opts[:after]
+      unless slot.is_a? QuireSlot
+        msg "`:before|:after` opt must be a QuireSlot: got #{slot}"
+      end
+    end
 
     def _slots
       (@slots ||= [])

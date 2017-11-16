@@ -17,12 +17,12 @@ module Como
     # Add `quire_slot` to the main subquire structure before or after the slot
     # given as the `:before` or `:after` slot in `opts`. Either `:before` or
     # `:after` must be specified but not both.
-    def add_slot quire_slot, opts={}
-      # TODO: Extract to module HasSlots
-      return if _slots.include? quire_slot
-      ndx = _get_index opts
-      _slots.insert ndx, quire_slot
-    end
+    # def add_slot quire_slot, opts={}
+    #   # TODO: Extract to module HasSlots
+    #   return if _slots.include? quire_slot
+    #   ndx = _get_index opts
+    #   _slots.insert ndx, quire_slot
+    # end
 
     def join_bifolia
       bifolia = non_singles
@@ -39,36 +39,6 @@ module Como
         # binding.pry
         range.include? posn
       }
-    end
-
-    def after_middle? slot
-      # If size is odd; middle index is size/2; after indices are greater than
-      # size/2.
-      _slots.index(slot) > (size / 2) if middle? slot
-      # If even, size/2 is one past middle index; after indices are greater
-      # than or equal to size/2.
-      _slots.index(slot) >= (size / 2)
-    end
-
-    def before_middle? slot
-      # If size is odd; middle index is size/2; before indices are less than
-      # size/2. If even, size/2 is one past middle index.
-      _slots.index(slot) < (size / 2)
-    end
-
-    def middle? slot
-      return false if size.even?
-      _slots.index(slot) == (size / 2)
-    end
-
-    def slot_before slot
-      ndx = _slots.index slot
-      _slots[ndx - 1]
-    end
-
-    def slot_after slot
-      ndx = _slots.index slot
-      _slots[ndx + 1]
     end
 
     def all_slots_joined?

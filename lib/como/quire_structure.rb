@@ -1,6 +1,5 @@
 module Como
   class QuireStructure
-    # TODO: Refactor QuireStructure arrays and child arrays as classes
     attr_reader :quire
     attr_reader :errors
 
@@ -8,23 +7,22 @@ module Como
       @quire = quire
     end
 
-    def structure
-      _structure.dup
+    def subquires
+      _subquires.dup
     end
-    alias_method :subquires, :structure
 
     def size
-      _structure.size
+      _subquires.size
     end
 
     def build
-      return structure if built?
+      return subquires if built?
 
       add_quire_leaves
       find_containment
       calculate_conjoins
 
-      structure
+      subquires
     end
 
     def add_quire_leaves
@@ -43,7 +41,7 @@ module Como
     def structurally_valid?
       build unless built?
       @errors = []
-      _structure.each do |sq|
+      _subquires.each do |sq|
         if sq.discontinuous?
           @errors << "Subquire #{sq.subquire_num} is discontinuous"
         end
@@ -57,12 +55,12 @@ module Como
 
     def top_level_quire
       build unless built?
-      _structure.find &:main_quire?
+      _subquires.find &:main_quire?
     end
     alias_method :top, :top_level_quire
 
     def subquire subquire_num
-      _structure[subquire_num]
+      _subquires[subquire_num]
     end
 
     def built?
@@ -72,16 +70,16 @@ module Como
     private
 
     def _add_quire_leaf subquire_num, quire_leaf
-      _structure[subquire_num] ||= Subquire.new @quire, subquire_num
-      return _structure if _structure[subquire_num].has_quire_leaf? quire_leaf
-      _structure[subquire_num].add_quire_leaf quire_leaf
+      _subquires[subquire_num] ||= Subquire.new @quire, subquire_num
+      return _subquires if _subquires[subquire_num].has_quire_leaf? quire_leaf
+      _subquires[subquire_num].add_quire_leaf quire_leaf
     end
 
     def find_containment
-      return if _structure.size < 2
+      return if _subquires.size < 2
 
-      _structure.each do |outer|
-        _structure.each do |inner|
+      _subquires.each do |outer|
+        _subquires.each do |inner|
           next if outer.equal? inner # don't compare same subquire
           outer.add_child inner if outer.immediate_parent? inner
         end
@@ -89,10 +87,10 @@ module Como
     end
 
     def calculate_conjoins
-      _structure.each &:calculate_conjoins
+      _subquires.each &:calculate_conjoins
     end
 
-    def _structure
+    def _subquires
       @structure ||= []
     end
   end

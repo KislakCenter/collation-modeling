@@ -27,7 +27,7 @@ module Como
       QuireStructure.new q
     }
 
-    let(:structure_with_bad_subquire) {
+    let(:structure_with_discontinuous_subquire) {
       q = build_quire_and_leaves 8
       q.quire_leaves[1].update_attribute 'subquire', 1
       q.quire_leaves[3].update_attribute 'subquire', 1
@@ -72,8 +72,8 @@ module Como
       end
 
       it 'builds a structure for a quire with adjacent nested subquires' do
-          structure_with_adjacent_subquires.build
-          expect(structure_with_adjacent_subquires.size).to eq 3
+        structure_with_adjacent_subquires.build
+        expect(structure_with_adjacent_subquires.size).to eq 3
       end
 
       context '(conjoins)' do
@@ -182,17 +182,17 @@ module Como
       end
 
       it 'reports a bad quire is not structurally valid' do
-        expect(structure_with_bad_subquire).not_to be_structurally_valid
+        expect(structure_with_discontinuous_subquire).not_to be_structurally_valid
       end
     end
 
     context '#top_level_quire' do
-      it "returns the top level subquire" do
+      it 'returns the top level subquire' do
         expect(structure_with_nested_subquires.top_level_quire).to be_a Subquire
       end
 
       it 'has one top level subquire' do
-        expect(structure_with_subquire.build.select { |sq| sq.main_quire? }.size).to eq 1
+        expect(structure_with_subquire.build.select(&:main_quire?).size).to eq 1
       end
     end
   end

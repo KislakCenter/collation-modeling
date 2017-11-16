@@ -52,12 +52,12 @@ module Como
         end
       end
 
-      return @errors.empty?
+      @errors.empty?
     end
 
     def top_level_quire
       build unless built?
-      _structure.find { |sq| sq.main_quire? }
+      _structure.find &:main_quire?
     end
     alias_method :top, :top_level_quire
 
@@ -69,11 +69,8 @@ module Como
       !!@structure
     end
 
-    def errors
-      @errors.dup
-    end
-
     private
+
     def _add_quire_leaf subquire_num, quire_leaf
       _structure[subquire_num] ||= Subquire.new @quire, subquire_num
       return _structure if _structure[subquire_num].has_quire_leaf? quire_leaf

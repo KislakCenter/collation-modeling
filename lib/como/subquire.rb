@@ -94,15 +94,6 @@ module Como
       pair_up_singles
     end
 
-    def join_bifolia
-      bifolia = super_structure.non_singles
-      until bifolia.empty?
-        left, right   = bifolia.shift, bifolia.pop
-        left.conjoin  = right
-        right.conjoin = left
-      end
-    end
-
     def pair_up_singles
       return if super_structure.all_slots_joined?
       pair_single super_structure.unjoined_slots.first

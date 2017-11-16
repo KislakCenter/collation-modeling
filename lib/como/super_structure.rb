@@ -10,24 +10,20 @@ module Como
     end
 
     def slot_rep slot
-      {index: _slots.index(slot), position: slot.position}
+      { index: _slots.index(slot), position: slot.position }
     end
 
     def join_bifolia
       bifolia = non_singles
       until bifolia.empty?
-        # TODO: change to left, right to leading, trailing
-        left, right = bifolia.shift, bifolia.pop
-        left.conjoin = right
-        right.conjoin = left
+        leading, trailing = bifolia.shift, bifolia.pop
+        leading.conjoin = trailing
+        trailing.conjoin = leading
       end
     end
 
     def contains_any? positions
-      positions.any? { |posn|
-        # binding.pry
-        range.include? posn
-      }
+      positions.any? { |posn| range.include? posn }
     end
 
     def all_slots_joined?
@@ -57,7 +53,7 @@ module Como
     end
 
     def leaves
-      _slots.flat_map {|slot| slot.quire_leaf || []}
+      _slots.flat_map { |slot| slot.quire_leaf || [] }
     end
 
     def include? quire_leaf
@@ -85,7 +81,6 @@ module Como
     ##
     # Return true if `slot` is in the list of slots, as opposed to its
     # substructure.
-    #
     def has_slot? slot
       _slots.include? slot
     end

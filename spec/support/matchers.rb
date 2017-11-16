@@ -7,7 +7,7 @@ end
 
 def same_subquire_num? first, second
   return true if first == second
-  [first, second].all? { |num| [1, :top].include? num }
+  [first, second].all? { |num| [0, :top].include? num }
 end
 
 ##

@@ -34,6 +34,34 @@ module Como
       QuireStructure.new q
     }
 
+    let(:structure_with_deep_discontinuous_subquire) {
+      # This structure is discontinuous at the grandparent level:
+      #
+      #       1 0
+      #       2 1
+      #       3 2
+      #       4 0 <= intervening grandparent leaf
+      #       5 2
+      #       6 1
+      #       7 0
+      #       8 0
+      #       9 0
+      #
+      q = build_quire_and_leaves 8
+      q.quire_leaves[1].update_attribute 'subquire', 1
+      q.quire_leaves[2].update_attribute 'subquire', 2
+      q.quire_leaves[4].update_attribute 'subquire', 2
+      q.quire_leaves[5].update_attribute 'subquire', 1
+      QuireStructure.new q
+    }
+
+    let(:structure_with_discontinuous_subquire) {
+      q = build_quire_and_leaves 8
+      q.quire_leaves[1].update_attribute 'subquire', 1
+      q.quire_leaves[3].update_attribute 'subquire', 1
+      QuireStructure.new q
+    }
+
     let(:structure_with_adjacent_subquires) {
       q = build_quire_and_leaves
       q.quire_leaves[1].update_attribute 'subquire', 1
@@ -120,7 +148,7 @@ module Como
       end
 
       context '(substructures)' do
-        it "builds a substructure for a quire with nested subquires" do
+        it 'builds a substructure for a quire with nested subquires' do
           expect(structure_with_nested_subquires).to have_subquire_with_substructure_size :top, 8
           expect(structure_with_nested_subquires).to have_subquire_with_substructure_size 1, 6
           expect(structure_with_nested_subquires).to have_subquire_with_substructure_size 2, 2
@@ -181,8 +209,26 @@ module Como
         expect(structure_with_adjacent_subquires).to be_structurally_valid
       end
 
-      it 'reports a bad quire is not structurally valid' do
+      it 'reports a discontinuous quire is not structurally valid' do
         expect(structure_with_discontinuous_subquire).not_to be_structurally_valid
+      end
+
+      it 'reports a deep discontinuous quire is not structurally valid' do
+        expect(structure_with_deep_discontinuous_subquire).not_to be_structurally_valid
+      end
+    end
+
+    context '#discontinuous?' do
+      it 'returns true for a discontinuous subquire' do
+        structure = structure_with_discontinuous_subquire
+        structure.build
+        expect(structure.subquire 1).to be_discontinuous
+      end
+
+      it 'returns true for a deep discontinuous subquire' do
+        structure = structure_with_deep_discontinuous_subquire
+        structure.build
+        expect(structure.subquire 2).to be_discontinuous
       end
     end
 

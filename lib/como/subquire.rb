@@ -75,12 +75,15 @@ module Como
 
     ##
     # By definition a subquire cannot be discontinuous, if any of the parent
-    # subquire's positions fall with in our range, something is off.
-    #
+    # subquire's positions fall with in our range, the user's input is wrong.
     def discontinuous?
       return false if top_level?
-      # TODO: BUG: doesn't catch all ancestor positions
-      super_structure.contains_any? parent.super_structure.positions
+      super_structure.contains_any? ancestor_positions
+    end
+
+    def ancestor_positions
+      return [] if top_level?
+      parent.super_structure.positions + parent.ancestor_positions
     end
 
     def calculate_conjoins

@@ -1,5 +1,8 @@
 module Como
-   class Subquire
+  ##
+  # Subquire represents the super- and substructures of a quire.
+  #
+  class Subquire
     MAIN_QUIRE_NUM = 0
 
     attr_reader :subquire_num
@@ -27,8 +30,6 @@ module Como
 
     def add_quire_leaf quire_leaf
       quire_slot = QuireSlot.new quire_leaf
-      # super_structure.add_quire_leaf quire_leaf
-      # substructure.add_quire_leaf_slot QuireSlot.new quire_leaf
       super_structure.append quire_slot
       substructure.append quire_slot
     end
@@ -161,10 +162,8 @@ module Como
     # `:after` must be specified but not both. After adding the slot to the
     # top level structure, the slot is added to the substructure.
     def _insert_placeholder quire_slot, opts={}
-      # TODO: Rename to add_place_holder or add_false_leaf
-      super_structure.add_slot quire_slot, opts
-      substructure.add_slot quire_slot, opts
-      # _add_slot_to_substructure quire_slot, opts
+      super_structure.insert_placeholder quire_slot, opts
+      substructure.insert_placeholder quire_slot, opts
     end
 
     private

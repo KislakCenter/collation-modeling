@@ -13,17 +13,6 @@ module Como
       {index: _slots.index(slot), position: slot.position}
     end
 
-    ##
-    # Add `quire_slot` to the main subquire structure before or after the slot
-    # given as the `:before` or `:after` slot in `opts`. Either `:before` or
-    # `:after` must be specified but not both.
-    # def add_slot quire_slot, opts={}
-    #   # TODO: Extract to module HasSlots
-    #   return if _slots.include? quire_slot
-    #   ndx = _get_index opts
-    #   _slots.insert ndx, quire_slot
-    # end
-
     def join_bifolia
       bifolia = non_singles
       until bifolia.empty?
@@ -132,7 +121,5 @@ module Como
       new_slot.conjoin = slot
       new_slot
     end
-
-
   end
 end

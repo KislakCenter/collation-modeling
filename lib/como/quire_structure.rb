@@ -1,4 +1,6 @@
 module Como
+  ##
+  # Class to build and represent the structure of a quire based on user input.
   class QuireStructure
     attr_reader :quire
     attr_reader :errors
@@ -16,8 +18,6 @@ module Como
     end
 
     def build
-      return subquires if built?
-
       add_quire_leaves
       find_containment
       calculate_conjoins
@@ -41,13 +41,9 @@ module Como
     def structurally_valid?
       build unless built?
       @errors = []
-      _subquires.each do |sq|
-        if sq.discontinuous?
-          @errors << "Subquire #{sq.subquire_num} is discontinuous"
-        end
-        unless sq.even_bifolia?
-          @errors << "Subquire #{sq.subquire_num} has an odd number of non-single leaves"
-        end
+      _subquires.each do |subquire|
+        _check_continuity subquire
+        _check_bifolia_even subquire
       end
 
       @errors.empty?
@@ -64,10 +60,22 @@ module Como
     end
 
     def built?
-      !!@structure
+      !_subquires.empty?
     end
 
     private
+
+    def _check_continuity subquire
+      return unless subquire.discontinuous?
+      @errors << "Subquire #{subquire.subquire_num} is discontinuous"
+    end
+
+    def _check_bifolia_even subquire
+      return if subquire.even_bifolia?
+      msg = "Subquire #{subquire.subquire_num} " \
+            'has an odd number of non-single leaves'
+      @errors << msg
+    end
 
     def _add_quire_leaf subquire_num, quire_leaf
       _subquires[subquire_num] ||= Subquire.new @quire, subquire_num
@@ -91,7 +99,7 @@ module Como
     end
 
     def _subquires
-      @structure ||= []
+      @subquires ||= []
     end
   end
 end

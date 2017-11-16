@@ -55,13 +55,6 @@ module Como
       QuireStructure.new q
     }
 
-    let(:structure_with_discontinuous_subquire) {
-      q = build_quire_and_leaves 8
-      q.quire_leaves[1].update_attribute 'subquire', 1
-      q.quire_leaves[3].update_attribute 'subquire', 1
-      QuireStructure.new q
-    }
-
     let(:structure_with_adjacent_subquires) {
       q = build_quire_and_leaves
       q.quire_leaves[1].update_attribute 'subquire', 1
@@ -191,6 +184,23 @@ module Como
       end
     end
 
+    context '#adjacent?' do
+      it 'returns true for parent and child subquires' do
+        expect(structure_with_subquire).to have_adjacent_subquires :top, 1
+      end
+
+      it 'returns true for child and parent subquires' do
+        expect(structure_with_subquire).to have_adjacent_subquires 1, :top
+      end
+
+      it 'returns false for grandparent and child subquires' do
+        expect(structure_with_nested_subquires).not_to have_adjacent_subquires :top, 2
+      end
+
+      it 'returns false for child and grandparent subquires' do
+        expect(structure_with_nested_subquires).not_to have_adjacent_subquires 2, :top
+      end
+    end
 
     context '#structurally_valid?' do
       it 'reports a simple quire is structurally valid' do

@@ -98,12 +98,16 @@ module Como
     def adjacent? super_struct
       return false if empty? || super_struct.empty?
       return true  if shares_edge? super_struct
-      # TODO: works only for contains adjacent; add contained_by adjacent
-      return true if positions.include?(super_struct.min_position + 1)
-      positions.include?(super_struct.max_position + 1)
+      positions.any? { |self_p|
+        super_struct.positions.any? { |other_p|
+          (self_p - other_p).abs == 1
+        }
+      }
     end
 
     def shares_edge? super_struct
+      return false if empty?
+      return false if super_struct.empty?
       return true if super_struct.min_position == min_position
       super_struct.max_position == max_position
     end

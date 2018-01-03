@@ -18,6 +18,8 @@ module Como
     end
 
     def build
+      return subquires if built?
+
       add_quire_leaves
       find_containment
       calculate_conjoins
@@ -32,7 +34,7 @@ module Como
       quire.quire_leaves.each do |quire_leaf|
         if [first_ql, last_ql].include? quire_leaf
           # first and last quire leaf are always in main subquire
-          _add_quire_leaf Subquire::MAIN_QUIRE_NUM, quire_leaf
+          _add_quire_leaf Subquires::Subquire::MAIN_QUIRE_NUM, quire_leaf
         end
         _add_quire_leaf quire_leaf.subquire, quire_leaf
       end
@@ -78,7 +80,7 @@ module Como
     end
 
     def _add_quire_leaf subquire_num, quire_leaf
-      _subquires[subquire_num] ||= Subquire.new @quire, subquire_num
+      _subquires[subquire_num] ||= Subquires::Subquire.new @quire, subquire_num
       return _subquires if _subquires[subquire_num].has_quire_leaf? quire_leaf
       _subquires[subquire_num].add_quire_leaf quire_leaf
     end

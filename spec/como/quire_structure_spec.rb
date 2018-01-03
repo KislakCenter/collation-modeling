@@ -244,7 +244,7 @@ module Como
 
     context '#top_level_quire' do
       it 'returns the top level subquire' do
-        expect(structure_with_nested_subquires.top_level_quire).to be_a Subquire
+        expect(structure_with_nested_subquires.top_level_quire).to be_a Subquires::Subquire
       end
 
       it 'has one top level subquire' do

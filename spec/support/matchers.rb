@@ -112,7 +112,7 @@ RSpec::Matchers.define :have_conjoin_positions do |posns|
   end
   failure_message do |actual|
     slots = actual.super_structure.slots
-    "expected that #{slots[position - 1]} would be conjoin with #{slots[conjoin_position - 1]}"
+    "expected that #{slots[posns.first - 1]} would be conjoin with #{slots[posns.last - 1]}"
   end
 end
 

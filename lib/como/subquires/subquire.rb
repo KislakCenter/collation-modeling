@@ -52,8 +52,7 @@ module Como
       end
 
       def immediate_parent? other
-        return false unless contains? other
-        adjacent?(other)
+        contains?(other) && adjacent?(other)
       end
 
       def add_child subquire
@@ -104,34 +103,18 @@ module Como
       end
 
       def pair_single slot
-        case
-          when super_structure.first?(slot)
-            new_slot = _new_conjoin slot
-            last_slot = super_structure.slots.last
-            _insert_placeholder new_slot, after: last_slot
-          when super_structure.last?(slot)
-            new_slot = _new_conjoin slot
-            first_slot = super_structure.slots.first
-            _insert_placeholder new_slot, before: first_slot
-          when super_structure.middle?(slot)
-            # if this slot is in the middle, the placeholder follows it
-            new_slot = _new_conjoin slot
-            _insert_placeholder new_slot, after: slot
-          when super_structure.before_middle?(slot)
-            new_slot = _new_conjoin slot
-            # new_slot goes before previous slot's conjoin
-            prev_slot = super_structure.slot_before slot
-            _insert_placeholder new_slot, before: prev_slot.conjoin
-          when super_structure.after_middle?(slot)
-            # new_slot goes after next slot's conjoin
-            # if the next slot is unjoined, we have to wait to process this one
-            next_slot = super_structure.slot_after(slot)
-            return pair_single next_slot if next_slot.unjoined?
-            new_slot = _new_conjoin slot
-            _insert_placeholder new_slot, after: next_slot.conjoin
-          else
-            raise "Shouldn't have a slot that doesn't match."
-        end
+        new_slot = _new_conjoin slot
+        # DE 2017-12-10: New simpler, cleaner, more elegant algorithm
+        #                proposed by Kate Lynch
+        opts = if super_structure.first?(slot)
+                 { after: super_structure.slots.last }
+               else
+                 # new_slot goes before previous slot's conjoin
+                 prev_slot = super_structure.slot_before slot
+                 { before: prev_slot.conjoin }
+               end
+        super_structure.insert_placeholder new_slot, opts
+        _update_substructure new_slot, opts
       end
 
       def to_s
@@ -152,13 +135,16 @@ module Como
       end
 
       ##
-      # Add `quire_slot` to the main subquire structure before or after the slot
-      # given as the `:before` or `:after` slot in `opts`. Either `:before` or
-      # `:after` must be specified but not both. After adding the slot to the
-      # top level structure, the slot is added to the substructure.
-      def _insert_placeholder quire_slot, opts={}
-        super_structure.insert_placeholder quire_slot, opts
+      # Add `quire_slot` to the  substructure before or after the slot given
+      # as the `:before` or `:after` slot in `opts`. If this Subquire has a
+      # parent, invoke this method on the parent, and, thus, recurse up the
+      # tree, updating each parent substructure.
+      #
+      # @param [QuireSlot] quire_slot
+      # @param [Hash] opts
+      def _update_substructure quire_slot, opts = {}
         substructure.insert_placeholder quire_slot, opts
+        parent._update_substructure quire_slot, opts if has_parent?
       end
 
       private

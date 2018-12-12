@@ -37,6 +37,8 @@ gem 'activerecord-import', '~> 0.18.3'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
+gem 'rails_12factor', '~> 0.0.3'
+
 # Use Unicorn as the app server
 gem 'unicorn', '~> 4.9.0'
 

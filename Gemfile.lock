@@ -157,6 +157,11 @@ GEM
       rails-deprecated_sanitizer (>= 1.0.1)
     rails-html-sanitizer (1.0.4)
       loofah (~> 2.2, >= 2.2.2)
+    rails_12factor (0.0.3)
+      rails_serve_static_assets
+      rails_stdout_logging
+    rails_serve_static_assets (0.0.5)
+    rails_stdout_logging (0.0.5)
     railties (4.2.10)
       actionpack (= 4.2.10)
       activesupport (= 4.2.10)
@@ -261,6 +266,7 @@ DEPENDENCIES
   pg (~> 0.18.1)
   pry-rails (~> 0.3.4)
   rails (~> 4.2.7)
+  rails_12factor (~> 0.0.3)
   rb-fsevent (~> 0.9.4)
   redcarpet (~> 3.1.2)
   rspec-rails (~> 3.1.0)
@@ -278,4 +284,4 @@ RUBY VERSION
    ruby 2.2.5p319
 
 BUNDLED WITH
-   1.13.2
+   1.16.3

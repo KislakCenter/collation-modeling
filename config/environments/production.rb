@@ -53,7 +53,8 @@ Rails.application.configure do
 
   # Use a different logger for distributed setups.
   # config.logger = ActiveSupport::TaggedLogging.new(SyslogLogger.new)
-  config.logger = Logger.new(STDOUT)
+  config.logger = Logger.new STDOUT
+  config.logger.level = Logger::DEBUG
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
@@ -73,7 +74,7 @@ Rails.application.configure do
   config.active_support.deprecation = :notify
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
-  config.log_formatter = ::Logger::Formatter.new
+  # config.log_formatter = ::Logger::Formatter.new
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false

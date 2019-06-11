@@ -254,7 +254,7 @@ DEPENDENCIES
   activerecord-import (~> 0.18.3)
   acts_as_list (~> 0.9.5)
   autoprefixer-rails (~> 6.5.0)
-  bootstrap-sass (~> 3.2.0)
+  bootstrap-sass (~> 3.2)
   byebug (~> 4.0.3)
   coffee-rails (~> 4.1.0)
   devise (~> 3.4.1)

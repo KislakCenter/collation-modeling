@@ -277,16 +277,25 @@ class Quire < ActiveRecord::Base
     leaves
   end
 
+  ##
+  # Go through the single leaves and conjoins and assign conjoin attributes
+  # to each leaf; single leaves have a +nil+ conjoin.
+  #
+  # @return Array<OpenStruct> a sorted array of leaf structs with conjoin
+  # numbers
   def to_leaves
     leaves = []
     units.each do |unit|
       first = unit.leaves.first
       if unit.leaves.size > 1
-        second = unit.leaves.second
-        leaves << OpenStruct.new(first.marshal_dump.merge({ conjoin: second.n }))
-        leaves << OpenStruct.new(second.marshal_dump.merge({ conjoin: first.n }))
+        second         = unit.leaves.second
+        first.conjoin  = second.n
+        second.conjoin = first.n
+        leaves << first
+        leaves << second
       else
-        leaves << OpenStruct.new(first.marshal_dump.merge({ conjoin: nil  }))
+        first.conjoin = nil
+        leaves << first
       end
     end
     leaves.sort_by &:n
@@ -296,21 +305,20 @@ class Quire < ActiveRecord::Base
   # conjoin and thus contains either one or two leaves.
   def units
     units = []
-    leaf_queue = leaves.map(&:itself)
+    leaf_queue = leaves.map &:itself
     logger.info leaf_queue.inspect
     while leaf_queue.size > 0 do
-      leaf = leaf_queue.shift.to_struct
-      if leaf.single
-        units << OpenStruct.new(leaves: [ leaf ])
+      leaf = leaf_queue.shift
+      if leaf.single?
+        units << OpenStruct.new(leaves: [ leaf.to_struct ])
       else
-        while leaf_queue.last && leaf_queue.last.single
+        while leaf_queue.last && leaf_queue.last.single?
           units << OpenStruct.new(leaves: [ leaf_queue.pop.to_struct ])
         end
-        units << OpenStruct.new(leaves: [ leaf, leaf_queue.pop.to_struct ])
+        units << OpenStruct.new(leaves: [ leaf.to_struct, leaf_queue.pop.to_struct ])
       end
     end
-    units.sort_by! { |u| u.leaves.first.n }
-    units
+    units.sort_by { |u| u.leaves.first.n }
   end
 
   def last_leaf

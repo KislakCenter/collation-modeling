@@ -53,8 +53,11 @@ class Manuscript < ActiveRecord::Base
     s
   end
 
+  ##
+  # This returns the 'Joins XML'
   def build_xml
     struct = to_struct
+    binding.pry
     Nokogiri::XML::Builder.new do |xml|
       xml.manuscript(url: struct.url) {
         xml.title struct.title
@@ -76,6 +79,8 @@ class Manuscript < ActiveRecord::Base
     end
   end
 
+  ##
+  # This returns the 'leaves XML'
   def filled_quires_xml
     Nokogiri::XML::Builder.new do |xml|
       xml.manuscript {
